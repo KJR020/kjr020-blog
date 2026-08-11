@@ -20,9 +20,12 @@ const { activePage, description, mainClass, title } = Astro.props;
 <html lang="ja" class="scroll-smooth">
   <head>
     <BaseHead title={title} description={description} />
-    <meta name="robots" content="noindex,nofollow" />
   </head>
-  <body data-layout="specimen-book" class="bg-background text-foreground antialiased">
+  <body
+    data-layout="specimen-book"
+    data-pagefind-ignore="all"
+    class="bg-background text-foreground antialiased"
+  >
     <a class="skip-link" href="#main-content">本文へ移動</a>
     <Header />
 

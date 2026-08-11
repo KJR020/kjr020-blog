@@ -1,20 +1,13 @@
 import type { AstroIntegration } from "astro";
 
 /**
- * 開発サーバーでだけデザインシステムを公開する。
- *
- * ページ本体を `src/pages` の外に置き、production build へ混入しないことを
- * integration の責務として保証する。
+ * デザインシステムの公開ルートをAstroへ登録する。
  */
-export function devDesignSystem(): AstroIntegration {
+export function designSystem(): AstroIntegration {
   return {
-    name: "kjr020:dev-design-system",
+    name: "kjr020:design-system",
     hooks: {
-      "astro:config:setup": ({ command, injectRoute }) => {
-        if (command !== "dev") {
-          return;
-        }
-
+      "astro:config:setup": ({ injectRoute }) => {
         injectRoute({
           pattern: "/design-system",
           entrypoint: new URL("../design-system/pages/index.astro", import.meta.url),

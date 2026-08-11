@@ -65,8 +65,20 @@ export function useScrollSpy(
       }
     }
 
+    const updateActiveAtPageEnd = () => {
+      const viewportBottom = Math.ceil(window.scrollY + window.innerHeight);
+      const pageBottom = document.documentElement.scrollHeight;
+      const lastHeadingId = headingIds[headingIds.length - 1];
+      if (viewportBottom >= pageBottom - 1 && lastHeadingId) {
+        setActiveId(lastHeadingId);
+      }
+    };
+
+    window.addEventListener("scroll", updateActiveAtPageEnd, { passive: true });
+
     return () => {
       observer.disconnect();
+      window.removeEventListener("scroll", updateActiveAtPageEnd);
     };
   }, [headingIds, options?.rootMargin, options?.threshold]);
 

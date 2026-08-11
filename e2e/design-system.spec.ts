@@ -263,10 +263,6 @@ test("実装とつながったデザインシステムを表示する", async ({
       name: "KJR020's Blog デザインシステム",
     }),
   ).toBeVisible();
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-    "content",
-    "noindex,nofollow",
-  );
 
   await expect(page.locator('body[data-layout="specimen-book"]')).toBeVisible();
   const header = page.getByRole("banner");
@@ -587,10 +583,6 @@ test("記事ページの読書設計をパターンの共通レイアウト内�
   await expect(page.locator("body")).not.toContainText("DEV ONLY");
   await expect(page.locator("body")).not.toContainText("開発環境限定");
   await expect(header.getByText("DRAFT", { exact: true })).toHaveCount(0);
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-    "content",
-    "noindex,nofollow",
-  );
   await expect(page.getByText("適用範囲", { exact: true })).toBeVisible();
   await expect(page.getByText("正規仕様ではありません")).toHaveCount(0);
   await expect(page.getByRole("link", { name: "パターンへ戻る" })).toHaveCount(0);

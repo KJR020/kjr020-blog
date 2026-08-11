@@ -56,6 +56,7 @@ describe("useScrollSpy", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
     document.body.innerHTML = "";
   });
 
@@ -171,5 +172,20 @@ describe("useScrollSpy", () => {
 
     // オプションが渡されることを確認（実装で検証）
     expect(MockIntersectionObserver.instances.length).toBe(1);
+  });
+
+  it("ページ末尾では最後の見出しがactiveIdになる", () => {
+    const headingIds = ["heading-1", "heading-2", "heading-3"];
+    vi.spyOn(window, "scrollY", "get").mockReturnValue(1200);
+    vi.spyOn(window, "innerHeight", "get").mockReturnValue(800);
+    vi.spyOn(document.documentElement, "scrollHeight", "get").mockReturnValue(2000);
+
+    const { result } = renderHook(() => useScrollSpy(headingIds));
+
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+
+    expect(result.current.activeId).toBe("heading-3");
   });
 });
