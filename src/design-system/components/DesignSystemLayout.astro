@@ -44,8 +44,6 @@ const { activePage, description, mainClass, title } = Astro.props;
       </main>
     </div>
 
-    <p class="copy-status" aria-live="polite"></p>
-
     <script>
       const updateTokenValues = () => {
         const styles = getComputedStyle(document.documentElement);
@@ -60,20 +58,6 @@ const { activePage, description, mainClass, title } = Astro.props;
         attributeFilter: ["class"],
       });
 
-      const copyStatus = document.querySelector<HTMLElement>(".copy-status");
-      document.querySelectorAll<HTMLButtonElement>("[data-copy-button]").forEach((button) => {
-        button.addEventListener("click", async () => {
-          const code = button.closest(".code-sample")?.querySelector("code")?.textContent;
-          if (!code) return;
-          await navigator.clipboard.writeText(code);
-          if (copyStatus) copyStatus.textContent = "コードをコピーしました";
-          button.textContent = "コピーしました";
-          window.setTimeout(() => {
-            button.textContent = "コピー";
-            if (copyStatus) copyStatus.textContent = "";
-          }, 1600);
-        });
-      });
     </script>
   </body>
 </html>

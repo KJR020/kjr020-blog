@@ -87,6 +87,16 @@ test("カテゴリカードはカード全体をリンクにして補助ラベ�
   ]);
 });
 
+test("Button標本は実装例のコードを重ねず状態とvariantだけを表示する", async ({ page }) => {
+  await page.goto("/design-system/components#button");
+
+  const buttonSpecimen = page.locator("#button");
+  await expect(buttonSpecimen).not.toContainText("使用例を表示");
+  await expect(buttonSpecimen.locator(".code-sample")).toHaveCount(0);
+  await expect(buttonSpecimen.getByRole("button", { name: "記事を読む" })).toBeVisible();
+  await expect(buttonSpecimen.getByText("src/components/ui/button.tsx")).toBeVisible();
+});
+
 test("記事ページの仕様をパターンページに統合して表示する", async ({ page }) => {
   const response = await page.goto("/design-system/patterns#article-reading");
 
