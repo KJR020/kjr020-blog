@@ -90,6 +90,13 @@ test("カテゴリカードはカード全体をリンクにして補助ラベ�
 test("Button標本は実装例のコードを重ねず状態とvariantだけを表示する", async ({ page }) => {
   await page.goto("/design-system/components#button");
 
+  const chapterDescription = page.locator("#primitives > .src");
+  await expect(chapterDescription).toHaveJSProperty("tagName", "UL");
+  await expect(chapterDescription.locator("li")).toHaveText([
+    "ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUI",
+    "用途・構造・状態を共通化し、ページごとの独自実装を増やさないために使用する",
+  ]);
+
   const buttonSpecimen = page.locator("#button");
   await expect(buttonSpecimen).not.toContainText("使用例を表示");
   await expect(buttonSpecimen.locator(".code-sample")).toHaveCount(0);
