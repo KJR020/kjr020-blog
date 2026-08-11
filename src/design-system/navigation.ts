@@ -22,37 +22,37 @@ export const designSystemPages = [
     id: "overview",
     label: "概要",
     href: "/design-system",
-    description: "適用範囲と、正規仕様を構成する5つのカテゴリ。",
+    description: "このデザインシステムの目的、適用範囲、5つのカテゴリ",
   },
   {
     id: "foundations",
     label: "基盤",
     href: "/design-system/foundations",
-    description: "視覚表現とレイアウトの共通ルール",
+    description: "色・文字・余白・Gridなど、全ページが共有する値と配置のルール",
   },
   {
     id: "components",
     label: "コンポーネント",
     href: "/design-system/components",
-    description: "再利用するUI部品とナビゲーション",
+    description: "情報表示と操作を一貫して実装するための再利用可能なUI部品",
   },
   {
     id: "patterns",
     label: "パターン",
     href: "/design-system/patterns",
-    description: "状態・記事・ページを組み立てる方法",
+    description: "状態、記事、ページを読者の目的に沿って組み立てる方法",
   },
   {
     id: "content",
     label: "コンテンツ",
     href: "/design-system/content",
-    description: "声の性格とUI文言のルール",
+    description: "操作と状態を自然で具体的な言葉で伝えるUIライティング",
   },
   {
     id: "governance",
     label: "ガバナンス",
     href: "/design-system/governance",
-    description: "正規仕様の適用と更新ルール",
+    description: "正規仕様と実装を一致させて保つための管理・更新ルール",
   },
 ] as const satisfies readonly (DesignSystemNavigationLink & {
   id: DesignSystemPageId;

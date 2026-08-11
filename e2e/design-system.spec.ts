@@ -27,6 +27,51 @@ test("デザインシステムを6つのトップレベルページに分けて�
   }
 });
 
+test("公開するデザインシステムを記事検索の索引から除外する", async ({ page }) => {
+  await page.goto("/design-system");
+
+  await expect(page.locator("body")).toHaveAttribute("data-pagefind-ignore", "all");
+});
+
+test("公開ページは仕様の目的と使い方を説明する", async ({ page }) => {
+  const pageDescriptions = [
+    {
+      path: "/design-system",
+      description: "同じ役割に同じ表現を使うための判断基準",
+    },
+    {
+      path: "/design-system/foundations",
+      description: "画面幅やテーマが変わっても情報の意味と優先順位を保つ",
+    },
+    {
+      path: "/design-system/components",
+      description: "同じ役割のUIを同じ構造で実装する",
+    },
+    {
+      path: "/design-system/patterns",
+      description: "探す・読む・移動する流れを保つ",
+    },
+    {
+      path: "/design-system/content",
+      description: "起きたこと、次にできることを自然な日本語",
+    },
+    {
+      path: "/design-system/governance",
+      description: "採用済みの仕様だけを正規情報として保つ",
+    },
+  ] as const;
+
+  for (const pageDescription of pageDescriptions) {
+    await page.goto(pageDescription.path);
+    await expect(page.locator(".book-lead")).toContainText(pageDescription.description);
+  }
+
+  await page.goto("/design-system/foundations");
+  await expect(page.locator("#tokens > .src")).toContainText("用途を表す名前");
+  await expect(page.locator("#layout > .src")).toContainText("読む順序");
+  await expect(page.locator("#responsive > .src")).toContainText("入力方法");
+});
+
 test("カテゴリカードはカード全体をリンクにして補助ラベルを重ねない", async ({ page }) => {
   await page.goto("/design-system");
 
@@ -34,11 +79,11 @@ test("カテゴリカードはカード全体をリンクにして補助ラベ�
   await expect(directory.locator("a.spec-page-link")).toHaveCount(5);
   await expect(directory).not.toContainText("開く");
   await expect(directory.locator(".spec-page-link > span")).toHaveText([
-    "視覚表現とレイアウトの共通ルール",
-    "再利用するUI部品とナビゲーション",
-    "状態・記事・ページを組み立てる方法",
-    "声の性格とUI文言のルール",
-    "正規仕様の適用と更新ルール",
+    "色・文字・余白・Gridなど、全ページが共有する値と配置のルール",
+    "情報表示と操作を一貫して実装するための再利用可能なUI部品",
+    "状態、記事、ページを読者の目的に沿って組み立てる方法",
+    "操作と状態を自然で具体的な言葉で伝えるUIライティング",
+    "正規仕様と実装を一致させて保つための管理・更新ルール",
   ]);
 });
 
@@ -347,11 +392,12 @@ test("ヘッダー・本文・コードで合意したフォントを使い分�
   );
 
   await page.goto("/design-system/foundations#typography");
-  await expect(
-    page.getByText(
-      "ヘッダーはsystem sans、本文と見出しはNoto Sans JP、コードとトークン名はJetBrains Monoを使用する。",
-    ),
-  ).toBeVisible();
+  const typographyDescription = page.locator("#typography > .src");
+  await expect(typographyDescription).toContainText("Headerはsystem sans");
+  await expect(typographyDescription).toContainText("本文と見出しはNoto Sans JP");
+  await expect(typographyDescription).toContainText(
+    "コードとトークン名はJetBrains Mono",
+  );
   const codeFont = await page
     .locator("#typography code")
     .first()
