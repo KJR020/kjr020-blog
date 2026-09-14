@@ -7,6 +7,9 @@ dist/
 # Astro cache
 .astro/
 
+# Generated thumbnail cache
+.cache/generated-images/
+
 # Claude Code
 .claude/settings.local.json
 .claude/projects/

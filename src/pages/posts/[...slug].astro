@@ -6,6 +6,7 @@ import PostMeta from "@/components/PostMeta.astro";
 import type { HeadingItem } from "@/components/toc";
 import { hasTableOfContents, TableOfContents } from "@/components/toc";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { createPostThumbnailInput, createThumbnailSpec } from "@/lib/generated-images";
 import { createPublishedPostStaticPaths } from "@/lib/postRoutes";
 import "@/styles/article-code.css";
 import "@/styles/article-content.css";
@@ -17,6 +18,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
+const thumbnail = createThumbnailSpec(createPostThumbnailInput(post));
 const { Content, headings: rawHeadings } = await render(post);
 
 // h2, h3のみを抽出して型変換
@@ -39,7 +41,7 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
 <BaseLayout
   title={`${post.data.title} - KJR020's Blog`}
   description={post.data.description}
-  image={`/og/posts/${post.id}.png`}
+  image={thumbnail.ogp.url}
   ogType="article"
   articleHeadline={post.data.title}
   articlePublishedTime={post.data.date}

@@ -140,8 +140,19 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 | Content | 技術スタックなど、ホームの説明に含まれない補助文言は表示しない |
 | Typography | 見出し、説明、メタデータをNoto Sans JPのローカルフォントで統一する |
 | Generation | SatoriでSVGを組み立て、SharpでPNGへ変換する |
-| Routing | 全体ページは`/og-image.png`、記事は`/og/posts/{記事ID}.png`を使用する |
+| Routing | 全体ページは`/og-image.png`、記事はハッシュ付き`/generated-images/ogp/{generationKey}.png`を正規URLとして使用し、`/og/posts/{記事ID}.png`は互換出力として残す |
 | Source of Truth | `src/lib/og-image/`、`src/pages/og/posts/[...slug].png.ts`、`src/lib/siteCopy.ts`、`src/assets/og/` |
+
+### 記事カードの生成サムネイル
+
+Homeのfeatured記事カードは、記事タイトルをHTMLで読み上げ可能に保ったまま、タグに対応するローカルの技術ロゴを中央へ配置した16:9 WebPを表示する。サムネイル自体は装飾として`alt=""`にし、固定寸法・`srcset`・`sizes`でレイアウト領域と転送サイズを安定させる。生成条件はハッシュURLへ反映し、キャッシュ破棄後も同じ条件から再生成できる。
+
+| 項目 | 正規仕様 |
+| --- | --- |
+| Size | `card-sm` 480×270、`card-lg` 960×540、WebP quality 80 |
+| Content | タグの登録済みロゴを記事順に最大3個。未知タグ・ロゴなしも図形へフォールバック |
+| Accessibility | サムネイルは装飾扱い、記事リンクのAccessible NameはHTMLタイトル |
+| Source of Truth | `src/lib/generated-images/`、`src/pages/generated-images/`、`src/components/PostCard.astro` |
 
 ### 記事の読書設計
 

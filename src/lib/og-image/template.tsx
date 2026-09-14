@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 
 import satori, { type Font } from "satori";
 import sharp from "sharp";
-
+import { getLogoDataUrl } from "../generated-images/logos";
 import { HOME_DESCRIPTION_LINES } from "../siteCopy";
 import {
   BASE_FONT_SIZE,
@@ -37,6 +37,7 @@ export type OgImageContent =
 export type OgImageSourceOptions = {
   content?: OgImageContent;
   layout?: OgImageLayoutOverrides;
+  logoIds?: string[];
   photoPath: string;
   sansBoldFontPath: string;
 };
@@ -60,6 +61,7 @@ function formatPublishedDate(value: Date | string): string {
 export async function createOgImageSvg({
   content = SITE_OG_IMAGE_CONTENT,
   layout: layoutOverrides,
+  logoIds = [],
   photoPath,
   sansBoldFontPath,
 }: OgImageSourceOptions): Promise<string> {
@@ -246,6 +248,16 @@ export async function createOgImageSvg({
                 }}
               />
             </>
+          )}
+          {logoIds.length > 0 && (
+            <div
+              data-og-role="logos"
+              style={{ alignItems: "center", display: "flex", gap: OG_IMAGE_SPACING.xs }}
+            >
+              {logoIds.slice(0, 3).map((logoId) => (
+                <img alt="" height={28} key={logoId} src={getLogoDataUrl(logoId)} width={28} />
+              ))}
+            </div>
           )}
           <div
             data-og-role="url"

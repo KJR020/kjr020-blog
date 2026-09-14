@@ -84,7 +84,7 @@ Wideでは記事ヘッダーを全幅に置き、右側3 columnsを装飾用の�
 
 ### Home / Archive
 
-Page hero、section header、post listはGrid全体を使う。PostCardの外枠は全幅へ揃えるが、Card内部のtitle、meta、tagはcolumnsへ揃えずspacing tokenで配置する。
+Page hero、section header、post listはGrid全体を使う。Homeのfeatured PostCardはリストの1 columnを維持し、16:9サムネイルも同じ外枠へ揃える。PostCard内部のtitle、meta、tagはcolumnsへ揃えずspacing tokenで配置する。
 
 ## 使用ルール
 

@@ -1,6 +1,7 @@
 ---
 import PostMeta from "@/components/PostMeta.astro";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createPostThumbnailInput, createThumbnailSpec } from "@/lib/generated-images";
 
 interface Props {
   post: {
@@ -9,11 +10,20 @@ interface Props {
       title: string;
       date: Date;
       tags?: string[];
+      heroImage?: string | { src: string; alt: string };
     };
   };
+  showThumbnail?: boolean;
+  priority?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, priority = false, showThumbnail = false } = Astro.props;
+const thumbnail = showThumbnail ? createThumbnailSpec(createPostThumbnailInput(post)) : undefined;
+const manualImage =
+  typeof post.data.heroImage === "string"
+    ? { alt: "", src: post.data.heroImage }
+    : post.data.heroImage;
+const imageSrc = manualImage?.src ?? thumbnail?.cardSmall.url;
 ---
 
 <Card className="post-card relative transition-all duration-200 hover:bg-accent/50 hover:shadow-sm py-phi-xs gap-phi-2xs group">
@@ -22,6 +32,19 @@ const { post } = Astro.props;
     class="absolute inset-0 z-0"
     aria-label={post.data.title}
   />
+  {imageSrc && (
+    <img
+      src={imageSrc}
+      srcset={manualImage ? undefined : `${thumbnail?.cardSmall.url} 480w, ${thumbnail?.cardLarge.url} 960w`}
+      sizes={manualImage ? undefined : "(min-width: 768px) 480px, 100vw"}
+      width={manualImage ? 960 : thumbnail?.cardSmall.width}
+      height={manualImage ? 540 : thumbnail?.cardSmall.height}
+      loading={priority ? "eager" : "lazy"}
+      fetchpriority={priority ? "high" : undefined}
+      alt={manualImage?.alt ?? ""}
+      class="post-card-thumbnail aspect-video w-full object-cover"
+    />
+  )}
   <CardHeader className="py-0 gap-0">
     <CardTitle className="post-card-title text-base group-hover:text-link transition-colors duration-200">
       {post.data.title}
