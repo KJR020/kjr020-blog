@@ -1,5 +1,5 @@
 {
-  "name": "kjr020.github.io",
+  "name": "kjr020-blog",
   "type": "module",
   "version": "1.0.0",
   "description": "Personal blog built with Astro",
@@ -28,13 +28,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/KJR020/kjr020.github.io.git"
+    "url": "git+ssh://git@github.com/KJR020/kjr020-blog.git"
   },
   "keywords": [],
   "author": "KJR020",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/KJR020/kjr020.github.io/issues"
+    "url": "https://github.com/KJR020/kjr020-blog/issues"
   },
   "homepage": "https://kjr020.dev/",
   "dependencies": {
