@@ -1,0 +1,4 @@
+/generated-images/card/*
+  Cache-Control: public, max-age=31536000, immutable
+/generated-images/ogp/*
+  Cache-Control: public, max-age=31536000, immutable

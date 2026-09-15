@@ -62,11 +62,11 @@ describe("BaseHead OGP meta tags", () => {
     expect(postHtml).toContain('<meta property="article:tag" content="Cookie">');
     expect(postHtml).toContain('<meta property="article:tag" content="Web">');
     expect(postHtml).toContain('<meta property="article:tag" content="HTTP">');
-    expect(postHtml).toContain(
-      '<meta property="og:image" content="https://kjr020.dev/og/posts/general/cookie%E3%81%A8%E3%81%AF.png">',
+    expect(postHtml).toMatch(
+      /<meta property="og:image" content="https:\/\/kjr020\.dev\/generated-images\/ogp\/[a-f0-9]{64}\.png">/,
     );
-    expect(postHtml).toContain(
-      '<meta name="twitter:image" content="https://kjr020.dev/og/posts/general/cookie%E3%81%A8%E3%81%AF.png">',
+    expect(postHtml).toMatch(
+      /<meta name="twitter:image" content="https:\/\/kjr020\.dev\/generated-images\/ogp\/[a-f0-9]{64}\.png">/,
     );
     expect(postHtml).not.toContain('<meta property="article:modified_time"');
   });

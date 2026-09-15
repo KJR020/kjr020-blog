@@ -82,7 +82,9 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
           }
         </div>
         <div class="grid gap-phi-xs">
-          {latestPosts.map((post) => <PostCard post={post} />)}
+          {latestPosts.map((post, index) => (
+            <PostCard post={post} showThumbnail priority={index === 0} />
+          ))}
         </div>
       </section>
 

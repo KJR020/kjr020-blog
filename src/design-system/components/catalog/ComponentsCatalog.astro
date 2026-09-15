@@ -226,8 +226,8 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
 
   <div class="spec-item" id="post-card">
     <h3>6-2. PostCard / PostMeta</h3>
-    <p class="src">カード全体を記事リンクにし、タグリンクだけz-indexで前面へ出す。hoverで背景・shadow・タイトル色を変える。</p>
-    <div class="demo post-card-wrap"><PostCard post={specimenPost} /></div>
+    <p class="src">カード全体を記事リンクにし、タグリンクだけz-indexで前面へ出す。Homeのfeaturedカードでは生成済み16:9サムネイルを本文タイトルと分離して表示する。</p>
+    <div class="demo post-card-wrap"><PostCard post={specimenPost} showThumbnail /></div>
     <p class="source-row"><strong>Source</strong><code>src/components/PostCard.astro</code><code>src/components/PostMeta.astro</code></p>
   </div>
 

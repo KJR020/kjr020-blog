@@ -2,7 +2,12 @@ import { getCollection } from "astro:content";
 import path from "node:path";
 import type { APIRoute } from "astro";
 
-import { createOgImagePng, OG_IMAGE_COPY } from "@/lib/og-image";
+import {
+  createOgpImagePng,
+  createPostThumbnailInput,
+  createThumbnailSpec,
+  renderCachedImage,
+} from "@/lib/generated-images";
 
 const projectRoot = process.cwd();
 const publishedPosts = getCollection("posts", ({ data }) => !data.draft);
@@ -21,16 +26,17 @@ export const GET: APIRoute = async ({ params }) => {
     return new Response(null, { status: 404 });
   }
 
-  const png = await createOgImagePng({
-    content: {
-      kind: "article",
-      publishedAt: post.data.date,
-      title: post.data.title,
-      url: OG_IMAGE_COPY.url,
-    },
-    photoPath: path.join(projectRoot, "src", "assets", "og", "kuri-cutout.png"),
-    sansBoldFontPath: path.join(projectRoot, "src", "assets", "og", "NotoSansJP-Bold.otf"),
+  const spec = createThumbnailSpec(createPostThumbnailInput(post));
+  const result = await renderCachedImage({
+    cacheDirectory: path.join(projectRoot, ".cache", "generated-images"),
+    extension: "png",
+    height: spec.ogp.height,
+    key: spec.ogp.key,
+    preset: "ogp",
+    render: () => createOgpImagePng(spec.input),
+    width: spec.ogp.width,
   });
+  const png = await import("node:fs/promises").then(({ readFile }) => readFile(result.imagePath));
 
   return new Response(new Uint8Array(png), {
     headers: { "Content-Type": "image/png" },
