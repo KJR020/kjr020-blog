@@ -12,6 +12,10 @@ const baseHeadPath = join(process.cwd(), "src", "layouts", "BaseHead.astro");
 function buildSite() {
   execFileSync(astroBin, ["build"], {
     cwd: process.cwd(),
+    env: {
+      ...process.env,
+      LINK_CARD_FETCH_MODE: "offline",
+    },
     stdio: "inherit",
   });
 }

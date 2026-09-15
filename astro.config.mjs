@@ -20,6 +20,31 @@ const calloutIcons = {
   danger: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 
+/**
+ * @param {{ linkCardFetchMode: "live" | "offline" }} options
+ * @returns {import("@astrojs/markdown-remark").RemarkPlugins}
+ */
+export function createRemarkPlugins({ linkCardFetchMode }) {
+  /** @type {import("@astrojs/markdown-remark").RemarkPlugins} */
+  const remarkPlugins = [
+    [
+      remarkCallout,
+      {
+        icon: (/** @type {{ type: string }} */ callout) =>
+          calloutIcons[callout.type] || calloutIcons.note,
+      },
+    ],
+  ];
+
+  if (linkCardFetchMode === "live") {
+    remarkPlugins.push([remarkLinkCard, { cache: false, shortenUrl: true }]);
+  }
+
+  return remarkPlugins;
+}
+
+const linkCardFetchMode = process.env.LINK_CARD_FETCH_MODE === "offline" ? "offline" : "live";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://kjr020.dev",
@@ -33,16 +58,7 @@ export default defineConfig({
   },
   markdown: {
     processor: unified({
-      remarkPlugins: [
-        [
-          remarkCallout,
-          {
-            icon: (/** @type {{ type: string }} */ callout) =>
-              calloutIcons[callout.type] || calloutIcons.note,
-          },
-        ],
-        [remarkLinkCard, { cache: false, shortenUrl: true }],
-      ],
+      remarkPlugins: createRemarkPlugins({ linkCardFetchMode }),
       rehypePlugins: [rehypeArticleFigures, [rehypeMermaid, { class: "mermaid" }]],
       remarkRehype: {
         footnoteLabel: "脚注",
