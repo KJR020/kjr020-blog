@@ -12,6 +12,7 @@ dist/
 .opencode/
 .kiro/settings/
 **/CLAUDE.md
+!/CLAUDE.md
 
 # Environment variables
 .env
