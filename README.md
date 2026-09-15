@@ -154,6 +154,10 @@ Cloudflare Pages に自動デプロイ。`main` ブランチへの push で GitH
 
 依存追加・更新時のサプライチェーン対策は [Supply Chain Security](docs/security/supply-chain.md) を参照。
 
+## 開発ガイド
+
+セットアップ、検証コマンド、プルリクエストの作成方法は [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
+
 ## ライセンス
 
 記事コンテンツ (`content/posts/`) の著作権は著者に帰属します。ソースコードは自由に参照してください。
