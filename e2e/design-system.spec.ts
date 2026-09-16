@@ -27,6 +27,51 @@ test("デザインシステムを6つのトップレベルページに分けて�
   }
 });
 
+test("公開するデザインシステムを記事検索の索引から除外する", async ({ page }) => {
+  await page.goto("/design-system");
+
+  await expect(page.locator("body")).toHaveAttribute("data-pagefind-ignore", "all");
+});
+
+test("公開ページは仕様の目的と使い方を説明する", async ({ page }) => {
+  const pageDescriptions = [
+    {
+      path: "/design-system",
+      description: "同じ役割に同じ表現を使うための判断基準",
+    },
+    {
+      path: "/design-system/foundations",
+      description: "画面幅やテーマが変わっても情報の意味と優先順位を保つ",
+    },
+    {
+      path: "/design-system/components",
+      description: "同じ役割のUIを同じ構造で実装する",
+    },
+    {
+      path: "/design-system/patterns",
+      description: "探す・読む・移動する流れを保つ",
+    },
+    {
+      path: "/design-system/content",
+      description: "起きたこと、次にできることを自然な日本語",
+    },
+    {
+      path: "/design-system/governance",
+      description: "採用済みの仕様だけを正規情報として保つ",
+    },
+  ] as const;
+
+  for (const pageDescription of pageDescriptions) {
+    await page.goto(pageDescription.path);
+    await expect(page.locator(".book-lead")).toContainText(pageDescription.description);
+  }
+
+  await page.goto("/design-system/foundations");
+  await expect(page.locator("#tokens > .src")).toContainText("用途を表す名前");
+  await expect(page.locator("#layout > .src")).toContainText("読む順序");
+  await expect(page.locator("#responsive > .src")).toContainText("入力方法");
+});
+
 test("カテゴリカードはカード全体をリンクにして補助ラベルを重ねない", async ({ page }) => {
   await page.goto("/design-system");
 
@@ -34,12 +79,29 @@ test("カテゴリカードはカード全体をリンクにして補助ラベ�
   await expect(directory.locator("a.spec-page-link")).toHaveCount(5);
   await expect(directory).not.toContainText("開く");
   await expect(directory.locator(".spec-page-link > span")).toHaveText([
-    "視覚表現とレイアウトの共通ルール",
-    "再利用するUI部品とナビゲーション",
-    "状態・記事・ページを組み立てる方法",
-    "声の性格とUI文言のルール",
-    "正規仕様の適用と更新ルール",
+    "色・文字・余白・Gridなど、全ページが共有する値と配置のルール",
+    "情報表示と操作を一貫して実装するための再利用可能なUI部品",
+    "状態、記事、ページを読者の目的に沿って組み立てる方法",
+    "操作と状態を自然で具体的な言葉で伝えるUIライティング",
+    "正規仕様と実装を一致させて保つための管理・更新ルール",
   ]);
+});
+
+test("Button標本は実装例のコードを重ねず状態とvariantだけを表示する", async ({ page }) => {
+  await page.goto("/design-system/components#button");
+
+  const chapterDescription = page.locator("#primitives > .src");
+  await expect(chapterDescription).toHaveJSProperty("tagName", "UL");
+  await expect(chapterDescription.locator("li")).toHaveText([
+    "ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUI",
+    "用途・構造・状態を共通化し、ページごとの独自実装を増やさないために使用する",
+  ]);
+
+  const buttonSpecimen = page.locator("#button");
+  await expect(buttonSpecimen).not.toContainText("使用例を表示");
+  await expect(buttonSpecimen.locator(".code-sample")).toHaveCount(0);
+  await expect(buttonSpecimen.getByRole("button", { name: "記事を読む" })).toBeVisible();
+  await expect(buttonSpecimen.getByText("src/components/ui/button.tsx")).toBeVisible();
 });
 
 test("記事ページの仕様をパターンページに統合して表示する", async ({ page }) => {
@@ -263,10 +325,6 @@ test("実装とつながったデザインシステムを表示する", async ({
       name: "KJR020's Blog デザインシステム",
     }),
   ).toBeVisible();
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-    "content",
-    "noindex,nofollow",
-  );
 
   await expect(page.locator('body[data-layout="specimen-book"]')).toBeVisible();
   const header = page.getByRole("banner");
@@ -351,11 +409,12 @@ test("ヘッダー・本文・コードで合意したフォントを使い分�
   );
 
   await page.goto("/design-system/foundations#typography");
-  await expect(
-    page.getByText(
-      "ヘッダーはsystem sans、本文と見出しはNoto Sans JP、コードとトークン名はJetBrains Monoを使用する。",
-    ),
-  ).toBeVisible();
+  const typographyDescription = page.locator("#typography > .src");
+  await expect(typographyDescription).toContainText("Headerはsystem sans");
+  await expect(typographyDescription).toContainText("本文と見出しはNoto Sans JP");
+  await expect(typographyDescription).toContainText(
+    "コードとトークン名はJetBrains Mono",
+  );
   const codeFont = await page
     .locator("#typography code")
     .first()
@@ -587,10 +646,6 @@ test("記事ページの読書設計をパターンの共通レイアウト内�
   await expect(page.locator("body")).not.toContainText("DEV ONLY");
   await expect(page.locator("body")).not.toContainText("開発環境限定");
   await expect(header.getByText("DRAFT", { exact: true })).toHaveCount(0);
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-    "content",
-    "noindex,nofollow",
-  );
   await expect(page.getByText("適用範囲", { exact: true })).toBeVisible();
   await expect(page.getByText("正規仕様ではありません")).toHaveCount(0);
   await expect(page.getByRole("link", { name: "パターンへ戻る" })).toHaveCount(0);

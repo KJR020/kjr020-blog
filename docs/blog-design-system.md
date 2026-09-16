@@ -82,6 +82,7 @@ Source of Truthは役割ごとに分ける。値は`globals.css`、部品の構�
 - 新しい視覚表現はオーナーと合意し、デザインシステムへ正規仕様として定義してから実装する。
 - トークンには用途を表す名前を付け、値と意味を一対一で管理する。
 - 部品名は実装のコンポーネント名と対応させる。
+- 説明は「何を定義するか」「なぜ共通化するか」「どの判断に使うか」「制約」の順で書き、実装値だけの説明にしない。
 - 仕様を変更するときは、デザインシステムと関連ガイドを同時に更新する。
 - 実装とテストはデザインシステムへ適合させる。
 
@@ -171,6 +172,10 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 | Card coordination | Tag上では親PostCardの背景色とタイトル色のhoverを重ねない |
 | Reduced motion | `prefers-reduced-motion: reduce`では面移動の遷移時間を0sにし、状態変化は維持する |
 | Source of Truth | `src/components/PostMeta.astro`、`src/components/PostCard.astro` |
+
+## 参考資料
+
+- [SmartHR Design System「デザイントークン」](https://smarthr.design/products/design-tokens/) - 目的、種類、用途を分けて説明する情報構造の参考
 
 ## 関連ファイル
 

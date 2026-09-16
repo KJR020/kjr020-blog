@@ -7,11 +7,14 @@ import DesignSystemLayout from "../components/DesignSystemLayout.astro";
 <DesignSystemLayout
   activePage="foundations"
   title="基盤 - KJR020's Blog デザインシステム"
-  description="KJR020's Blogのトークン、レイアウト、レスポンシブとアクセシビリティ"
+  description="KJR020's Blogで共有する色・文字・余白・Gridと、レスポンシブ・アクセシビリティの基準"
 >
   <header class="book-intro" id="overview">
     <h1 class="book-title">基盤</h1>
-    <p class="book-lead">すべてのページと部品が共有する、視覚言語と配置の原則を定義する。</p>
+    <p class="book-lead">
+      色、文字、余白、幅、Gridなど、複数のページで繰り返し使う値と配置のルールを定義します。
+      部品ごとのハードコードを減らし、画面幅やテーマが変わっても情報の意味と優先順位を保つための基盤です。
+    </p>
   </header>
 
   <FoundationsCatalog sections={["tokens", "layout"]} />

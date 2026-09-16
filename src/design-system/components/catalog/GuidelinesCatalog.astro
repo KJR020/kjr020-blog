@@ -12,6 +12,10 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 {shows("writing") && (
 <section class="spec" id="writing">
   <h2>9. UIライティング</h2>
+  <p class="src">
+    UIに表示する言葉の役割、声、表記、状態メッセージを定義します。
+    見た目の文言とAccessible Nameを同時に設計し、読者が次の行動を判断できるようにします。
+  </p>
 
   <div class="spec-item" id="voice">
     <h3>9-1. 声の性格</h3>
@@ -96,6 +100,10 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 {shows("responsive") && (
 <section class="spec" id="responsive">
   <h2>10. レスポンシブ・アクセシビリティ</h2>
+  <p class="src">
+    画面幅、入力方法、動きの設定が変わっても、同じ情報と操作へ到達できるようにします。
+    配置、キーボード操作、ARIA、Motionの最低条件を定義します。
+  </p>
 
   <div class="spec-item" id="responsive-rules">
     <h3>10-1. レスポンシブ規則</h3>
@@ -141,6 +149,10 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 {shows("governance") && (
 <section class="spec" id="governance">
   <h2>11. ガバナンス</h2>
+  <p class="src">
+    値・部品・原則の正規な置き場所と、変更を反映する順序を定義します。
+    デザインシステムを一時的な検討メモではなく、採用済み仕様のSource of Truthとして保つための規則です。
+  </p>
 
   <div class="spec-item" id="source-of-truth">
     <h3>11-1. Source of Truth</h3>

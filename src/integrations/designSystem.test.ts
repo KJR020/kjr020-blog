@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { devDesignSystem } from "./devDesignSystem";
+import { designSystem } from "./designSystem";
 
 type InjectedRoute = {
   entrypoint: URL | string;
@@ -13,18 +13,23 @@ type SetupHook = (options: {
 }) => Promise<void> | void;
 
 function getDesignSystemSetupHook(): SetupHook {
-  const integration = devDesignSystem();
+  const integration = designSystem();
 
-  expect(integration.name).toBe("kjr020:dev-design-system");
+  expect(integration.name).toBe("kjr020:design-system");
 
   return integration.hooks["astro:config:setup"] as unknown as SetupHook;
 }
 
-describe("devDesignSystem integration", () => {
-  it("開発サーバーではデザインシステムのルートだけを注入する", async () => {
+describe("designSystem integration", () => {
+  it.each([
+    "build",
+    "dev",
+    "preview",
+    "sync",
+  ] as const)("%s で6つのデザインシステムページと互換ルートを注入する", async (command) => {
     const injectRoute = vi.fn<(route: InjectedRoute) => void>();
 
-    await getDesignSystemSetupHook()({ command: "dev", injectRoute });
+    await getDesignSystemSetupHook()({ command, injectRoute });
 
     expect(injectRoute.mock.calls.map(([route]) => route.pattern)).toEqual([
       "/design-system",
@@ -36,13 +41,5 @@ describe("devDesignSystem integration", () => {
       "/design-system/patterns/article-reading",
       "/design-system/article-reading",
     ]);
-  });
-
-  it.each(["build", "preview", "sync"] as const)("%s ではルートを注入しない", async (command) => {
-    const injectRoute = vi.fn<(route: InjectedRoute) => void>();
-
-    await getDesignSystemSetupHook()({ command, injectRoute });
-
-    expect(injectRoute).not.toHaveBeenCalled();
   });
 });

@@ -8,18 +8,19 @@ const categoryPages = designSystemPages.filter((page) => page.id !== "overview")
 <DesignSystemLayout
   activePage="overview"
   title="KJR020's Blog デザインシステム"
-  description="KJR020's Blogの実装と接続されたデザインシステム"
+  description="KJR020's Blogで一貫した見た目・操作・文章を設計するための正規仕様"
 >
   <header class="book-intro" id="overview">
     <h1 class="book-title">KJR020's Blog<br />デザインシステム</h1>
     <p class="book-lead">
-      KJR020's Blogの視覚言語、部品、状態、ページ構造、UIライティングを定義する正規仕様。
-      標本はブログと同じトークンとコンポーネントから描画する。
+      KJR020's Blogで繰り返し使う視覚言語、部品、状態、ページ構造、UIライティングをまとめた正規仕様です。
+      記事の読みやすさと操作の分かりやすさを保ち、同じ役割に同じ表現を使うための判断基準を示します。
+      標本はブログと同じトークンとコンポーネントから描画します。
     </p>
     <div class="scope-note">
       <strong>適用範囲</strong>
       <span>
-        ブログのすべてのページと部品に適用する。
+        記事、一覧、検索、ナビゲーション、状態表示を含む、ブログのすべての公開ページとUI部品に適用します。
       </span>
     </div>
   </header>

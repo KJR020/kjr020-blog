@@ -51,11 +51,16 @@ const shows = (section: FoundationSection) => sections.includes(section);
 {shows("tokens") && (
 <section class="spec" id="tokens">
   <h2>1. トークン</h2>
+  <p class="src">
+    色、文字、余白、角丸、影などの値に用途を表す名前を付け、ページと部品で共有します。
+    値の直接指定を減らし、変更時にブログ全体の意味と見た目を同じ基準で更新できるようにします。
+  </p>
 
   <div class="spec-item" id="color">
     <h3>1-1. 色の役割</h3>
     <p class="src">
-      ライト/ダークの2テーマ。ニュートラルを面と文字に使い、青をリンク、赤を破壊的状態、4色を記事内コールアウトに限定する。色名ではなく用途を表すsemantic tokenを選ぶ。
+      色は情報の役割、操作可能性、状態を伝えるために使います。Light / Darkで同じ意味を保つsemantic tokenを選び、色だけを唯一の手がかりにしません。
+      ニュートラルを面と文字、青を遷移、赤を破壊的状態、4色を記事内Calloutに限定します。
     </p>
     <div class="demo swatches">
       {colorTokens.map((token) => (
@@ -72,7 +77,10 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="callout-colors">
     <h3>1-2. 記事コールアウト色</h3>
-    <p class="src">記事本文の補足種別にだけ使用する。面を塗らず、左2pxの境界とタイトル文字で識別する。</p>
+    <p class="src">
+      Callout色は、本文から補足の種類を識別するためだけに使います。面全体を塗らず、左2pxの境界とタイトル文字へ適用します。
+      色が分からなくても見出しから意味を判断できるようにします。
+    </p>
     <div class="demo swatches">
       {calloutTokens.map(([token, label, role]) => (
         <div class="swatch" data-token={token}>
@@ -88,7 +96,10 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="typography">
     <h3>1-3. 文字階層</h3>
-    <p class="src">ヘッダーはsystem sans、本文と見出しはNoto Sans JP、コードとトークン名はJetBrains Monoを使用する。サイズと行高は黄金比φを中心に組む。</p>
+    <p class="src">
+      書体、サイズ、ウェイト、行高で、ページ内の情報階層と読み方を伝えます。Headerはsystem sans、本文と見出しはNoto Sans JP、コードとトークン名はJetBrains Monoを使います。
+      役割ごとのサイズと行高は黄金比φを基準に定義します。
+    </p>
     <div class="demo type-list">
       {typeScale.map(([label, token, weight, usage]) => (
         <div class="type-row">
@@ -105,7 +116,10 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="spacing">
     <h3>1-4. 黄金比スペーシング</h3>
-    <p class="src">関連性が強い要素には狭い値を使い、セクションなど関係が切り替わる場所には広い値を使う。</p>
+    <p class="src">
+      余白は、要素どうしの関係と情報の区切りを伝えるために使います。黄金比φのscaleから選び、同一要素内、部品間、セクション間、ページ外周の順に広げます。
+      局所的な数値を追加する前に、既存tokenで関係を表せるか確認します。
+    </p>
     <div class="demo spacing-list">
       {spacingTokens.map(([label, token]) => (
         <div class="spacing-row">
@@ -121,7 +135,10 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="radius">
     <h3>1-5. 角丸・影</h3>
-    <p class="src">基準角丸は0.618rem。情報のまとまりを示す目的で使用し、装飾として過剰に丸めない。Cardには控えめなshadowを使う。</p>
+    <p class="src">
+      角丸は同じ面に属する情報のまとまりを、影は面の重なりを補助的に伝えます。基準角丸は0.618remとし、装飾だけを目的に丸みや影を追加しません。
+      Cardの影は、境界だけでは面を識別しにくい場合に限定します。
+    </p>
     <div class="demo foundation-pair">
       <div class="radius-grid">
         <div><span class="radius-sample radius-sm"></span><strong>Small</strong><code>--radius-sm</code></div>
@@ -142,6 +159,9 @@ const shows = (section: FoundationSection) => sections.includes(section);
 {shows("layout") && (
 <section class="spec" id="layout">
   <h2>2. レイアウト原則</h2>
+  <p class="src">
+    ページ全体の幅、列、余白、読む順序を定義します。コンテンツの種類と画面幅に応じて配置を変えても、情報の優先順位とDOM順を保つための基準です。
+  </p>
 
   <div class="spec-item" id="page-shell">
     <h3>2-1. ページシェル</h3>
@@ -252,6 +272,10 @@ const shows = (section: FoundationSection) => sections.includes(section);
 {shows("states") && (
 <section class="spec" id="states">
   <h2>3. 状態の体系</h2>
+  <p class="src">
+    操作中、非同期データ、現在位置と選択を、部品が変わっても同じ意味で伝えるための規則です。
+    見た目だけでなく、文言とARIAを組み合わせて状態を識別できるようにします。
+  </p>
 
   <div class="spec-item" id="interaction-states">
     <h3>3-1. 操作状態</h3>

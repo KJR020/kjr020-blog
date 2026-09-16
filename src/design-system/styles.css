@@ -634,31 +634,12 @@ pre {
   background: var(--card);
 }
 
-.code-sample summary {
-  padding: var(--phi-neg1) var(--phi-0);
-  color: var(--muted-foreground);
-  font-size: var(--font-size-small);
-  cursor: pointer;
-}
-
-.code-sample > div {
-  position: relative;
-  border-block-start: 1px solid var(--border);
-  background: var(--secondary);
-}
-
 .code-sample pre {
   margin: 0;
   overflow-x: auto;
   padding: var(--phi-0);
   font-size: 0.78rem;
   line-height: 1.7;
-}
-
-.code-sample button {
-  position: absolute;
-  inset: var(--phi-neg1) var(--phi-neg1) auto auto;
-  background: var(--background);
 }
 
 .input-grid {

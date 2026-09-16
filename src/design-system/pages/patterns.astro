@@ -7,11 +7,14 @@ import DesignSystemLayout from "../components/DesignSystemLayout.astro";
 <DesignSystemLayout
   activePage="patterns"
   title="パターン - KJR020's Blog デザインシステム"
-  description="KJR020's Blogの状態、記事コンテンツ、ページパターン"
+  description="KJR020's Blogの状態、記事コンテンツ、ページ構造を一貫して組み立てるための仕様"
 >
   <header class="book-intro" id="overview">
     <h1 class="book-title">パターン</h1>
-    <p class="book-lead">複数の部品を組み合わせ、状態・記事・ページを一貫して表現する方法を定義する。</p>
+    <p class="book-lead">
+      単独の部品だけでは決まらない、状態の伝え方、記事コンテンツの組み方、ページ内の情報順序を定義します。
+      読者の目的に応じて部品を組み合わせ、画面が変わっても探す・読む・移動する流れを保つために使います。
+    </p>
   </header>
 
   <FoundationsCatalog sections={["states"]} />

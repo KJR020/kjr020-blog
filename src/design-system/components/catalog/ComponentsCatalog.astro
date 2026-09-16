@@ -56,14 +56,14 @@ const scrapboxPages = [
     url: "https://scrapbox.io/KJR020/Astro_Content_Collection",
   },
 ];
-
-const buttonCode = `<Button variant="default">記事を読む</Button>
-<Button variant="outline">下書きを確認</Button>
-<Button variant="destructive">削除する</Button>`;
 ---
 
 <section class="spec" id="primitives">
   <h2>4. 基本部品</h2>
+  <ul class="src rule-list">
+    <li>ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUI</li>
+    <li>用途・構造・状態を共通化し、ページごとの独自実装を増やさないために使用する</li>
+  </ul>
 
   <div class="spec-item" id="button">
     <h3>4-1. Button</h3>
@@ -84,10 +84,6 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
         <Button disabled>読み込み中…</Button>
       </div>
     </div>
-    <details class="code-sample">
-      <summary>使用例を表示</summary>
-      <div><pre><code>{buttonCode}</code></pre><Button type="button" variant="outline" size="sm" data-copy-button>コピー</Button></div>
-    </details>
     <p class="source-row"><strong>Source</strong><code>src/components/ui/button.tsx</code></p>
   </div>
 
@@ -159,6 +155,10 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
 
 <section class="spec" id="navigation">
   <h2>5. ナビゲーション・検索部品</h2>
+  <p class="src">
+    サイト内の現在地、移動先、検索手段を読者へ伝える部品です。
+    Pointer・Touch・Keyboardのいずれでも同じ場所と操作へ到達できることを基準とします。
+  </p>
 
   <div class="spec-item" id="global-navigation">
     <h3>5-1. Header / Global Navigation</h3>
@@ -216,6 +216,10 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
 
 <section class="spec" id="blog-components">
   <h2>6. ブログ固有部品</h2>
+  <p class="src">
+    記事を探す・読む・関連情報へ移動するために、KJR020's Blog固有の情報構造を持つ部品です。
+    実データと状態を含めて再利用し、ページごとに別の見た目や挙動を作りません。
+  </p>
 
   <div class="spec-item" id="page-hero">
     <h3>6-1. PageHero</h3>

@@ -6,11 +6,14 @@ import DesignSystemLayout from "../components/DesignSystemLayout.astro";
 <DesignSystemLayout
   activePage="governance"
   title="ガバナンス - KJR020's Blog デザインシステム"
-  description="KJR020's BlogのSource of Truth、適合ルール、更新方法"
+  description="KJR020's Blogのデザイン仕様と実装を一致させて保つための管理・更新ルール"
 >
   <header class="book-intro" id="overview">
     <h1 class="book-title">ガバナンス</h1>
-    <p class="book-lead">デザインシステムを正規仕様として保ち、実装と一致させるためのルールを定義する。</p>
+    <p class="book-lead">
+      デザインの値・部品・原則をどこで管理し、変更時に何を更新するかを定義します。
+      デザインシステムと実装のずれを防ぎ、採用済みの仕様だけを正規情報として保つために使います。
+    </p>
   </header>
 
   <GuidelinesCatalog sections={["governance"]} />

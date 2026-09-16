@@ -56,6 +56,9 @@
   --lh-tight: 1.272; /* √φ — headings */
   --lh-body: 1.618; /* φ — body text */
 
+  /* Article reading */
+  --article-reading-measure: 40ic;
+
   /* Callout Colors - Note (sky) */
   --callout-note: hsl(199 89% 48%);
 

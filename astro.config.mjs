@@ -9,7 +9,7 @@ import { rehypeMermaid } from "@beoe/rehype-mermaid";
 // @ts-ignore
 import remarkLinkCard from "remark-link-card";
 import remarkCallout from "@r4ai/remark-callout";
-import { devDesignSystem } from "./src/integrations/devDesignSystem.ts";
+import { designSystem } from "./src/integrations/designSystem.ts";
 import { rehypeArticleFigures } from "./src/integrations/rehypeArticleFigures.ts";
 
 /** @type {Record<string, string>} */
@@ -52,7 +52,7 @@ export default defineConfig({
   build: {
     format: "directory",
   },
-  integrations: [react(), sitemap(), pagefind(), devDesignSystem()],
+  integrations: [react(), sitemap(), pagefind(), designSystem()],
   vite: {
     plugins: [tailwindcss()],
   },
