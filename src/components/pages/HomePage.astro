@@ -2,16 +2,19 @@
 import PostCard from "@/components/PostCard.astro";
 import { ScrapboxCardList } from "@/components/scrapbox";
 import type { ScrapboxPageData } from "@/components/scrapbox/types";
+import { SearchBox } from "@/components/search/SearchBox";
+import { TagBubbleCloud } from "@/components/TagBubbleCloud";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { HOME_DESCRIPTION_LINES } from "@/lib/siteCopy";
-import type { PostSummary } from "./types";
+import type { PostSummary, TagSummary } from "./types";
 
 interface Props {
   posts: PostSummary[];
+  tags: TagSummary[];
   scrapboxPages?: ScrapboxPageData[];
 }
 
-const { posts, scrapboxPages } = Astro.props;
+const { posts, tags, scrapboxPages } = Astro.props;
 const latestPosts = posts.slice(0, 3);
 const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
 ---
@@ -47,7 +50,11 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
           </div>
         </div>
       </section>
-      <section class="py-phi-xl animate-fade-in-up" style="animation-delay: 80ms">
+      <section
+        id="latest-posts"
+        class="py-phi-xl animate-fade-in-up"
+        style="animation-delay: 80ms"
+      >
         <div class="flex items-center justify-between mb-phi-md">
           <h2
             class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
@@ -84,7 +91,11 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
         </div>
       </section>
 
-      <section class="py-phi-xl animate-fade-in-up" style="animation-delay: 210ms">
+      <section
+        id="scrapbox"
+        class="py-phi-xl animate-fade-in-up"
+        style="animation-delay: 210ms"
+      >
         <div class="flex items-center justify-between mb-phi-md">
           <h2
             class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
@@ -117,6 +128,38 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
           </a>
         </div>
         <ScrapboxCardList project="KJR020" pages={scrapboxPages} client:load />
+      </section>
+
+      <section
+        id="search"
+        class="scroll-mt-phi-3xl py-phi-xl animate-fade-in-up"
+        style="animation-delay: 260ms"
+      >
+        <div class="flex items-center justify-between mb-phi-md">
+          <h2
+            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
+            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
+          >
+            Search
+          </h2>
+        </div>
+        <SearchBox client:load />
+      </section>
+
+      <section
+        id="tags"
+        class="py-phi-xl animate-fade-in-up"
+        style="animation-delay: 310ms"
+      >
+        <div class="flex items-center justify-between mb-phi-md">
+          <h2
+            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
+            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
+          >
+            Tags
+          </h2>
+        </div>
+        <TagBubbleCloud tags={tags} client:load />
       </section>
     </div>
   </div>

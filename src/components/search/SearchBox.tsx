@@ -128,7 +128,7 @@ export function SearchBox() {
   }, [displayCount]);
 
   return (
-    <div>
+    <search>
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
           <svg
@@ -147,10 +147,11 @@ export function SearchBox() {
           </svg>
           <input
             ref={inputRef}
-            type="text"
+            type="search"
             value={query}
             onChange={handleInput}
-            placeholder="記事を検索..."
+            aria-label="記事を検索"
+            placeholder="キーワードを入力"
             className={cn(
               "h-9 w-full rounded-md border border-border bg-muted pl-8 pr-3",
               "text-sm text-foreground placeholder:text-muted-foreground",
@@ -169,7 +170,7 @@ export function SearchBox() {
             "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
           )}
         >
-          クリア
+          検索条件をクリア
         </button>
       </div>
 
@@ -218,6 +219,6 @@ export function SearchBox() {
           )}
         </div>
       )}
-    </div>
+    </search>
   );
 }
