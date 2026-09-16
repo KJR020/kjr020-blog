@@ -1,5 +1,6 @@
 {
   "name": "kjr020-blog",
+  "private": true,
   "type": "module",
   "version": "1.0.0",
   "description": "Personal blog built with Astro",
@@ -32,7 +33,7 @@
   },
   "keywords": [],
   "author": "KJR020",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/KJR020/kjr020-blog/issues"
   },
