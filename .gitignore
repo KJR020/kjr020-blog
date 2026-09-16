@@ -7,16 +7,12 @@ dist/
 # Astro cache
 .astro/
 
-# Claude Code
-.claude/settings.local.json
-.claude/projects/
-.claude/worktrees/
-.claude/scheduled_tasks.lock
+# Local AI tooling
+.claude/
+.opencode/
+.kiro/settings/
 **/CLAUDE.md
 !/CLAUDE.md
-
-# Handover (auto-generated)
-HANDOVER.md
 
 # Environment variables
 .env
