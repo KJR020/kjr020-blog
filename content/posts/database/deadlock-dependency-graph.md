@@ -93,8 +93,8 @@ typedef struct
 
 今回調べたことで、何らかの依存関係を扱うときに「これはグラフとして扱うと良さそうだ」という視点が一つ増えたように思います。
 
-[^1]: デッドロックの自動検出とトランザクションの中断、ロック取得順序の統一、再試行について。[PostgreSQL 18.4文書「13.3.4. デッドロック」](https://www.postgresql.jp/document/18/html/explicit-locking.html#LOCKING-DEADLOCKS)
-[^2]: Wait-for Graphのノードとエッジの定義、サイクルによるデッドロック検出について。[Wait-for graph - Wikipedia](https://en.wikipedia.org/wiki/Wait-for_graph)
-[^3]: `src/backend/storage/lmgr/README`は、PostgreSQL内部のロック管理について開発者向けに説明した文書。プロセスをWait-for Graphのノード、待ち関係をエッジとして扱い、`FindLockCycle()`がエッジを再帰的にたどる方法が説明されている。[PostgreSQL 18.6 `src/backend/storage/lmgr/README` 393〜449行](https://github.com/postgres/postgres/blob/REL_18_6/src/backend/storage/lmgr/README#L393-L449)（2026年9月確認）
-[^4]: `EDGE`構造体は`waiter`、`blocker`、`lock`を保持する（[`deadlock.c` 37〜54行](https://github.com/postgres/postgres/blob/REL_18_6/src/backend/storage/lmgr/deadlock.c#L37-L54)）。循環の探索では、`visitedProcs`配列に探索済みのプロセスを記録し（[`deadlock.c` 102〜104行](https://github.com/postgres/postgres/blob/REL_18_6/src/backend/storage/lmgr/deadlock.c#L102-L104)、[`deadlock.c` 472〜509行](https://github.com/postgres/postgres/blob/REL_18_6/src/backend/storage/lmgr/deadlock.c#L472-L509)）、`waitLock`から対象のロックを取得して、`procLocks`から競合するロックの保持者を探している（[`deadlock.c` 535〜585行](https://github.com/postgres/postgres/blob/REL_18_6/src/backend/storage/lmgr/deadlock.c#L535-L585)）。また、`waitProcs`はそのロックを待つプロセスの待ち行列として参照される（[`deadlock.c` 630〜703行](https://github.com/postgres/postgres/blob/REL_18_6/src/backend/storage/lmgr/deadlock.c#L630-L703)）。（2026年9月確認）
-[^5]: グラフを構成するノードとエッジ、および隣接リストや隣接行列などの代表的な表現方法について。[Graph (abstract data type) - Wikipedia](https://en.wikipedia.org/wiki/Graph_%28abstract_data_type%29)（2026年9月確認）
+[^1]: [PostgreSQL 18.4文書「13.3.4. デッドロック」](https://www.postgresql.jp/document/18/html/explicit-locking.html#LOCKING-DEADLOCKS)
+[^2]: [Wait-for graph - Wikipedia](https://en.wikipedia.org/wiki/Wait-for_graph)
+[^3]: [PostgreSQL 18.6 src/backend/storage/lmgr/README 393〜449行](https://github.com/postgres/postgres/blob/REL_18_6/src/backend/storage/lmgr/README#L393-L449)
+[^4]: [PostgreSQL 18.6 src/backend/storage/lmgr/deadlock.c 37〜54行](https://github.com/postgres/postgres/blob/REL_18_6/src/backend/storage/lmgr/deadlock.c#L37-L54)
+[^5]: [Open Data Structures - Chapter 12: Graphs](https://opendatastructures.org/newhtml/ods/latex/graphs.html)。[日本語版『みんなのデータ構造』](https://www.lambdanote.com/products/opendatastructures)もラムダノートから出版されています。
