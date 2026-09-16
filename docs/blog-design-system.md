@@ -9,7 +9,7 @@ graph TB
     G["globals.css: 色・文字・φスケール・記事表現"]
     U["ui components: Button・Badge・Card・Input"]
     B["blog components: Header・PostCard・TOC・Search・Scrapbox"]
-    P["pages: Home・Archive・Post・Search・State"]
+    P["pages: Home・Archive・Post・State"]
     L["grid system: Columns・Gutters・Margins・Grid types"]
     W["UI writing: Voice・Labels・States・Accessible names"]
     S["デザインシステム: /design-system"]
@@ -68,7 +68,7 @@ Source of Truthは役割ごとに分ける。値は`globals.css`、部品の構�
 | 5. ナビゲーション・検索部品 | Header、SearchBox、Command Palette、Theme、Mobile Menu | `src/components/` |
 | 6. ブログ固有部品 | PageHero、PostCard、TOC、Scrapbox | Blog components |
 | 7. 記事コンテンツ | Markdown、Callout、Link Card、Code、Image | 記事実装 |
-| 8. ページの型 | ホーム、記事一覧、記事ページ、検索、ポリシー・状態 | Pages・Grid system・Article reading |
+| 8. ページの型 | ホーム、記事一覧、記事ページ、ポリシー・状態 | Pages・Grid system・Article reading |
 | 9. UIライティング | 声、6原則、部品文法、表記、状態メッセージ | UIライティング |
 | 10. レスポンシブ・アクセシビリティ | Breakpoint、Keyboard、ARIA、Motion、Loading | Components・guidelines |
 | 11. ガバナンス | Source of Truth、適合ルール、更新方法 | デザインシステム全体 |
@@ -107,6 +107,18 @@ KJR020's Blogのデザインは次の原則に従う。
 - ライト/ダーク、Desktop/Mobile、通常/非同期状態を同じ部品で扱う。
 - 記事では見出し、コード、Callout、Link Card、TOCを組み合わせる。
 - UIは記事を主役にし、操作と状態を簡潔・具体的・中立に伝える。
+
+### Homeの記事探索
+
+Homeでは最新記事を主役にし、全文検索はページ後半の補助導線として扱う。検索はScrapboxの後、Tagsの直前へ配置し、旧`/search`はHomeの検索位置へ転送する。
+
+| 項目 | 正規仕様 |
+| --- | --- |
+| Information order | プロフィール → Latest Posts → Scrapbox → Search → Tags |
+| Search | Home内の全幅sectionとして配置し、結果を入力欄の直下へ展開する |
+| Tags | Searchの直後へ置き、選択したTagを検索条件としてHomeを再表示する |
+| Legacy URL | `/search`から`/#search`へ恒久転送する |
+| Source of Truth | `src/pages/index.astro`、`src/pages/search.astro`、`src/components/search/SearchBox.tsx` |
 
 ### Headerのブランド表現
 

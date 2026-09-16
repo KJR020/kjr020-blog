@@ -107,3 +107,52 @@ test.describe("トップページのブランド表現", () => {
     expect(containerSpacing).toBe("0px");
   });
 });
+
+test.describe("トップページの記事検索", () => {
+  test("検索をScrapboxとTagsの間へ補助導線として配置する", async ({ page }) => {
+    await page.goto("/");
+
+    const sections = page.locator("main section");
+    await expect(sections).toHaveCount(5);
+    await expect(sections.nth(1)).toHaveAttribute("id", "latest-posts");
+    await expect(sections.nth(2)).toHaveAttribute("id", "scrapbox");
+    await expect(sections.nth(3)).toHaveAttribute("id", "search");
+    await expect(sections.nth(4)).toHaveAttribute("id", "tags");
+  });
+
+  test("Home上で記事を検索できる", async ({ page }) => {
+    await page.goto("/#search");
+
+    const searchSection = page.locator("section#search");
+    await expect(
+      searchSection.getByRole("heading", { level: 2, name: "Search" }),
+    ).toBeVisible();
+    await expect(
+      searchSection.getByRole("searchbox", { name: "記事を検索" }),
+    ).toHaveAttribute("placeholder", "キーワードを入力");
+    await expect(
+      searchSection.getByRole("button", { name: "検索条件をクリア" }),
+    ).toBeVisible();
+  });
+
+  test("ヘッダーのSearchからHome内の検索へ移動する", async ({ page }) => {
+    await page.goto("/");
+
+    if ((page.viewportSize()?.width ?? 0) < 768) {
+      await page.getByRole("button", { name: "メニューを開く" }).click();
+    }
+
+    await expect(
+      page.locator("header").getByRole("link", { name: /^Search/ }),
+    ).toHaveAttribute("href", "/#search");
+  });
+
+  test("旧SearchページからHome内の検索へ移動する", async ({ page }) => {
+    await page.goto("/search");
+
+    await expect(page).toHaveURL(/\/#search$/);
+    await expect(
+      page.getByRole("searchbox", { name: "記事を検索" }),
+    ).toBeVisible();
+  });
+});
