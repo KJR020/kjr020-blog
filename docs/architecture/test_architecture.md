@@ -139,9 +139,9 @@ Integration Testで検証し、VRTでは解決済みの固定データを描画�
 #### 実行環境
 
 - `playwright.config.ts` のDesktop ChromeとMobile Chromeで実行する
-- macOSとLinuxの基準画像を分けて管理する
-- ローカルではmacOS用、CIの通常実行ではLinux用の基準画像と比較する
-- Linux用の基準画像はGitHub Actionsの手動workflowで更新する
+- 公式Playwright LinuxコンテナでE2EとVRTを実行する
+- ローカルとCIは同じコンテナイメージ、ブラウザ、Linux用基準画像を使う
+- Linux用の基準画像はローカルのDocker、またはGitHub Actionsの手動workflowで更新する
 
 記事追加や記事本文の編集だけで基準画像の更新が必要になった場合は、VRT対象が
 実コンテンツへ依存していないかを先に確認する。画像の更新で差分を受け入れることを

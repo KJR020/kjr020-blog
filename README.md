@@ -108,11 +108,11 @@ pnpm exec wrangler pages dev --proxy 4321 --port 8788
 | `pnpm typecheck` | TypeScriptの型を検査 |
 | `pnpm test:run` | Vitestを単発実行 |
 | `pnpm test:coverage:check` | カバレッジ閾値を含めてVitestを実行 |
-| `pnpm test:e2e` | Playwright E2Eテストを実行 |
+| `pnpm test:e2e` | LinuxコンテナでPlaywright E2Eテストを実行 |
 
 ### Visual Regressionスナップショット
 
-`pnpm test:e2e:update-snapshots` は、ローカル環境向けの基準画像を更新します。CIで使用するLinux向けの `*-linux.png` は、GitHub Actionsの `CI` workflowを `update_snapshots=true` で手動実行して更新します。macOSからLinux向け画像を上書きしません。
+Dockerを起動した状態で `pnpm test:e2e:update-snapshots` を実行すると、CIと同じPlaywright Linuxコンテナで基準画像を更新します。更新された `*-linux.png` を確認してコミットします。GitHub Actionsの `CI` workflowを `update_snapshots=true` で手動実行して更新することもできます。
 
 VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテクチャ](docs/architecture/test_architecture.md)で定義しています。
 
