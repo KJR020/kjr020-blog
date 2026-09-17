@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
@@ -49,6 +49,26 @@ const linkCardFetchMode = process.env.LINK_CARD_FETCH_MODE === "offline" ? "offl
 export default defineConfig({
   site: "https://kjr020.dev",
   compressHTML: true,
+  fonts: [
+    {
+      provider: fontProviders.google(),
+      name: "Noto Sans JP",
+      cssVariable: "--font-noto-sans-jp",
+      weights: ["400 900"],
+      styles: ["normal"],
+      subsets: ["japanese"],
+      fallbacks: ["system-ui", "sans-serif"],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "JetBrains Mono",
+      cssVariable: "--font-jetbrains-mono",
+      weights: [400, 500],
+      styles: ["normal"],
+      subsets: ["latin"],
+      fallbacks: ["ui-monospace", "monospace"],
+    },
+  ],
   build: {
     format: "directory",
   },

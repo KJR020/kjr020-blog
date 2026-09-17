@@ -345,10 +345,38 @@ test("ヘッダー・本文・コードで合意したフォントを使い分�
 
   expect(headerFont).toContain("ui-sans-serif");
   expect(bodyFont).toContain("Noto Sans JP");
-  await expect(page.locator('link[href*="Noto+Sans+JP"]')).toHaveAttribute(
-    "href",
-    /wght@400;500;700;900/,
+  await expect(
+    page.locator(
+      'link[href^="https://fonts.googleapis.com"], link[href^="https://fonts.gstatic.com"]',
+    ),
+  ).toHaveCount(0);
+  const notoFontCSS = await page.locator("style").evaluateAll((styles) =>
+    styles.map((style) => style.textContent ?? "").find((css) => css.includes("--font-noto-sans-jp")),
   );
+  expect(notoFontCSS).toMatch(/font-weight:\s*400 900/);
+  await page.evaluate(() => document.fonts.ready);
+  const fontResources = await page.evaluate(() =>
+    performance
+      .getEntriesByType("resource")
+      .map((entry) => entry.name)
+      .filter((url) => url.endsWith(".woff2")),
+  );
+  expect(fontResources.length).toBeGreaterThan(0);
+  const pageOrigin = new URL(page.url()).origin;
+  expect(
+    fontResources.every((url) => {
+      const resourceURL = new URL(url);
+      return resourceURL.origin === pageOrigin && resourceURL.pathname.startsWith("/_astro/fonts/");
+    }),
+  ).toBe(true);
+  expect(
+    await page.evaluate(() =>
+      performance
+        .getEntriesByType("resource")
+        .map((entry) => entry.name)
+        .filter((url) => /fonts\.(?:googleapis|gstatic)\.com/.test(url)),
+    ),
+  ).toEqual([]);
 
   await page.goto("/design-system/foundations#typography");
   await expect(
