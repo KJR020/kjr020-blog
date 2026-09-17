@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   use: {
-    baseURL: "http://127.0.0.1:4321",
+    baseURL: "http://localhost:4321",
     trace: "on-first-retry",
   },
   projects: [
@@ -32,8 +32,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm build:test && pnpm preview --host 127.0.0.1 --port 4321",
-    url: "http://127.0.0.1:4321/__test/home",
+    command: "pnpm build:test && pnpm preview --host localhost --port 4321",
+    url: "http://localhost:4321/__test/home",
     timeout: 180_000,
     reuseExistingServer: !process.env.CI,
   },
