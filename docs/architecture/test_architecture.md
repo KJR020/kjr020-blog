@@ -23,8 +23,8 @@
 | Browser E2E | ページの導線、操作、レイアウト | DOMまたはスクリーンショットの検証 |
 | Integration | 外部データの取得、ビルド時変換 | 境界を固定した入出力の比較 |
 
-Browser E2Eでは、DOMによる機能検証とスクリーンショットによるVisual Regression Test（VRT）で
-同じfixtureページを使う。
+Browser E2Eは固定fixtureを入力に使う。通常ページのDOM検証とスクリーンショットによる
+Visual Regression Test（VRT）は同じfixtureページを使い、記事ページのDOM検証は固定fixture記事を使う。
 
 ### ファイル配置
 Unit / Component テストファイルは、ソースファイルと同じディレクトリに配置する（コロケーション）。
