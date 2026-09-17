@@ -1,13 +1,13 @@
 <h1 align="center">
-  <sup><picture>
-      <source media="(prefers-color-scheme: dark)" srcset="./public/images/kuri-dark.svg" />
-      <img src="./public/images/kuri.svg" alt="" width="120" align="middle" />
-  </picture></sup>&nbsp;
-  KJR020's Blog&nbsp;
-  <sup><img src="./public/images/readme-spacer.svg" alt="" width="120" height="120" align="middle" /></sup>
+  <a href="https://kjr020.dev/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./public/images/readme-title-dark.svg" />
+      <img src="./public/images/readme-title.svg" alt="KJR020's Blog" width="420" />
+    </picture>
+  </a>
 </h1>
 
-[kjr020.dev](https://kjr020.dev/) で公開している、Astroで開発した個人技術ブログです。
+[kjr020.dev](https://kjr020.dev/) で公開している、Astroで開発した個人技術ブログです。<br />
 Cloudflare Pagesでホスティングし、記事や主要ページは静的サイトとして配信しています。
 
 
