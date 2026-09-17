@@ -273,7 +273,7 @@ test("実装とつながったデザインシステムを表示する", async ({
   await expect(header).toBeVisible();
   await expect(header.getByRole("link", { name: "KJR020's Blog" })).toHaveAttribute("href", "/");
   await expect(header.getByRole("link", { name: "Posts" })).toHaveAttribute("href", "/posts");
-  await expect(header.getByRole("link", { name: /Search/ })).toHaveAttribute("href", "/search");
+  await expect(header.getByRole("link", { name: /Search/ })).toHaveAttribute("href", "/#search");
   await expect(header.getByRole("link", { name: /Scrapbox/ })).toHaveAttribute(
     "href",
     "https://scrapbox.io/kjr020/",
@@ -579,7 +579,7 @@ test("記事ページの読書設計をパターンの共通レイアウト内�
   const header = page.getByRole("banner");
   await expect(header.getByRole("link", { name: "KJR020's Blog" })).toHaveAttribute("href", "/");
   await expect(header.getByRole("link", { name: "Posts" })).toHaveAttribute("href", "/posts");
-  await expect(header.getByRole("link", { name: /Search/ })).toHaveAttribute("href", "/search");
+  await expect(header.getByRole("link", { name: /Search/ })).toHaveAttribute("href", "/#search");
   await expect(header.getByRole("link", { name: /Scrapbox/ })).toHaveAttribute(
     "href",
     "https://scrapbox.io/kjr020/",

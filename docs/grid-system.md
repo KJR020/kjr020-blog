@@ -56,7 +56,7 @@ KJR020's Blogでは、その原則を次のように調整する。
 
 | Type | 最大幅 | 用途 | 主なページ |
 | --- | ---: | --- | --- |
-| Fixed-wide | 1152px | 本文と補助領域を横に並べる構造化ページ | 記事＋目次、検索＋タグ |
+| Fixed-wide | 1152px | 本文と補助領域を横に並べる構造化ページ | 記事＋目次、Homeの記事探索 |
 | Fixed-narrow | 864px | 読むことが主目的の長文ページ | 記事単体、Privacy Policy、説明文書 |
 | Fluid | なし | 横方向の広がり自体に意味がある領域 | 横scroll carouselの内部 |
 
@@ -74,17 +74,9 @@ Command PaletteなどのoverlayはGridの外に浮く要素なので、Grid type
 
 Wideでは記事ヘッダーを全幅に置き、右側3 columnsを装飾用のキャラクター領域として空ける。その下に本文と目次を並べて1 gutterを空ける。目次を閉じるとアイコンだけの再表示操作に必要な幅をRailに残し、本文とReading laneを空いた領域へ広げる。本文内は外側のPage Gridとは独立した9 tracksで構成し、本文・見出し・リスト・Figure・Diagramを8 / 9、Code・Tableを9 / 9へ配置する。Compactでは両方を1 columnへ戻し、キャラクターは表示しない。CompactとMediumの目次は、記事ヘッダーの直後へインラインに配置する。
 
-### 検索
-
-| モード | Results | Tag filters |
-| --- | --- | --- |
-| Compact | 2 / 2 columns | Resultsの下 |
-| Medium | 6 / 6 columns | Resultsの下 |
-| Wide | 9 / 12 columns | 3 / 12 columns |
-
 ### Home / Archive
 
-Page hero、section header、post listはGrid全体を使う。PostCardの外枠は全幅へ揃えるが、Card内部のtitle、meta、tagはcolumnsへ揃えずspacing tokenで配置する。
+Page hero、section header、post listはGrid全体を使う。HomeのSearchとTagsは横へ分割せず、Scrapboxの後へSearch、Tagsの順で全幅に積む。PostCardの外枠は全幅へ揃えるが、Card内部のtitle、meta、tagはcolumnsへ揃えずspacing tokenで配置する。
 
 ## 使用ルール
 
@@ -163,4 +155,4 @@ CSS Gridは2次元のページ骨格に使い、navigationやtoolbarのような
 - [デザインシステムの基盤ページ](../src/design-system/pages/foundations.astro) - Gridの視覚例（`pnpm dev`の`/design-system/foundations`）
 - [BaseLayout.astro](../src/layouts/BaseLayout.astro) - Page shell
 - [記事詳細](../src/pages/posts/[...slug].astro) - 本文＋目次layout
-- [検索](../src/pages/search.astro) - 検索結果＋filter layout
+- [Home](../src/pages/index.astro) - 検索とTagを含む記事探索layout
