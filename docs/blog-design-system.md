@@ -100,7 +100,7 @@ Source of Truthは役割ごとに分ける。値は`globals.css`、部品の構�
 KJR020's Blogのデザインは次の原則に従う。
 
 - ニュートラルな面と文字を基調に、リンクを青、破壊的状態を赤で表す。
-- ヘッダーはsystem sans、本文と見出しはNoto Sans JP、コードはJetBrains Monoを使用する。
+- ヘッダーはsystem sans、本文と見出しはNoto Sans JP、コードはJetBrains Monoを使用する。WebフォントはAstro Fonts APIでビルド時に取得し、同一オリジンから配信する。
 - 文字・行高・間隔・基準角丸に黄金比φを採用する。
 - ページ骨格はAtlassianを参考にした2 / 6 / 12 columnsのGridで整理する。
 - Card、細い境界、控えめな影で情報単位を作る。

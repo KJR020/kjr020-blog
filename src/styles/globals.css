@@ -5,9 +5,9 @@
   --foreground: hsl(240 10% 3.9%);
   --link: hsl(230 70% 50%);
   --link-hover: hsl(230 70% 40%);
-  --font-content: "Noto Sans JP", system-ui, -apple-system, sans-serif;
+  --font-content: var(--font-noto-sans-jp);
   --font-heading: var(--font-content);
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "Menlo", "Monaco", "Consolas", monospace;
+  --font-mono: var(--font-jetbrains-mono);
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(240 10% 3.9%);
   --popover: hsl(0 0% 100%);

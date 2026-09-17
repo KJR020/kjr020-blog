@@ -2,7 +2,7 @@ import { expect, test } from "playwright/test";
 
 test.describe("トップページのブランド表現", () => {
   test("ヘッダーとヒーローで正式なブログ名を表示する", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     const header = page.locator("header");
     await expect(
@@ -33,7 +33,7 @@ test.describe("トップページのブランド表現", () => {
     await page.addInitScript(() => {
       window.localStorage.setItem("theme", "light");
     });
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     const headerLogo = page.locator("header a[href='/'] img");
     await expect(headerLogo).toHaveCSS("filter", "none");
@@ -41,7 +41,7 @@ test.describe("トップページのブランド表現", () => {
   });
 
   test("ロゴの黒目を透明背景から独立したpathで描画する", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     const logoSvg = await page.evaluate(async () => {
       const response = await fetch("/images/kjr020-eyes.svg");
@@ -54,7 +54,7 @@ test.describe("トップページのブランド表現", () => {
   });
 
   test("気取らない紹介文を2行で表示する", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     await expect(page.getByText("とあるWebエンジニアのブログ。")).toBeVisible();
     await expect(
@@ -65,7 +65,7 @@ test.describe("トップページのブランド表現", () => {
 
   test("写真の上下をタイトルと紹介文へ揃える", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     const heroImage = page.locator("main img[alt='KJR020']");
     const heroText = page
@@ -85,7 +85,7 @@ test.describe("トップページのブランド表現", () => {
   });
 
   test("プロフィール領域を上下対称の余白で配置する", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     const hero = page
       .getByRole("heading", { level: 1, name: "KJR020's Blog" })

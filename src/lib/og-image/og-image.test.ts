@@ -71,7 +71,7 @@ describe("OG image content", () => {
 
   it("shares the home page description source with the OGP template", async () => {
     const homePageSource = await readFile(
-      join(process.cwd(), "src", "pages", "index.astro"),
+      join(process.cwd(), "src", "components", "pages", "HomePage.astro"),
       "utf8",
     );
 

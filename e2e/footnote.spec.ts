@@ -2,7 +2,7 @@ import { expect, test } from "playwright/test";
 
 test.describe("記事脚注スタイル", () => {
   test("GFM脚注が記事デザインに馴染むスタイルで表示される", async ({ page }) => {
-    await page.goto("/posts/llm/harness-engineering/");
+    await page.goto("/posts/__test/article");
 
     const footnotes = page.locator(".prose [data-footnotes]");
     await expect(footnotes).toBeVisible();
@@ -93,23 +93,23 @@ test.describe("記事脚注スタイル", () => {
   test("脚注内容を参照位置で確認し、戻る操作ではプレビューを開かない", async ({
     page,
   }) => {
-    await page.goto("/posts/llm/harness-engineering/");
+    await page.goto("/posts/__test/article");
 
     const reference = page.locator(".prose [data-footnote-ref]").first();
     const referenceWrapper = reference.locator("xpath=..");
     const preview = referenceWrapper.locator('[role="tooltip"]');
 
-    await expect(referenceWrapper).toHaveAttribute("id", /user-content-fnref-1/);
+    await expect(referenceWrapper).toHaveAttribute("id", "user-content-fnref-fixture");
     await expect(reference).not.toHaveAttribute("id", /.+/);
     await reference.hover();
     await expect(preview).toBeVisible();
-    await expect(preview).toContainText("軽量な OSS のログ・メトリクス収集ツール");
+    await expect(preview).toContainText("固定fixtureに含めた脚注の説明です");
 
     await reference.click();
     const backReference = page.locator(".prose [data-footnote-backref]").first();
     await backReference.click();
 
-    await expect(page).toHaveURL(/#user-content-fnref-1$/);
+    await expect(page).toHaveURL(/#user-content-fnref-fixture$/);
     await expect(preview).toBeHidden();
   });
 });

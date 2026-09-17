@@ -1,6 +1,7 @@
 # Test Architecture
 
 このドキュメントは、プロジェクトのテスト戦略と方針を定義する。
+具体的なコマンドと設定値は、各設定ファイルと `package.json` をSource of Truthとする。
 
 ## 概要
 
@@ -12,6 +13,18 @@
 ### テストフレームワーク
 - **Vitest**: Unit / Component テスト用の Vite ネイティブテストランナー
 - **Playwright**: E2E / Visual regression テスト用のブラウザテストランナー
+
+### テストの責務
+
+| テスト種別 | 主な検証対象 | 検証方法 |
+|------|------|------|
+| Unit | 純粋関数、変換、分類 | 入出力の比較 |
+| Component | UIの状態と操作 | DOMとユーザー操作の検証 |
+| Browser E2E | ページの導線、操作、レイアウト | DOMまたはスクリーンショットの検証 |
+| Integration | 外部データの取得、ビルド時変換 | 境界を固定した入出力の比較 |
+
+Browser E2Eは固定fixtureを入力に使う。通常ページのDOM検証とスクリーンショットによる
+Visual Regression Test（VRT）は同じfixtureページを使い、記事ページのDOM検証は固定fixture記事を使う。
 
 ### ファイル配置
 Unit / Component テストファイルは、ソースファイルと同じディレクトリに配置する（コロケーション）。
@@ -74,92 +87,78 @@ e2e/
 - Playwright を使用
 - 配置: `e2e/**/*.spec.ts`
 - `pnpm test:e2e` で実行
-- スナップショット安定化CSSは `e2e/snapshot.css`
+- リンク遷移、検索、表示順、件数、インタラクションをDOMで検証する
+- 固定fixtureページまたは固定fixture記事を使う
+- E2Eの成否を、外部サービスの可用性や応答内容へ依存させない
 
-## 設定ファイル
+記事ページのE2Eでは、`content/posts/__test/` のdraft記事を使う。テストビルドでは通常の記事と
+同じMarkdown変換と記事ルートを通して `/posts/__test/*` に出力し、通常の本番ビルドには含めない。
 
-### vitest.config.ts
+### Visual Regression Tests
 
-```typescript
-/// <reference types="vitest" />
-import { getViteConfig } from "astro/config";
+VRTはBrowser E2Eのうち、スクリーンショットで意図しないレイアウトやスタイルの変更を
+検出するテストである。記事や外部サービスの更新を検出するテストにはしない。
 
-export default getViteConfig({
-  test: {
-    environment: "jsdom",
-    globals: true,
-    include: ["src/**/*.test.{ts,tsx}", "functions/**/*.test.ts"],
-    setupFiles: ["./src/test/setup.ts"],
-  },
-});
-```
+#### VRT対象
 
-### playwright.config.ts
+- `src/test-fixtures/pages/` のfixtureページ、またはデザインシステムの標本を撮影する
+- 本番と同じコンポーネント、レイアウト、スタイルを使って描画する
+- Desktop / Mobile、Light / Darkなど、仕様として維持する表示条件を網羅する
+- ページ全体を確認する場合も、実記事ではなく固定fixtureでページを構成する
 
-```typescript
-import { defineConfig } from "playwright/test";
+fixtureページは開発サーバーと `TEST_FIXTURES=true` のテストビルドで `/__test/*` に公開し、
+通常の本番ビルドには含めない。本番ページとfixtureページは `src/components/pages/` の
+ページコンポーネントを共有し、前者には実データ、後者には `src/test-fixtures/fixtures.ts` の固定データを渡す。
+機能検証と `e2e/snapshot.spec.ts` の画像比較は同じfixtureページを使う。
 
-export default defineConfig({
-  testDir: "./e2e",
-  expect: {
-    toHaveScreenshot: {
-      stylePath: "./e2e/snapshot.css",
-    },
-  },
-});
-```
+#### fixtureの要件
 
-### package.json scripts
+- 記事タイトル、日付、タグ、件数、画像サイズを固定する
+- 長いタイトル、複数行、空状態など、守りたいレイアウト条件を明示して含める
+- リンクカードは外部URLから取得せず、解決済みのカードデータを渡す
+- 現在時刻、乱数、ネットワーク、実コンテンツの追加・編集へ依存させない
+- fixtureはテスト対象の近くに置き、用途が分かる名前を付ける
 
-```json
-{
-  "scripts": {
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:e2e": "playwright test"
-  }
-}
-```
+#### 外部依存とビルド時処理の境界
 
-## CI 統合
+Playwrightの通信モックが介入できるのは、ページを開いた後にブラウザが行う通信だけである。
+Astroのビルド時に `getCollection()` で読み込む記事や、Markdown変換中に生成する
+リンクカードは、完成済みHTMLとしてブラウザへ渡されるため、通信モックでは固定できない。
 
-```yaml
-- name: Run tests
-  run: pnpm test:run --passWithNoTests
-```
+外部データを扱う機能は、取得・変換と描画を分ける。取得・変換はUnitまたは
+Integration Testで検証し、VRTでは解決済みの固定データを描画コンポーネントへ渡す。
 
-- `--passWithNoTests`: テストファイルがない場合もエラーにしない
-- `test:run`: ウォッチモードではなく単発実行
+#### スナップショットを安定させるルール
 
-```yaml
-- name: Run E2E tests
-  run: pnpm test:e2e
-```
+- コンテンツ領域をmaskして差分を隠さない
+- 外部ウィジェットを含むページをそのままVRT対象にしない
+- アニメーションと開発ツールの影響を除く
+- フォント、画像、Astro Islandの準備完了後に撮影する
+- 基準画像は、意図したUI変更があった場合だけ更新する
 
-## カバレッジ計測
+#### 実行環境
 
-Vitest のカバレッジ計測を使用する。測定対象は `vitest.config.ts` の `coverage.include` で明示する。
+- `playwright.config.ts` のDesktop ChromeとMobile Chromeで実行する
+- macOSとLinuxの基準画像を分けて管理する
+- ローカルではmacOS用、CIの通常実行ではLinux用の基準画像と比較する
+- Linux用の基準画像はGitHub Actionsの手動workflowで更新する
 
-```typescript
-// vitest.config.ts
-export default getViteConfig({
-  test: {
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "html", "lcov"],
-      include: [
-        "functions/**/*.ts",
-        "src/lib/**/*.ts",
-        "src/components/**/use*.ts",
-        "src/components/scrapbox/queryClient.ts",
-      ],
-    },
-  },
-});
-```
+記事追加や記事本文の編集だけで基準画像の更新が必要になった場合は、VRT対象が
+実コンテンツへ依存していないかを先に確認する。画像の更新で差分を受け入れることを
+通常の解決方法にしない。
 
-## 参考資料
+## 実行と設定
 
-- [Astro Testing Docs](https://docs.astro.build/en/guides/testing/)
-- [Vitest Configuration](https://vitest.dev/config/)
-- [Testing Library](https://testing-library.com/)
+実行コマンドは [README](../../README.md) に記載する。テスト対象、カバレッジ、
+ブラウザ、CIの具体的な設定はドキュメントへ転記せず、関連する設定ファイルを直接参照する。
+
+## 関連ファイル
+
+- [playwright.config.ts](../../playwright.config.ts) - E2EとVRTのPlaywright設定
+- [playwright.design-system.config.ts](../../playwright.design-system.config.ts) - デザインシステムのブラウザテスト設定
+- [snapshot.spec.ts](../../e2e/snapshot.spec.ts) - 固定fixtureページのVRT
+- [snapshot.ts](../../e2e/helpers/snapshot.ts) - 撮影前の安定化と画像比較
+- [snapshot.css](../../e2e/snapshot.css) - 撮影時のアニメーションと開発UIの制御
+- [fixtures.ts](../../src/test-fixtures/fixtures.ts) - Browser E2Eへ渡す固定データ
+- [fixture pages](../../src/test-fixtures/pages/) - 開発サーバーとテストビルドだけで公開するテスト対象ページ
+- [fixture article](../../content/posts/__test/article.md) - テストビルドだけで公開する固定Markdown記事

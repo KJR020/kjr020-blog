@@ -5,12 +5,14 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "./QueryProvider";
+import type { ScrapboxPageData } from "./types";
 import { useScrapboxData } from "./useScrapboxData";
 
 interface ScrapboxCardListProps {
   project: string;
   limit?: number;
   className?: string;
+  pages?: ScrapboxPageData[];
 }
 
 function formatDate(dateString: string): string {
@@ -30,11 +32,11 @@ function cleanScrapboxDescription(text: string): string {
     .trim();
 }
 
-function ScrapboxCardListInner({ project, limit, className }: ScrapboxCardListProps) {
-  const { data, isLoading, isError, error, refetch } = useScrapboxData(
-    project,
-    limit ? { limit } : undefined,
-  );
+function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCardListProps) {
+  const { data, isLoading, isError, error, refetch } = useScrapboxData(project, {
+    initialData: pages,
+    limit,
+  });
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);

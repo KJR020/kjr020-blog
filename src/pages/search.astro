@@ -1,9 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import PageHero from "@/components/PageHero.astro";
-import { SearchBox } from "@/components/search/SearchBox";
-import { TagBubbleCloud } from "@/components/TagBubbleCloud";
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import SearchPage from "@/components/pages/SearchPage.astro";
 
 const posts = await getCollection("posts", ({ data }) => !data.draft);
 const tagCounts = new Map<string, number>();
@@ -17,39 +14,4 @@ const tags = Array.from(tagCounts, ([name, count]) => ({ name, count })).sort(
 );
 ---
 
-<BaseLayout title="Search - KJR020's Blog" description="記事を検索">
-  <PageHero title="Search" description="サイト内の記事を検索できます。" />
-  <div class="container mx-auto px-4 pb-phi-2xl">
-    <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_250px] lg:gap-8">
-      <section
-        class="py-phi-xl animate-fade-in-up"
-        style="animation-delay: 80ms"
-      >
-        <div class="flex items-center justify-between mb-phi-md">
-          <h2
-            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
-            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-          >
-            Search
-          </h2>
-        </div>
-        <SearchBox client:load />
-      </section>
-
-      <aside
-        class="py-phi-xl animate-fade-in-up border-t border-border lg:border-t-0 lg:rounded-lg lg:bg-muted/50 lg:p-4"
-        style="animation-delay: 130ms"
-      >
-        <div class="flex items-center justify-between mb-phi-md">
-          <h2
-            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
-            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-          >
-            Tags
-          </h2>
-        </div>
-        <TagBubbleCloud tags={tags} client:load />
-      </aside>
-    </div>
-  </div>
-</BaseLayout>
+<SearchPage tags={tags} />

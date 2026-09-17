@@ -32,8 +32,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm preview",
-    url: "http://localhost:4321",
-    reuseExistingServer: !process.env.CI,
+    command: "pnpm build:test && pnpm preview --host localhost --port 4321",
+    url: "http://localhost:4321/__test/home",
+    timeout: 180_000,
+    reuseExistingServer: false,
   },
 });

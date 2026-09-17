@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { devDesignSystem } from "./devDesignSystem";
 
@@ -21,7 +21,11 @@ function getDesignSystemSetupHook(): SetupHook {
 }
 
 describe("devDesignSystem integration", () => {
-  it("開発サーバーではデザインシステムのルートだけを注入する", async () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("開発サーバーではデザインシステムとテストfixtureのルートを注入する", async () => {
     const injectRoute = vi.fn<(route: InjectedRoute) => void>();
 
     await getDesignSystemSetupHook()({ command: "dev", injectRoute });
@@ -35,6 +39,10 @@ describe("devDesignSystem integration", () => {
       "/design-system/governance",
       "/design-system/patterns/article-reading",
       "/design-system/article-reading",
+      "/__test/home",
+      "/__test/posts",
+      "/__test/search",
+      "/__test/404",
     ]);
   });
 
@@ -44,5 +52,19 @@ describe("devDesignSystem integration", () => {
     await getDesignSystemSetupHook()({ command, injectRoute });
 
     expect(injectRoute).not.toHaveBeenCalled();
+  });
+
+  it("テストfixtureを有効にしたビルドではfixtureルートだけを注入する", async () => {
+    vi.stubEnv("TEST_FIXTURES", "true");
+    const injectRoute = vi.fn<(route: InjectedRoute) => void>();
+
+    await getDesignSystemSetupHook()({ command: "build", injectRoute });
+
+    expect(injectRoute.mock.calls.map(([route]) => route.pattern)).toEqual([
+      "/__test/home",
+      "/__test/posts",
+      "/__test/search",
+      "/__test/404",
+    ]);
   });
 });

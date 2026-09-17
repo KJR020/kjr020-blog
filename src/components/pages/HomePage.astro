@@ -1,0 +1,166 @@
+---
+import PostCard from "@/components/PostCard.astro";
+import { ScrapboxCardList } from "@/components/scrapbox";
+import type { ScrapboxPageData } from "@/components/scrapbox/types";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { HOME_DESCRIPTION_LINES } from "@/lib/siteCopy";
+import type { PostSummary } from "./types";
+
+interface Props {
+  posts: PostSummary[];
+  scrapboxPages?: ScrapboxPageData[];
+}
+
+const { posts, scrapboxPages } = Astro.props;
+const latestPosts = posts.slice(0, 3);
+const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
+---
+
+<BaseLayout title="KJR020's Blog" description="KJR020の技術ブログ">
+  <div class="index-wrapper">
+    <div class="container mx-auto px-4 pb-phi-2xl">
+      <section class="py-phi-xl animate-fade-in-up">
+        <div class="flex items-start gap-phi-md">
+          <div class="hero-image-frame hidden sm:block">
+            <img
+              src="/images/kuri_photo.png"
+              alt="KJR020"
+              width="500"
+              height="500"
+              class="h-full w-full rounded-full object-cover ring-2 ring-border"
+            />
+          </div>
+          <div class="max-w-2xl">
+            <h1
+              class="hero-title font-bold font-heading tracking-tight mb-phi-2xs"
+              style="font-size: var(--font-size-title1); line-height: var(--lh-tight);"
+            >
+              KJR020's Blog
+            </h1>
+            <p
+              class="hero-copy text-base text-muted-foreground max-w-lg"
+              style="line-height: var(--lh-body);"
+            >
+              {homeDescriptionLead}<br class="hidden sm:inline" />
+              {homeDescriptionDetail}
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="py-phi-xl animate-fade-in-up" style="animation-delay: 80ms">
+        <div class="flex items-center justify-between mb-phi-md">
+          <h2
+            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
+            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
+          >
+            Latest Posts
+          </h2>
+          {
+            posts.length > 3 && (
+              <a
+                href="/posts"
+                class="flex items-center gap-1 text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+              >
+                すべて見る
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </a>
+            )
+          }
+        </div>
+        <div class="grid gap-phi-xs">
+          {latestPosts.map((post) => <PostCard post={post} />)}
+        </div>
+      </section>
+
+      <section class="py-phi-xl animate-fade-in-up" style="animation-delay: 210ms">
+        <div class="flex items-center justify-between mb-phi-md">
+          <h2
+            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
+            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
+          >
+            Scrapbox
+          </h2>
+          <a
+            href="https://scrapbox.io/KJR020"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-1 text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+          >
+            すべて見る
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M15 3h6v6"></path>
+              <path d="M10 14 21 3"></path>
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            </svg>
+          </a>
+        </div>
+        <ScrapboxCardList project="KJR020" pages={scrapboxPages} client:load />
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .index-wrapper {
+    position: relative;
+  }
+
+  .index-wrapper > .container {
+    position: relative;
+  }
+
+  .index-wrapper > .container > section + section {
+    border-top: 1px solid var(--border);
+    padding-top: 1.618rem;
+  }
+
+  .index-wrapper :global([data-slot="card"]:hover) {
+    background: hsl(var(--accent) / 0.5);
+  }
+
+  .hero-title {
+    text-wrap: balance;
+  }
+
+  .hero-image-frame {
+    --hero-lockup-size: calc(
+      var(--phi-2) + var(--phi-1) + var(--phi-1) + var(--phi-neg2)
+    );
+
+    block-size: var(--hero-lockup-size);
+    flex: none;
+    inline-size: var(--hero-lockup-size);
+    position: relative;
+  }
+
+  .hero-image-frame img {
+    inset: 0;
+    position: absolute;
+  }
+
+  .hero-copy {
+    text-wrap: pretty;
+  }
+</style>

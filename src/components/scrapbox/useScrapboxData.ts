@@ -12,15 +12,17 @@ async function fetchFromProxy(project: string): Promise<ScrapboxPageData[]> {
 }
 
 interface UseScrapboxDataOptions {
+  initialData?: ScrapboxPageData[];
   limit?: number;
 }
 
 export function useScrapboxData(project: string, options?: UseScrapboxDataOptions) {
   return useQuery({
-    queryKey: ["scrapbox", project],
+    queryKey: ["scrapbox", project, options?.initialData === undefined ? "remote" : "fixture"],
     queryFn: () => fetchFromProxy(project),
     select: (pages: ScrapboxPageData[]): ScrapboxPageData[] =>
       options?.limit !== undefined ? pages.slice(0, options.limit) : pages,
-    enabled: !!project,
+    enabled: !!project && options?.initialData === undefined,
+    initialData: options?.initialData,
   });
 }

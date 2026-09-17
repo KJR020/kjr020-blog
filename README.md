@@ -114,6 +114,8 @@ pnpm exec wrangler pages dev --proxy 4321 --port 8788
 
 `pnpm test:e2e:update-snapshots` は、ローカル環境向けの基準画像を更新します。CIで使用するLinux向けの `*-linux.png` は、GitHub Actionsの `CI` workflowを `update_snapshots=true` で手動実行して更新します。macOSからLinux向け画像を上書きしません。
 
+VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテクチャ](docs/architecture/test_architecture.md)で定義しています。
+
 ## デプロイ
 
 `main`へのpushを契機にGitHub Actionsがビルドし、Cloudflare Pagesへデプロイします。Pull RequestではLint、フォーマット、型、Unit／Component、カバレッジ、ビルド、E2Eを検証します。
