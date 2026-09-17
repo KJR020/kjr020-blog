@@ -32,7 +32,7 @@ graph LR
 |------|------|------|
 | Unit | 純粋関数、変換、分類 | テストケース内で固定 |
 | Component | UIの状態と操作 | props、モックで固定 |
-| E2E | 本番ページの導線とユーザー操作 | 実際にビルドされたコンテンツを許容 |
+| E2E | 本番ページの導線とユーザー操作 | 実コンテンツを許容 |
 | VRT | レイアウト、スタイル、レスポンシブ表示 | 専用fixtureで固定 |
 | Integration | 外部データの取得、ビルド時変換 | 境界でレスポンスを固定 |
 
@@ -108,10 +108,15 @@ VRTは、意図しないレイアウトやスタイルの変更を検出する�
 
 #### VRT対象
 
-- 固定fixtureを受け取るVRT専用ページ、またはデザインシステムの標本を撮影する
+- `src/vrt/pages/` のVRT専用ページ、またはデザインシステムの標本を撮影する
 - 本番と同じコンポーネント、レイアウト、スタイルを使って描画する
 - Desktop / Mobile、Light / Darkなど、仕様として維持する表示条件を網羅する
 - ページ全体を確認する場合も、実記事ではなく固定fixtureでページを構成する
+
+VRT専用ページは開発サーバーと `VRT_FIXTURES=true` のテストビルドで `/__vrt/*` に公開し、
+通常の本番ビルドには含めない。本番ページとVRT専用ページは `src/components/pages/` の
+ページコンポーネントを共有し、前者には実データ、後者には `src/vrt/fixtures.ts` の固定データを渡す。
+`e2e/snapshot.spec.ts` はVRT専用ページだけを撮影する。
 
 #### fixtureの要件
 
@@ -140,22 +145,14 @@ Integration Testで検証し、VRTでは解決済みの固定データを描画�
 
 #### 実行環境
 
-- VRTの実行と基準画像の更新は、ローカルとCIで同じ固定Linuxコンテナを使う
-- Playwrightとコンテナイメージのバージョンを一致させる
-- ローカルからCI用のLinux基準画像を更新できるようにする
-- CIは基準画像を更新せず、差分の検出だけを行う
-- OS別の基準画像は持たず、コンテナで生成した1組を管理する
+- `playwright.config.ts` のDesktop ChromeとMobile Chromeで実行する
+- macOSとLinuxの基準画像を分けて管理する
+- ローカルではmacOS用、CIの通常実行ではLinux用の基準画像と比較する
+- Linux用の基準画像はGitHub Actionsの手動workflowで更新する
 
 記事追加や記事本文の編集だけで基準画像の更新が必要になった場合は、VRT対象が
 実コンテンツへ依存していないかを先に確認する。画像の更新で差分を受け入れることを
 通常の解決方法にしない。
-
-#### 現行構成からの移行
-
-現在の `e2e/snapshot.spec.ts` には、本番のトップ、記事一覧、検索、記事詳細、
-タグ一覧を実コンテンツのまま撮影するテストが残っている。固定fixtureを使うVRTへ移し、
-本番ルートの確認を機能E2Eへ分ける。CI上でLinux基準画像を更新する現行手順も、
-ローカルとCIで同じコンテナを使う手順へ置き換える。これらの作業は Issue #116 で管理する。
 
 ## 実行と設定
 
@@ -166,6 +163,8 @@ Integration Testで検証し、VRTでは解決済みの固定データを描画�
 
 - [playwright.config.ts](../../playwright.config.ts) - E2EとVRTのPlaywright設定
 - [playwright.design-system.config.ts](../../playwright.design-system.config.ts) - デザインシステムのブラウザテスト設定
-- [snapshot.spec.ts](../../e2e/snapshot.spec.ts) - 現行のVRT
+- [snapshot.spec.ts](../../e2e/snapshot.spec.ts) - 固定fixtureページのVRT
 - [snapshot.ts](../../e2e/helpers/snapshot.ts) - 撮影前の安定化と画像比較
 - [snapshot.css](../../e2e/snapshot.css) - 撮影時のアニメーションと開発UIの制御
+- [fixtures.ts](../../src/vrt/fixtures.ts) - VRTへ渡す固定データ
+- [VRT pages](../../src/vrt/pages/) - 開発サーバーとテストビルドだけで公開する撮影対象ページ

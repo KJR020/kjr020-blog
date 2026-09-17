@@ -1,0 +1,99 @@
+---
+import PostCard from "@/components/PostCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { PostSummary } from "./types";
+
+interface Props {
+  posts: PostSummary[];
+}
+
+const { posts } = Astro.props;
+const postsByYear = posts.reduce<Record<number, PostSummary[]>>((acc, post) => {
+  const year = post.data.date.getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(post);
+  return acc;
+}, {});
+const years = Object.keys(postsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+---
+
+<BaseLayout title="Posts - KJR020's Blog" description="すべての記事一覧">
+  <div class="archive-page">
+    <div class="archive-header container mx-auto px-4 pt-phi-2xl pb-phi-md">
+      <h1
+        class="font-bold font-heading tracking-tight mb-phi-2xs"
+        style="font-size: var(--font-size-title1); line-height: var(--lh-tight);"
+      >
+        Posts
+      </h1>
+      <p class="text-muted-foreground">ブログ記事一覧です。</p>
+    </div>
+
+    <div class="archive-body">
+      <div class="archive-scroll">
+        <div class="container mx-auto px-4 pb-4">
+          {
+            years.map((year) => (
+              <section class="year-section">
+                <div class="year-label">
+                  <span class="year-text">{year}</span>
+                </div>
+                <div class="year-cards">
+                  {postsByYear[year].map((post) => (
+                    <PostCard post={post} />
+                  ))}
+                </div>
+              </section>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .year-section {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1.618rem;
+    margin-bottom: 1.618rem;
+  }
+
+  .year-label {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    padding-top: 0.618rem;
+  }
+
+  .year-text {
+    font-size: var(--font-size-title3);
+    font-weight: 700;
+    color: hsl(var(--muted-foreground));
+    border-left: 2px solid var(--link);
+    padding-left: 0.75rem;
+  }
+
+  .year-cards {
+    display: grid;
+    gap: 0.618rem;
+  }
+
+  :global([data-slot="card"]:hover) {
+    background: hsl(var(--accent) / 0.5);
+  }
+
+  @media (max-width: 768px) {
+    .year-section {
+      grid-template-columns: 3.5rem 1fr;
+      gap: 0.618rem;
+    }
+
+    .year-text {
+      font-size: var(--font-size-small);
+    }
+  }
+</style>
