@@ -324,7 +324,7 @@ test("共通ヘッダーはページに関わらずsystem sansを使う", async 
     .getByRole("banner")
     .evaluate((element) => getComputedStyle(element).fontFamily);
 
-  await page.goto("/");
+  await page.goto("/__test/home");
   const blogFont = await page
     .getByRole("banner")
     .evaluate((element) => getComputedStyle(element).fontFamily);
@@ -334,7 +334,7 @@ test("共通ヘッダーはページに関わらずsystem sansを使う", async 
 });
 
 test("ヘッダー・本文・コードで合意したフォントを使い分ける", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/__test/home");
 
   const headerFont = await page
     .getByRole("banner")

@@ -1,7 +1,7 @@
 import type { PostSummary, TagSummary } from "@/components/pages/types";
 import type { ScrapboxPageData } from "@/components/scrapbox/types";
 
-export const vrtPosts: PostSummary[] = [
+export const fixturePosts: PostSummary[] = [
   {
     id: "fixture/layout-boundaries",
     data: {
@@ -44,7 +44,7 @@ export const vrtPosts: PostSummary[] = [
   },
 ];
 
-export const vrtScrapboxPages: ScrapboxPageData[] = [
+export const fixtureScrapboxPages: ScrapboxPageData[] = [
   {
     id: "fixture-astro-notes",
     title: "Astroブログの固定メモ",
@@ -71,7 +71,7 @@ export const vrtScrapboxPages: ScrapboxPageData[] = [
   },
 ];
 
-export const vrtTags: TagSummary[] = [
+export const fixtureTags: TagSummary[] = [
   { name: "Astro", count: 8 },
   { name: "Testing", count: 5 },
   { name: "Frontend", count: 3 },

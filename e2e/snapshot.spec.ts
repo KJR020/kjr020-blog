@@ -3,10 +3,10 @@ import type { PageConfig } from "./helpers/snapshot";
 import { capturePageSnapshot } from "./helpers/snapshot";
 
 const fixturePages: PageConfig[] = [
-  { route: "/__vrt/home", name: "index", hasIslands: true },
-  { route: "/__vrt/posts", name: "posts", hasIslands: true },
-  { route: "/__vrt/search", name: "search", hasIslands: true },
-  { route: "/__vrt/404", name: "404", hasIslands: true },
+  { route: "/__test/home", name: "index", hasIslands: true },
+  { route: "/__test/posts", name: "posts", hasIslands: true },
+  { route: "/__test/search", name: "search", hasIslands: true },
+  { route: "/__test/404", name: "404", hasIslands: true },
 ];
 
 const themes = ["light", "dark"] as const;

@@ -1,10 +1,10 @@
 import type { AstroIntegration } from "astro";
 
 /**
- * デザインシステムとVRT fixtureを本番サイトから分離して公開する。
+ * デザインシステムとブラウザテスト用fixtureを本番サイトから分離して公開する。
  *
- * デザインシステムは開発サーバーだけ、VRT fixtureは開発サーバーと
- * `VRT_FIXTURES=true`を指定したテストビルドだけにルートを注入する。
+ * デザインシステムは開発サーバーだけ、fixtureは開発サーバーと
+ * `TEST_FIXTURES=true`を指定したテストビルドだけにルートを注入する。
  */
 export function devDesignSystem(): AstroIntegration {
   return {
@@ -12,10 +12,10 @@ export function devDesignSystem(): AstroIntegration {
     hooks: {
       "astro:config:setup": ({ command, injectRoute }) => {
         const includesDesignSystem = command === "dev";
-        const includesVrtFixtures =
-          command === "dev" || (command === "build" && process.env.VRT_FIXTURES === "true");
+        const includesTestFixtures =
+          command === "dev" || (command === "build" && process.env.TEST_FIXTURES === "true");
 
-        if (!includesDesignSystem && !includesVrtFixtures) {
+        if (!includesDesignSystem && !includesTestFixtures) {
           return;
         }
 
@@ -60,22 +60,22 @@ export function devDesignSystem(): AstroIntegration {
           });
         }
 
-        if (includesVrtFixtures) {
+        if (includesTestFixtures) {
           injectRoute({
-            pattern: "/__vrt/home",
-            entrypoint: new URL("../vrt/pages/home.astro", import.meta.url),
+            pattern: "/__test/home",
+            entrypoint: new URL("../test-fixtures/pages/home.astro", import.meta.url),
           });
           injectRoute({
-            pattern: "/__vrt/posts",
-            entrypoint: new URL("../vrt/pages/posts.astro", import.meta.url),
+            pattern: "/__test/posts",
+            entrypoint: new URL("../test-fixtures/pages/posts.astro", import.meta.url),
           });
           injectRoute({
-            pattern: "/__vrt/search",
-            entrypoint: new URL("../vrt/pages/search.astro", import.meta.url),
+            pattern: "/__test/search",
+            entrypoint: new URL("../test-fixtures/pages/search.astro", import.meta.url),
           });
           injectRoute({
-            pattern: "/__vrt/404",
-            entrypoint: new URL("../vrt/pages/404.astro", import.meta.url),
+            pattern: "/__test/404",
+            entrypoint: new URL("../test-fixtures/pages/404.astro", import.meta.url),
           });
         }
       },

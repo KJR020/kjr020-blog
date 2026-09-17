@@ -4,7 +4,7 @@ test.describe("モバイルビューポートでのメニュー動作", () => {
   test.use({ viewport: { width: 375, height: 667 } });
 
   test("768px未満でハンバーガーメニューが表示される", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     // Astro Islandのハイドレーション完了を待機
     await page.waitForSelector("astro-island[client='load']:not([ssr])");
@@ -14,7 +14,7 @@ test.describe("モバイルビューポートでのメニュー動作", () => {
   });
 
   test("メニュー開閉が正しく動作する", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
     await page.waitForSelector("astro-island[client='load']:not([ssr])");
 
     const menuButton = page.getByRole("button", {
@@ -36,7 +36,7 @@ test.describe("モバイルビューポートでのメニュー動作", () => {
   });
 
   test("リンククリック後にメニューが閉じる", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
     await page.waitForSelector("astro-island[client='load']:not([ssr])");
 
     const menuButton = page.getByRole("button", {
@@ -56,7 +56,7 @@ test.describe("モバイルビューポートでのメニュー動作", () => {
   });
 
   test("Escapeキーでメニューが閉じる", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
     await page.waitForSelector("astro-island[client='load']:not([ssr])");
 
     const menuButton = page.getByRole("button", {
@@ -70,7 +70,7 @@ test.describe("モバイルビューポートでのメニュー動作", () => {
   });
 
   test("メニュー外クリックでメニューが閉じる", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
     await page.waitForSelector("astro-island[client='load']:not([ssr])");
 
     const menuButton = page.getByRole("button", {
@@ -88,7 +88,7 @@ test.describe("デスクトップビューポートでの表示", () => {
   test.use({ viewport: { width: 1280, height: 720 } });
 
   test("768px以上で水平ナビゲーションが表示される", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     // ヘッダー内のデスクトップナビゲーションを確認
     const header = page.locator("header");
@@ -102,7 +102,7 @@ test.describe("デスクトップビューポートでの表示", () => {
   });
 
   test("ハンバーガーメニューが非表示", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     // MobileMenuコンポーネントのハンバーガーボタンがデスクトップでは非表示
     const menuButton = page.getByRole("button", { name: /メニューを開く/ });
@@ -110,7 +110,7 @@ test.describe("デスクトップビューポートでの表示", () => {
   });
 
   test("既存のナビゲーション動作が正常", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/__test/home");
 
     const header = page.locator("header");
     const postsLink = header.locator("nav").getByRole("link", { name: "Posts" });

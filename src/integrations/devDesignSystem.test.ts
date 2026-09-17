@@ -25,7 +25,7 @@ describe("devDesignSystem integration", () => {
     vi.unstubAllEnvs();
   });
 
-  it("開発サーバーではデザインシステムとVRT fixtureのルートを注入する", async () => {
+  it("開発サーバーではデザインシステムとテストfixtureのルートを注入する", async () => {
     const injectRoute = vi.fn<(route: InjectedRoute) => void>();
 
     await getDesignSystemSetupHook()({ command: "dev", injectRoute });
@@ -39,10 +39,10 @@ describe("devDesignSystem integration", () => {
       "/design-system/governance",
       "/design-system/patterns/article-reading",
       "/design-system/article-reading",
-      "/__vrt/home",
-      "/__vrt/posts",
-      "/__vrt/search",
-      "/__vrt/404",
+      "/__test/home",
+      "/__test/posts",
+      "/__test/search",
+      "/__test/404",
     ]);
   });
 
@@ -54,17 +54,17 @@ describe("devDesignSystem integration", () => {
     expect(injectRoute).not.toHaveBeenCalled();
   });
 
-  it("VRT fixtureを有効にしたビルドではfixtureルートだけを注入する", async () => {
-    vi.stubEnv("VRT_FIXTURES", "true");
+  it("テストfixtureを有効にしたビルドではfixtureルートだけを注入する", async () => {
+    vi.stubEnv("TEST_FIXTURES", "true");
     const injectRoute = vi.fn<(route: InjectedRoute) => void>();
 
     await getDesignSystemSetupHook()({ command: "build", injectRoute });
 
     expect(injectRoute.mock.calls.map(([route]) => route.pattern)).toEqual([
-      "/__vrt/home",
-      "/__vrt/posts",
-      "/__vrt/search",
-      "/__vrt/404",
+      "/__test/home",
+      "/__test/posts",
+      "/__test/search",
+      "/__test/404",
     ]);
   });
 });

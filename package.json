@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "prebuild": "tsx scripts/prepare-public-build.ts",
     "build": "astro build",
-    "build:test": "VRT_FIXTURES=true LINK_CARD_FETCH_MODE=offline pnpm build",
+    "build:test": "TEST_FIXTURES=true LINK_CARD_FETCH_MODE=offline pnpm build",
     "generate:og-image": "tsx scripts/generate-og-image.ts",
     "preview": "astro preview",
     "astro": "astro",

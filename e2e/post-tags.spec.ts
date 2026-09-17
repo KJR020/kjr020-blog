@@ -16,7 +16,7 @@ async function getLinkColor(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/posts");
+  await page.goto("/__test/posts");
 });
 
 test("記事タグはホバーするとRender面を表示してリンク色になる", async ({ page }) => {

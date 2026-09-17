@@ -16,25 +16,16 @@
 
 ### テストの責務
 
-同じ Playwright を使うテストでも、E2E と Visual Regression Test（VRT）では
-検証対象とデータの扱いを分ける。
-
-```mermaid
-graph LR
-    L[純粋なロジック] --> U[Unit Test]
-    C[コンポーネントの振る舞い] --> CT[Component Test]
-    J[本番ページの操作と導線] --> E[E2E Test]
-    V[固定fixtureで描画したUI] --> R[Visual Regression Test]
-    X[外部データの取得と変換] --> I[Unit / Integration Test]
-```
-
-| テスト種別 | 主な検証対象 | データ |
+| テスト種別 | 主な検証対象 | 検証方法 |
 |------|------|------|
-| Unit | 純粋関数、変換、分類 | テストケース内で固定 |
-| Component | UIの状態と操作 | props、モックで固定 |
-| E2E | 本番ページの導線とユーザー操作 | 実コンテンツを許容 |
-| VRT | レイアウト、スタイル、レスポンシブ表示 | 専用fixtureで固定 |
-| Integration | 外部データの取得、ビルド時変換 | 境界でレスポンスを固定 |
+| Unit | 純粋関数、変換、分類 | 入出力の比較 |
+| Component | UIの状態と操作 | DOMとユーザー操作の検証 |
+| Browser E2E | ページの導線、操作、レイアウト | DOMまたはスクリーンショットの検証 |
+| Integration | 外部データの取得、ビルド時変換 | 境界を固定した入出力の比較 |
+
+Browser E2Eでは、DOMによる機能検証とスクリーンショットによるVisual Regression Test（VRT）で
+同じfixtureページを使う。記事本文やMarkdown変換結果そのものを検証する場合だけ、リポジトリ内の
+記事を入力にする。
 
 ### ファイル配置
 Unit / Component テストファイルは、ソースファイルと同じディレクトリに配置する（コロケーション）。
@@ -97,26 +88,27 @@ e2e/
 - Playwright を使用
 - 配置: `e2e/**/*.spec.ts`
 - `pnpm test:e2e` で実行
-- 本番ページのリンク遷移、検索、表示順、件数、インタラクションをDOMで検証する
-- 記事タイトルや記事数の変化を、画像差分ではなく意味のあるアサーションで検証する
+- リンク遷移、検索、表示順、件数、インタラクションをDOMで検証する
+- コンテンツ自体が検証対象でなければ、VRTと同じ固定fixtureページを使う
+- 記事本文やMarkdown変換結果が検証対象なら、リポジトリ内の記事を入力に使う
 - E2Eの成否を、外部サービスの可用性や応答内容へ依存させない
 
 ### Visual Regression Tests
 
-VRTは、意図しないレイアウトやスタイルの変更を検出する。記事や外部サービスの
-更新を検出するテストにはしない。
+VRTはBrowser E2Eのうち、スクリーンショットで意図しないレイアウトやスタイルの変更を
+検出するテストである。記事や外部サービスの更新を検出するテストにはしない。
 
 #### VRT対象
 
-- `src/vrt/pages/` のVRT専用ページ、またはデザインシステムの標本を撮影する
+- `src/test-fixtures/pages/` のfixtureページ、またはデザインシステムの標本を撮影する
 - 本番と同じコンポーネント、レイアウト、スタイルを使って描画する
 - Desktop / Mobile、Light / Darkなど、仕様として維持する表示条件を網羅する
 - ページ全体を確認する場合も、実記事ではなく固定fixtureでページを構成する
 
-VRT専用ページは開発サーバーと `VRT_FIXTURES=true` のテストビルドで `/__vrt/*` に公開し、
-通常の本番ビルドには含めない。本番ページとVRT専用ページは `src/components/pages/` の
-ページコンポーネントを共有し、前者には実データ、後者には `src/vrt/fixtures.ts` の固定データを渡す。
-`e2e/snapshot.spec.ts` はVRT専用ページだけを撮影する。
+fixtureページは開発サーバーと `TEST_FIXTURES=true` のテストビルドで `/__test/*` に公開し、
+通常の本番ビルドには含めない。本番ページとfixtureページは `src/components/pages/` の
+ページコンポーネントを共有し、前者には実データ、後者には `src/test-fixtures/fixtures.ts` の固定データを渡す。
+機能検証と `e2e/snapshot.spec.ts` の画像比較は同じfixtureページを使う。
 
 #### fixtureの要件
 
@@ -166,5 +158,5 @@ Integration Testで検証し、VRTでは解決済みの固定データを描画�
 - [snapshot.spec.ts](../../e2e/snapshot.spec.ts) - 固定fixtureページのVRT
 - [snapshot.ts](../../e2e/helpers/snapshot.ts) - 撮影前の安定化と画像比較
 - [snapshot.css](../../e2e/snapshot.css) - 撮影時のアニメーションと開発UIの制御
-- [fixtures.ts](../../src/vrt/fixtures.ts) - VRTへ渡す固定データ
-- [VRT pages](../../src/vrt/pages/) - 開発サーバーとテストビルドだけで公開する撮影対象ページ
+- [fixtures.ts](../../src/test-fixtures/fixtures.ts) - Browser E2Eへ渡す固定データ
+- [fixture pages](../../src/test-fixtures/pages/) - 開発サーバーとテストビルドだけで公開するテスト対象ページ
