@@ -24,8 +24,7 @@
 | Integration | 外部データの取得、ビルド時変換 | 境界を固定した入出力の比較 |
 
 Browser E2Eでは、DOMによる機能検証とスクリーンショットによるVisual Regression Test（VRT）で
-同じfixtureページを使う。記事本文やMarkdown変換結果そのものを検証する場合だけ、リポジトリ内の
-記事を入力にする。
+同じfixtureページを使う。
 
 ### ファイル配置
 Unit / Component テストファイルは、ソースファイルと同じディレクトリに配置する（コロケーション）。
@@ -89,9 +88,11 @@ e2e/
 - 配置: `e2e/**/*.spec.ts`
 - `pnpm test:e2e` で実行
 - リンク遷移、検索、表示順、件数、インタラクションをDOMで検証する
-- コンテンツ自体が検証対象でなければ、VRTと同じ固定fixtureページを使う
-- 記事本文やMarkdown変換結果が検証対象なら、リポジトリ内の記事を入力に使う
+- 固定fixtureページまたは固定fixture記事を使う
 - E2Eの成否を、外部サービスの可用性や応答内容へ依存させない
+
+記事ページのE2Eでは、`content/posts/__test/` のdraft記事を使う。テストビルドでは通常の記事と
+同じMarkdown変換と記事ルートを通して `/posts/__test/*` に出力し、通常の本番ビルドには含めない。
 
 ### Visual Regression Tests
 
@@ -160,3 +161,4 @@ Integration Testで検証し、VRTでは解決済みの固定データを描画�
 - [snapshot.css](../../e2e/snapshot.css) - 撮影時のアニメーションと開発UIの制御
 - [fixtures.ts](../../src/test-fixtures/fixtures.ts) - Browser E2Eへ渡す固定データ
 - [fixture pages](../../src/test-fixtures/pages/) - 開発サーバーとテストビルドだけで公開するテスト対象ページ
+- [fixture article](../../content/posts/__test/article.md) - テストビルドだけで公開する固定Markdown記事

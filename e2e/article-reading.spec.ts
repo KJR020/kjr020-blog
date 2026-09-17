@@ -1,6 +1,6 @@
 import { expect, test } from "playwright/test";
 
-const articlePath = "/posts/astro/astro-pagefind-search";
+const articlePath = "/posts/__test/article";
 
 test("画面幅に応じた本文組版を使う", async ({ page }, testInfo) => {
   await page.goto(articlePath);
@@ -33,7 +33,7 @@ test("Figureを本文と同じReading laneへ揃える", async ({ page }, testIn
   const figure = content.locator("figure.article-figure").last();
 
   await expect(figure.locator("figcaption")).toContainText(
-    "検索結果から直接記事に遷移できる",
+    "画像を拡大表示できる",
   );
   await expect(figure.locator("figcaption")).not.toContainText(/FIGURE \d+/);
 
@@ -116,7 +116,7 @@ test("デスクトップでは記事ヘッダーの下に本文と目次を並�
 
 test("デスクトップでは記事タイトルをキャラクター領域に重ねない", async ({ page }) => {
   await page.setViewportSize({ width: 1051, height: 900 });
-  await page.goto("/posts/ux/the-elements-of-user-experience");
+  await page.goto(articlePath);
 
   const title = page.getByRole("heading", { level: 1 });
   const character = page.locator(".kuri-watermark");
@@ -205,7 +205,7 @@ test("デスクトップ目次の現在位置アイコンをスクロール領�
 
 test("デスクトップ目次はページをスクロールしても画面内に追従する", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
-  await page.goto("/posts/ux/the-elements-of-user-experience");
+  await page.goto(articlePath);
 
   const desktopToc = page.locator(".post-desktop-toc [data-desktop-toc-open]");
   await expect(desktopToc).toBeVisible();
@@ -225,7 +225,7 @@ test("デスクトップ目次はページをスクロールしても画面内�
 
 test("本文をスクロールすると現在の見出しへ目次マーカーが移動する", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
-  await page.goto("/posts/ux/the-elements-of-user-experience");
+  await page.goto(articlePath);
 
   const targetHeading = page.getByRole("heading", { name: "構造レイヤー" });
   const targetTop = (await targetHeading.boundingBox())?.y;
@@ -242,7 +242,7 @@ test("本文をスクロールすると現在の見出しへ目次マーカー�
 
 test("見出しへの直接リンクを開いても目次の更新でページ上部へ戻らない", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
-  await page.goto("/posts/ux/the-elements-of-user-experience#表層レイヤー");
+  await page.goto(`${articlePath}#表層レイヤー`);
 
   const heading = page.getByRole("heading", { name: "表層レイヤー" });
   await page.waitForTimeout(1_000);
@@ -259,14 +259,14 @@ test("記事画像を拡大表示し、閉じると画像リンクへフォー�
   }));
   expect(viewportWidths.scroll).toBe(viewportWidths.client);
 
-  const trigger = page.getByRole("link", { name: "画像を拡大: ⌘Kコマンドパレット" });
+  const trigger = page.getByRole("link", { name: "画像を拡大: テスト画像" });
   await trigger.click();
 
   const dialog = page.getByRole("dialog", { name: "画像を拡大表示" });
   await expect(dialog).toBeVisible();
   await expect(dialog.locator("img")).toHaveAttribute(
     "src",
-    "/images/posts/astro-pagefind-search/search-command-palette.png",
+    "/images/kuri_photo.png",
   );
 
   await dialog.getByRole("button", { name: "拡大表示を閉じる" }).click();
@@ -277,10 +277,10 @@ test("記事画像を拡大表示し、閉じると画像リンクへフォー�
 test("画像拡大パネルをビューポート中央に表示する", async ({ page }) => {
   await page.goto(articlePath);
 
-  await page.getByRole("link", { name: "画像を拡大: ⌘Kコマンドパレット" }).click();
+  await page.getByRole("link", { name: "画像を拡大: テスト画像" }).click();
 
   const dialog = page.getByRole("dialog", { name: "画像を拡大表示" });
-  await expect(dialog.locator("img")).toHaveJSProperty("naturalWidth", 1078);
+  await expect(dialog.locator("img")).toHaveJSProperty("naturalWidth", 500);
   const [dialogBox, viewport] = await Promise.all([
     dialog.boundingBox(),
     page.evaluate(() => {

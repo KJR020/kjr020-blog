@@ -13,7 +13,8 @@ import "@/styles/article-footnotes.css";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
-  return createPublishedPostStaticPaths(posts);
+  const fixturePostIds = process.env.TEST_FIXTURES === "true" ? ["__test/article"] : [];
+  return createPublishedPostStaticPaths(posts, fixturePostIds);
 }
 
 const { post } = Astro.props;

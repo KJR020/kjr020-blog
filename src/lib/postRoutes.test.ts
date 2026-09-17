@@ -20,4 +20,18 @@ describe("createPublishedPostStaticPaths", () => {
       },
     ]);
   });
+
+  it("指定したdraftだけをfixtureとして生成できる", () => {
+    const posts = [
+      { id: "__test/article", data: { draft: true, title: "Test article" } },
+      { id: "draft/post", data: { draft: true, title: "Draft" } },
+    ];
+
+    expect(createPublishedPostStaticPaths(posts, ["__test/article"])).toEqual([
+      {
+        params: { slug: "__test/article" },
+        props: { post: posts[0] },
+      },
+    ]);
+  });
 });
