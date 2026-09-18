@@ -112,7 +112,7 @@ pnpm exec wrangler pages dev --proxy 4321 --port 8788
 
 ### Visual Regressionスナップショット
 
-Dockerを起動した状態で `pnpm test:e2e:update-snapshots` を実行すると、CIと同じPlaywright Linuxコンテナで基準画像を更新します。更新された `*-linux.png` を確認してコミットします。GitHub Actionsの `CI` workflowを `update_snapshots=true` で手動実行して更新することもできます。
+Dockerを起動した状態で `pnpm test:e2e:update-snapshots` を実行すると、CIと同じPlaywright Linuxコンテナで基準画像を更新します。Playwright用のCompose構成は開発サーバーを含まず、E2EとVRTだけを対象にします。更新された `*-linux.png` を確認してコミットします。GitHub Actionsの `CI` workflowを `update_snapshots=true` で手動実行して更新することもできます。
 
 VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテクチャ](docs/architecture/test_architecture.md)で定義しています。
 
