@@ -1,13 +1,22 @@
 # Repository Guidelines
 
-- [Pull Request 作成ガイド](docs/development/pull-request-guidelines.md)
+## Communication
 
-## Design System
+- 日本語で応答する。
 
-UI、レイアウト、スタイル、タイポグラフィ、モーション、UIライティング、アクセシビリティを変更する前に、[KJR020ブログ デザインシステム](docs/blog-design-system.md)と関連ガイドを参照する。
+## Project
 
-- レイアウト変更では[Grid system](docs/grid-system.md)、文言変更では[UIライティングガイドライン](docs/ui-writing-guidelines.md)も確認する。
-- 値は`src/styles/globals.css`、部品の構造とvariantは`src/components/`、原則は`docs/`をSource of Truthとして扱う。
-- 開発サーバーの`/design-system`で、実装と接続された標本をライト/ダーク、Desktop/Mobileで確認する。
-- デザインシステムには採用済みの仕様だけを記載し、改善候補、優先度、移行状況はIssueまたはADRで管理する。
-- 仕様を変更した場合は、正規の実装、関連ガイド、デザインシステムの標本、テストを同じ変更で更新し、`pnpm test:design-system`を実行する。
+- Astro + Reactで構築し、Cloudflare Pagesへデプロイする個人ブログ。
+- パッケージマネージャーはpnpmを使用する。
+
+## Project References
+
+- 構成や技術判断は[Architecture Documents](docs/architecture/README.md)を参照する。
+- Pull Requestは[Pull Request 作成ガイド](docs/development/pull-request-guidelines.md)に従う。
+- UI、レイアウト、スタイル、タイポグラフィ、モーション、UIライティング、アクセシビリティを変更する場合は、[KJR020ブログ デザインシステム](docs/blog-design-system.md)を参照する。
+- レイアウト変更では[Grid system](docs/grid-system.md)、文言変更では[UIライティングガイドライン](docs/ui-writing-guidelines.md)も参照する。
+
+## Git Workflow
+
+- ブランチ名は`<type>/<short-description>`形式にし、変更の目的に応じて`feat`、`fix`、`refactor`、`chore`、`docs`、`test`などの意味的なtypeを選ぶ。
+- AIツール名や担当者名ではなく、変更内容が分かる英語のkebab-caseを使う。
