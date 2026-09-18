@@ -1,0 +1,39 @@
+name: kjr020-blog-playwright
+
+services:
+  e2e:
+    image: kjr020-blog-playwright:local
+    build:
+      context: .
+      dockerfile: Dockerfile.playwright
+      secrets:
+        - npmrc
+    init: true
+    ipc: host
+    environment:
+      CI: "true"
+      PUBLIC_GISCUS_REPO: "${PUBLIC_GISCUS_REPO:-}"
+      PUBLIC_GISCUS_REPO_ID: "${PUBLIC_GISCUS_REPO_ID:-}"
+      PUBLIC_GISCUS_CATEGORY: "${PUBLIC_GISCUS_CATEGORY:-}"
+      PUBLIC_GISCUS_CATEGORY_ID: "${PUBLIC_GISCUS_CATEGORY_ID:-}"
+
+  update-snapshots:
+    extends:
+      service: e2e
+    environment:
+      HOST_UID: "${HOST_UID:-1000}"
+      HOST_GID: "${HOST_GID:-1000}"
+    command:
+      - /bin/bash
+      - -lc
+      - |
+        trap 'chown -R "$${HOST_UID}:$${HOST_GID}" e2e/snapshot.spec.ts-snapshots' EXIT
+        pnpm exec playwright test e2e/snapshot.spec.ts --update-snapshots
+    volumes:
+      # 更新対象だけを書き込み可能にし、終了時にホストユーザーの所有権へ戻す。
+      - ./e2e/snapshot.spec.ts-snapshots:/app/e2e/snapshot.spec.ts-snapshots
+
+secrets:
+  # CIとローカルで使用しているTakumi Guardの認証情報をビルド時だけ渡す。
+  npmrc:
+    file: "${HOME}/.npmrc"

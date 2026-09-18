@@ -239,12 +239,8 @@ jobs:
         run: echo "//npm.flatt.tech/:_authToken=${{ secrets.TAKUMI_GUARD_TOKEN }}" >> ~/.npmrc
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
-      - name: Sync Astro types
-        run: pnpm astro sync
       - name: Update snapshots
-        run: pnpm exec playwright test e2e/snapshot.spec.ts --update-snapshots
+        run: pnpm test:e2e:update-snapshots
         env:
           PUBLIC_GISCUS_REPO: ${{ vars.PUBLIC_GISCUS_REPO }}
           PUBLIC_GISCUS_REPO_ID: ${{ vars.PUBLIC_GISCUS_REPO_ID }}
