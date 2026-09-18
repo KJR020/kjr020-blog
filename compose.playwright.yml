@@ -20,15 +20,17 @@ services:
   update-snapshots:
     extends:
       service: e2e
+    environment:
+      HOST_UID: "${HOST_UID:-1000}"
+      HOST_GID: "${HOST_GID:-1000}"
     command:
-      - pnpm
-      - exec
-      - playwright
-      - test
-      - e2e/snapshot.spec.ts
-      - --update-snapshots
+      - /bin/bash
+      - -lc
+      - |
+        trap 'chown -R "$${HOST_UID}:$${HOST_GID}" e2e/snapshot.spec.ts-snapshots' EXIT
+        pnpm exec playwright test e2e/snapshot.spec.ts --update-snapshots
     volumes:
-      # 更新対象だけを書き込み可能にし、その他の生成物はコンテナ内で破棄する。
+      # 更新対象だけを書き込み可能にし、終了時にホストユーザーの所有権へ戻す。
       - ./e2e/snapshot.spec.ts-snapshots:/app/e2e/snapshot.spec.ts-snapshots
 
 secrets:
