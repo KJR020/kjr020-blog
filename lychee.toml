@@ -1,0 +1,13 @@
+# ドキュメント内のリポジトリ内リンク検査設定
+# ローカル（pnpm check:links）とCIで同じ設定を使う
+
+# 外部URLへはアクセスせず、リポジトリ内のファイル参照のみを検査する
+offline = true
+
+# 見出しアンカー（#section）の整合性も検査する
+include_fragments = "anchor-only"
+
+no_progress = true
+
+# 除外設定は必要なものに限定し、追加する場合は理由をコメントで残す
+exclude_path = ["node_modules"]

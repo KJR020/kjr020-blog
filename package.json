@@ -17,6 +17,7 @@
     "lint:fix": "biome check --write src/",
     "format": "biome format --write src/",
     "format:check": "biome format src/",
+    "check:links": "lychee --config lychee.toml README.md 'docs/**/*.md'",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run",
