@@ -1,0 +1,21 @@
+# syntax=docker/dockerfile:1
+
+# Playwrightとブラウザのバージョンを一致させるため、package.jsonと同じ版を使う。
+FROM mcr.microsoft.com/playwright:v1.57.0-noble
+
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+
+RUN corepack enable \
+    && corepack prepare pnpm@11.7.0 --activate
+
+WORKDIR /app
+
+# 依存定義を先にコピーし、ソース変更時も依存レイヤーを再利用する。
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc,required=true \
+    pnpm install --frozen-lockfile
+
+COPY . .
+
+CMD ["pnpm", "exec", "playwright", "test"]

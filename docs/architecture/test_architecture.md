@@ -139,9 +139,12 @@ Integration Testで検証し、VRTでは解決済みの固定データを描画�
 #### 実行環境
 
 - `playwright.config.ts` のDesktop ChromeとMobile Chromeで実行する
-- macOSとLinuxの基準画像を分けて管理する
-- ローカルではmacOS用、CIの通常実行ではLinux用の基準画像と比較する
-- Linux用の基準画像はGitHub Actionsの手動workflowで更新する
+- 公式Playwright LinuxコンテナでE2EとVRTを実行する
+- ローカルとCIは同じコンテナイメージ、ブラウザ、Linux用基準画像を使う
+- Linux用の基準画像はローカルのDocker、またはGitHub Actionsの手動workflowで更新する
+
+Playwright用のCompose構成はE2EとVRTの再現性を担保するために使う。通常のローカル開発は
+ホストのNode.jsとpnpmで実行し、Astro開発サーバーをComposeの対象には含めない。
 
 記事追加や記事本文の編集だけで基準画像の更新が必要になった場合は、VRT対象が
 実コンテンツへ依存していないかを先に確認する。画像の更新で差分を受け入れることを
@@ -156,6 +159,8 @@ Integration Testで検証し、VRTでは解決済みの固定データを描画�
 
 - [playwright.config.ts](../../playwright.config.ts) - E2EとVRTのPlaywright設定
 - [playwright.design-system.config.ts](../../playwright.design-system.config.ts) - デザインシステムのブラウザテスト設定
+- [compose.playwright.yml](../../compose.playwright.yml) - ローカルとCIで共有するPlaywright実行環境
+- [Dockerfile.playwright](../../Dockerfile.playwright) - Playwrightコンテナの依存関係
 - [snapshot.spec.ts](../../e2e/snapshot.spec.ts) - 固定fixtureページのVRT
 - [snapshot.ts](../../e2e/helpers/snapshot.ts) - 撮影前の安定化と画像比較
 - [snapshot.css](../../e2e/snapshot.css) - 撮影時のアニメーションと開発UIの制御
