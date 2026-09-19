@@ -98,43 +98,43 @@ Pagefind、API、proxyなどの実装語は、記事本文や開発者向けロ�
 
 ### 6. Visible textとAccessible nameを一緒に決める
 
-- Visible labelがある場合は、その文言をAccessible nameの基礎にする。
-- Placeholderを入力欄の名前にしない。`label`または`aria-labelledby`を使う。
-- Icon-only buttonは、操作を具体的に名付ける。
-- 同じ画面に同じ見た目の操作が複数ある場合だけ、対象名を補う。
-- `aria-expanded`や`aria-pressed`が伝える状態をAccessible nameで重複させない。
-- 見た目だけでは分からない完了結果は、短い表示文または`aria-live="polite"`で伝える。
+- Visible labelがある場合は、その文言をAccessible nameの基礎にする
+- Placeholderを入力欄の名前にしない。`label`または`aria-labelledby`を使う
+- Icon-only buttonは、操作を具体的に名付ける
+- 同じ画面に同じ見た目の操作が複数ある場合だけ、対象名を補う
+- `aria-expanded`や`aria-pressed`が伝える状態をAccessible nameで重複させない
+- 見た目だけでは分からない完了結果は、短い表示文または`aria-live="polite"`で伝える
 
 ## 日本語の書き方
 
 ### 文体
 
-- ボタンやリンクは、`戻る`、`開く`、`再読み込み`のように短く書く。
-- 説明文、空状態、エラー本文は「です・ます」で統一する。
-- `〜していただく`のような過剰な敬語は使わない。
-- 読者を責める表現や、必要以上に謝る表現は使わない。
+- ボタンやリンクは、`戻る`、`開く`、`再読み込み`のように短く書く
+- 説明文、空状態、エラー本文は「です・ます」で統一する
+- `〜していただく`のような過剰な敬語は使わない
+- 読者を責める表現や、必要以上に謝る表現は使わない
 
 ### 日本語と英語
 
-- Navigationのカテゴリ名とサービス固有名は英語を使用できる。
+- Navigationのカテゴリ名とサービス固有名は英語を使用できる
   - `Home`, `Posts`, `Search`, `Scrapbox`
-- 説明、操作、状態は日本語を基本とする。
-- 技術固有名詞は公式表記を使う。
+- 説明、操作、状態は日本語を基本とする
+- 技術固有名詞は公式表記を使う
   - `Astro`, `Pagefind`, `Scrapbox`, `Google Analytics`
-- 同じ役割の中で日本語と英語を混在させない。
+- 同じ役割の中で日本語と英語を混在させない
 
 ### 句読点
 
-- ボタン、リンク、Navigation、見出し、タグには句点を付けない。
-- 完全文の説明や状態には「。」を付ける。
-- 進行中を表す場合は全角の`…`を1つ使う。
-- 感嘆符は使用しない。
+- ボタン、リンク、Navigation、見出し、タグには句点を付けない
+- 完全文の説明や状態には「。」を付ける
+- 進行中を表す場合は全角の`…`を1つ使う
+- 感嘆符は使用しない
 
 ### 数字・日付・件数
 
-- 数字は算用数字を使う。
-- 記事日付は`2026年3月21日`形式とする。
-- 件数は対象と隣接させる。
+- 数字は算用数字を使う
+- 記事日付は`2026年3月21日`形式とする
+- 件数は対象と隣接させる
   - `12件の記事`
   - `3件のタグ`
 
@@ -193,14 +193,14 @@ Pagefind、API、proxyなどの実装語は、記事本文や開発者向けロ�
 
 ## アクセシビリティ
 
-- InputにはVisible labelまたは視覚的に隠したlabelを関連付ける。
-- Placeholderは補助情報として扱い、Accessible nameには使わない。
-- Icon-only buttonには操作を表すAccessible nameを付ける。
-- 同じ遷移先のリンクには同じ名前を使う。
-- 異なる操作に同じAccessible nameを使わない。
-- 通常の完了通知には`aria-live="polite"`を使う。
-- ローディング中の細かな変化を繰り返し読み上げない。
-- 緊急でない情報に`role="alert"`や`aria-live="assertive"`を使わない。
+- InputにはVisible labelまたは視覚的に隠したlabelを関連付ける
+- Placeholderは補助情報として扱い、Accessible nameには使わない
+- Icon-only buttonには操作を表すAccessible nameを付ける
+- 同じ遷移先のリンクには同じ名前を使う
+- 異なる操作に同じAccessible nameを使わない
+- 通常の完了通知には`aria-live="polite"`を使う
+- ローディング中の細かな変化を繰り返し読み上げない
+- 緊急でない情報に`role="alert"`や`aria-live="assertive"`を使わない
 
 ## レビューチェックリスト
 

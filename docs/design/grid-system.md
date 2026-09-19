@@ -26,13 +26,13 @@ Atlassian Design SystemのGridは、12 columns、gutters、marginsを基本要�
 
 KJR020's Blogでは、その原則を次のように調整する。
 
-- Atlassianの6 breakpointを、KJR020's Blogの`md: 768px`と`lg: 1024px`へ合わせて3段階に圧縮する。
-- Desktopは12 columns、Tabletは6 columns、Mobileは2 columnsとする。
-- Desktopのmarginsは32px、TabletとMobileは16pxとする。
-- Desktopのguttersは16px、TabletとMobileは12pxとする。
-- 構造化されたページはfixed-wide 1152pxを使う。
-- 長文中心のページは、読みやすさを優先するfixed-narrow 864pxを使う。
-- Fluidは横スクロール領域など、横方向の拡張に意味がある領域の内部に限定する。
+- Atlassianの6 breakpointを、KJR020's Blogの`md: 768px`と`lg: 1024px`へ合わせて3段階に圧縮する
+- Desktopは12 columns、Tabletは6 columns、Mobileは2 columnsとする
+- Desktopのmarginsは32px、TabletとMobileは16pxとする
+- Desktopのguttersは16px、TabletとMobileは12pxとする
+- 構造化されたページはfixed-wide 1152pxを使う
+- 長文中心のページは、読みやすさを優先するfixed-narrow 864pxを使う
+- Fluidは横スクロール領域など、横方向の拡張に意味がある領域の内部に限定する
 
 ## 基本要素
 
@@ -104,13 +104,13 @@ Page hero、section header、post listはGrid全体を使う。PostCardの外枠
 
 ### Do / Don't
 
-- **Do:** コンテナの開始・終了をcolumn lineへ揃える。
-- **Do:** DOM順と視覚順を一致させ、狭い画面では自然な縦積みにする。
-- **Do:** 内部レイアウトはFlexbox、Grid、spacing tokenから目的に合うものを選ぶ。
-- **Don't:** Contentをgutterやmarginへはみ出させない。
-- **Don't:** 小さな部品までpage gridへ固定しない。
-- **Don't:** `grid-auto-flow: dense`やCSSの`order`でinteractive contentの視覚順だけを変えない。
-- **Don't:** 長文をFluidでviewport全幅まで広げない。
+- **Do:** コンテナの開始・終了をcolumn lineへ揃える
+- **Do:** DOM順と視覚順を一致させ、狭い画面では自然な縦積みにする
+- **Do:** 内部レイアウトはFlexbox、Grid、spacing tokenから目的に合うものを選ぶ
+- **Don't:** Contentをgutterやmarginへはみ出させない
+- **Don't:** 小さな部品までpage gridへ固定しない
+- **Don't:** `grid-auto-flow: dense`やCSSの`order`でinteractive contentの視覚順だけを変えない
+- **Don't:** 長文をFluidでviewport全幅まで広げない
 
 ## CSSリファレンス
 
