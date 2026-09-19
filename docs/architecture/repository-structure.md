@@ -26,6 +26,8 @@
 ├── scripts/
 ├── src/
 └── tests/
+    ├── src/
+    ├── functions/
     └── e2e/
 ```
 
@@ -41,8 +43,10 @@
   - ビルド時に加工せず公開する静的ファイル
 - `functions/`
   - Cloudflare Pages FunctionsによるAPIと、関連するサーバー側ロジック
-- `tests/e2e/`
-  - PlaywrightによるE2EとVisual Regressionテスト
+- `tests/`
+  - Unit、Component、Functions、E2E、Visual Regressionのテストコードと、テスト専用のセットアップ
+  - `tests/src/`は`src/`、`tests/functions/`は`functions/`のディレクトリ構成とファイル名を引き継ぐ
+  - `tests/e2e/`はPlaywrightによるE2EとVisual Regressionテスト
 - `scripts/`
   - ビルド、検査、生成に使うプロジェクト固有のスクリプト
 - `docs/`
@@ -50,10 +54,16 @@
 
 ### テストの配置
 
-- 現在、Unit／Component／Functionsテストは対象実装の近くに配置している
-- 今後は、実装と検証用のコードを分け、テスト全体を一か所から確認できるようにするため、`tests/`へ集約する
-  - 配置の変更と、関連する設定・ドキュメントの更新は移行Issueで扱う
-- E2EとVisual Regressionテストは、引き続き`tests/e2e/`に配置する
+- テストコードは種別を問わず`tests/`へ集約する
+  - アプリケーションの実装と検証用のコードを分け、テスト全体を一か所から確認できるようにするため
+- `src/`を対象とするUnit／Componentテストは`tests/src/`、`functions/`を対象とするテストは`tests/functions/`に置く
+  - 対象実装のディレクトリ構成とファイル名を引き継ぎ、実装側のパスから対応するテストの配置先を判断できるようにするため
+  - テスト種別ごとに独自の階層を増やさない
+- E2EとVisual Regressionテストは`tests/e2e/`に置く
+- テスト専用のヘルパーやセットアップも`tests/`配下に置く
+  - 複数種別で共有するセットアップは`tests/setup.ts`、E2E専用のヘルパーは`tests/e2e/helpers/`に置く
+- アプリケーションの実行時にも使用するコードやデータは、テスト専用として`tests/`へ移動しない
+  - 開発サーバーとテストビルドで公開する`src/test-fixtures/`は`src/`に残す
 
 ## プロジェクト境界と設定
 

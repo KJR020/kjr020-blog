@@ -75,9 +75,15 @@ src/
 └── styles/            グローバル・記事向けスタイル
 functions/             Cloudflare Pages Functions
 scripts/               ビルド前処理とOGP生成
-e2e/                   Playwright E2E・Visual Regressionテスト
+tests/
+├── src/               `src/` を対象とするUnit／Componentテスト
+├── functions/         `functions/` を対象とするテスト
+├── e2e/               Playwright E2E・Visual Regressionテスト
+└── setup.ts           Vitest共通セットアップ
 docs/                  設計、開発・運用資料
 ```
+
+テストコードは `tests/` へ集約し、実装と検証を分離してテスト全体を一か所から確認できるようにしています。`tests/src/` と `tests/functions/` は対象実装のディレクトリ構成とファイル名を引き継ぐため、実装側のパスから対応するテストの配置先を判断できます。
 
 ## ローカル開発
 
