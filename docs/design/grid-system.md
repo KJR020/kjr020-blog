@@ -159,8 +159,8 @@ CSS Gridは2次元のページ骨格に使い、navigationやtoolbarのような
 
 ## 関連ファイル
 
-- [デザインシステム概要](blog-design-system.md) - 全体構成とSource of Truth
-- [デザインシステムの基盤ページ](../src/design-system/pages/foundations.astro) - Gridの視覚例（`pnpm dev`の`/design-system/foundations`）
-- [BaseLayout.astro](../src/layouts/BaseLayout.astro) - Page shell
-- [記事詳細](../src/pages/posts/[...slug].astro) - 本文＋目次layout
-- [検索](../src/pages/search.astro) - 検索結果＋filter layout
+- [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
+- [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - Gridの視覚例（`pnpm dev`の`/design-system/foundations`）
+- [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - Page shell
+- [記事詳細](../../src/pages/posts/[...slug].astro) - 本文＋目次layout
+- [検索](../../src/pages/search.astro) - 検索結果＋filter layout

@@ -13,8 +13,8 @@
 
 - 構成や技術判断は[Architecture Documents](docs/architecture/README.md)を参照する。
 - Pull Requestは[Pull Request 作成ガイド](docs/development/pull-request-guidelines.md)に従う。
-- UI、レイアウト、スタイル、タイポグラフィ、モーション、UIライティング、アクセシビリティを変更する場合は、[KJR020ブログ デザインシステム](docs/blog-design-system.md)を参照する。
-- レイアウト変更では[Grid system](docs/grid-system.md)、文言変更では[UIライティングガイドライン](docs/ui-writing-guidelines.md)も参照する。
+- UI、レイアウト、スタイル、タイポグラフィ、モーション、UIライティング、アクセシビリティを変更する場合は、[KJR020ブログ デザインシステム](docs/design/design-system.md)を参照する。
+- レイアウト変更では[Grid system](docs/design/grid-system.md)、文言変更では[UIライティングガイドライン](docs/design/ui-writing-guidelines.md)も参照する。
 
 ## Git Workflow
 

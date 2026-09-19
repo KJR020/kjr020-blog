@@ -37,8 +37,8 @@ Source of Truthは役割ごとに分ける。値は`globals.css`、部品の構�
 
 - [Grid system](grid-system.md)
 - [UIライティングガイドライン](ui-writing-guidelines.md)
-- [デザインシステム実装](../src/design-system/pages/index.astro)
-- [開発時限定ルート](../src/integrations/devDesignSystem.ts)
+- [デザインシステム実装](../../src/design-system/pages/index.astro)
+- [開発時限定ルート](../../src/integrations/devDesignSystem.ts)
 
 `pnpm dev`を起動し、`http://localhost:4321/design-system`を開く。色・文字・spacingは`globals.css`のCSS変数、Button・Badge・Input・Card・ブログパターンは実コンポーネントから描画される。全ページを共通のHeader・Sidebar・トークンで描画し、ライトとダークの両方で確認できる。
 
@@ -174,24 +174,24 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 
 ## 関連ファイル
 
-- [globals.css](../src/styles/globals.css) - グローバルトークンと記事表現
-- [概要ページ](../src/design-system/pages/index.astro) - 5カテゴリへの入口
-- [共通レイアウト](../src/design-system/components/DesignSystemLayout.astro) - Header・Sidebar・Footer・共通script
-- [ページナビゲーション](../src/design-system/navigation.ts) - 6ページとセクションの対応
-- [デザインシステム固有スタイル](../src/design-system/styles.css) - 標本固有のレイアウト
-- [Dev integration](../src/integrations/devDesignSystem.ts) - 非公開ルートの登録条件
-- [デザインシステム E2E](../tests/e2e/design-system.spec.ts) - 実装との接続、章目次、Mobile表示
-- [button.tsx](../src/components/ui/button.tsx) - Button variants
-- [badge.tsx](../src/components/ui/badge.tsx) - Badge variants
-- [card.tsx](../src/components/ui/card.tsx) - Card composition
-- [input.tsx](../src/components/ui/input.tsx) - Input states
-- [BaseLayout.astro](../src/layouts/BaseLayout.astro) - ページシェル
-- [Header.astro](../src/components/Header.astro) - Global navigation
-- [PostCard.astro](../src/components/PostCard.astro) - 記事一覧パターン
-- [SearchBox.tsx](../src/components/search/SearchBox.tsx) - 全文検索
-- [TableOfContents.tsx](../src/components/toc/TableOfContents.tsx) - 記事目次
-- [記事ページ](../src/pages/posts/[...slug].astro) - Reading / Wide laneと記事本文
-- [Figure変換](../src/integrations/rehypeArticleFigures.ts) - Markdown画像とCaptionの構造化
-- [画像拡大](../src/components/article/ImageLightbox.astro) - FigureのDialog拡大
-- [コード拡張](../src/lib/articleCode.ts) - 言語表示、Copy操作、完了通知
-- [記事コンテンツスタイル](../src/styles/article-content.css) - Reading / Wide laneとFigure
+- [globals.css](../../src/styles/globals.css) - グローバルトークンと記事表現
+- [概要ページ](../../src/design-system/pages/index.astro) - 5カテゴリへの入口
+- [共通レイアウト](../../src/design-system/components/DesignSystemLayout.astro) - Header・Sidebar・Footer・共通script
+- [ページナビゲーション](../../src/design-system/navigation.ts) - 6ページとセクションの対応
+- [デザインシステム固有スタイル](../../src/design-system/styles.css) - 標本固有のレイアウト
+- [Dev integration](../../src/integrations/devDesignSystem.ts) - 非公開ルートの登録条件
+- [デザインシステム E2E](../../tests/e2e/design-system.spec.ts) - 実装との接続、章目次、Mobile表示
+- [button.tsx](../../src/components/ui/button.tsx) - Button variants
+- [badge.tsx](../../src/components/ui/badge.tsx) - Badge variants
+- [card.tsx](../../src/components/ui/card.tsx) - Card composition
+- [input.tsx](../../src/components/ui/input.tsx) - Input states
+- [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - ページシェル
+- [Header.astro](../../src/components/Header.astro) - Global navigation
+- [PostCard.astro](../../src/components/PostCard.astro) - 記事一覧パターン
+- [SearchBox.tsx](../../src/components/search/SearchBox.tsx) - 全文検索
+- [TableOfContents.tsx](../../src/components/toc/TableOfContents.tsx) - 記事目次
+- [記事ページ](../../src/pages/posts/[...slug].astro) - Reading / Wide laneと記事本文
+- [Figure変換](../../src/integrations/rehypeArticleFigures.ts) - Markdown画像とCaptionの構造化
+- [画像拡大](../../src/components/article/ImageLightbox.astro) - FigureのDialog拡大
+- [コード拡張](../../src/lib/articleCode.ts) - 言語表示、Copy操作、完了通知
+- [記事コンテンツスタイル](../../src/styles/article-content.css) - Reading / Wide laneとFigure

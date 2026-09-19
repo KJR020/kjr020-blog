@@ -130,6 +130,7 @@ VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテク
 
 - [アーキテクチャ](docs/architecture/)
 - [開発](docs/development/)
+- [デザイン](docs/design/)
 - [セキュリティ](docs/security/)
 
 ## ライセンス

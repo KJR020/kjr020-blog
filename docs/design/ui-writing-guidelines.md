@@ -247,10 +247,10 @@ Pagefind、API、proxyなどの実装語は、記事本文や開発者向けロ�
 
 ## 関連ファイル
 
-- [デザインシステムのコンテンツページ](../src/design-system/pages/content.astro) - UIライティングの視覚サマリー（`pnpm dev`の`/design-system/content`）
-- [デザインシステム概要](blog-design-system.md) - デザインシステム全体の構成
-- [SearchBox.tsx](../src/components/search/SearchBox.tsx) - 検索UI
-- [CommandPalette.tsx](../src/components/search/CommandPalette.tsx) - Command Palette
-- [ThemeToggleAnimated.tsx](../src/components/theme/ThemeToggleAnimated.tsx) - Theme切り替え
-- [ScrapboxCardList.tsx](../src/components/scrapbox/ScrapboxCardList.tsx) - Scrapboxの状態表示
-- [posts/[...slug].astro](../src/pages/posts/[...slug].astro) - Code Copy
+- [デザインシステムのコンテンツページ](../../src/design-system/pages/content.astro) - UIライティングの視覚サマリー（`pnpm dev`の`/design-system/content`）
+- [デザインシステム概要](design-system.md) - デザインシステム全体の構成
+- [SearchBox.tsx](../../src/components/search/SearchBox.tsx) - 検索UI
+- [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - Command Palette
+- [ThemeToggleAnimated.tsx](../../src/components/theme/ThemeToggleAnimated.tsx) - Theme切り替え
+- [ScrapboxCardList.tsx](../../src/components/scrapbox/ScrapboxCardList.tsx) - Scrapboxの状態表示
+- [posts/[...slug].astro](../../src/pages/posts/[...slug].astro) - Code Copy
