@@ -235,9 +235,9 @@ Pagefind、API、proxyなどの実装語は、記事本文や開発者向けロ�
 
 ## ガバナンス
 
-この文書に記載するのは、採用済みの正規ルールと用例だけとする。改善候補、優先度、移行状況、実装との差分はIssueまたはADRで管理し、この文書へ混在させない。
+この文書はUI文言の正本である。記述方針、変更管理、更新フローは[デザイン仕様の運用](design-system.md#運用)に従う。
 
-ルールを変更する場合は、変更理由を合意したうえでこの文書とデザインシステムを同時に更新する。実装とテストはこの仕様へ適合させる。
+この文書に記載するのは、採用済みの正規ルールと用例だけとする。
 
 ## 参考資料
 
@@ -248,7 +248,7 @@ Pagefind、API、proxyなどの実装語は、記事本文や開発者向けロ�
 ## 関連ファイル
 
 - [デザインシステムのコンテンツページ](../../src/design-system/pages/content.astro) - UIライティングの視覚サマリー（`pnpm dev`の`/design-system/content`）
-- [デザインシステム概要](design-system.md) - デザインシステム全体の構成
+- [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
 - [SearchBox.tsx](../../src/components/search/SearchBox.tsx) - 検索UI
 - [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - Command Palette
 - [ThemeToggleAnimated.tsx](../../src/components/theme/ThemeToggleAnimated.tsx) - Theme切り替え
