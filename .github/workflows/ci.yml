@@ -270,13 +270,13 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: linux-snapshots
-          path: e2e/snapshot.spec.ts-snapshots/**/*-linux.png
+          path: tests/e2e/snapshot.spec.ts-snapshots/**/*-linux.png
           if-no-files-found: error
           retention-days: 30
       - name: Commit snapshot updates
         run: |
-          git add e2e/snapshot.spec.ts-snapshots
-          if git diff --cached --quiet -- e2e/snapshot.spec.ts-snapshots; then
+          git add tests/e2e/snapshot.spec.ts-snapshots
+          if git diff --cached --quiet -- tests/e2e/snapshot.spec.ts-snapshots; then
             echo "No snapshot changes to commit."
             exit 0
           fi

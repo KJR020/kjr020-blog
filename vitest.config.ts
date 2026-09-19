@@ -5,8 +5,8 @@ export default getViteConfig({
   test: {
     environment: "jsdom",
     globals: true,
-    include: ["src/**/*.test.{ts,tsx}", "functions/**/*.test.ts"],
-    setupFiles: ["./src/test/setup.ts"],
+    include: ["tests/src/**/*.test.{ts,tsx}", "tests/functions/**/*.test.ts"],
+    setupFiles: ["./tests/setup.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "lcov"],
