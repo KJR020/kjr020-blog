@@ -133,7 +133,6 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
         <ScrapboxCardList
             project="KJR020"
             pages={scrapboxPages}
-            variant="notes"
             limit={4}
             client:load
           />
@@ -189,6 +188,11 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
     .home-aside {
       margin-block-start: var(--phi-2);
     }
+  }
+
+  /* メモが0件のときは、見出しと枠だけ残さず領域ごと畳む */
+  .home-aside:has([data-notes-empty]) {
+    display: none;
   }
 
   .index-wrapper :global([data-slot="card"]:hover) {

@@ -44,7 +44,7 @@ describe("ScrapboxCardList", () => {
     expect(screen.getByText("Scrapbox note")).toBeInTheDocument();
   });
 
-  it("取得は成功しページが0件なら対象を示す空状態を表示する", async () => {
+  it("取得は成功しページが0件なら領域を畳む印だけを残す", async () => {
     vi.mocked(fetch).mockResolvedValue(
       new Response(JSON.stringify([]), {
         status: 200,
@@ -52,25 +52,24 @@ describe("ScrapboxCardList", () => {
       }),
     );
 
-    render(<ScrapboxCardList project="project name" />);
+    const { container } = render(<ScrapboxCardList project="project name" />);
 
-    await waitFor(() =>
-      expect(screen.getByText("Scrapboxのページがありません")).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(container.querySelector("[data-notes-empty]")).toBeInTheDocument());
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /再読み込み/ })).not.toBeInTheDocument();
   });
 
   it("取得に失敗したら0件と区別できるエラーと再読み込みを表示する", async () => {
     vi.mocked(fetch).mockResolvedValue(new Response("", { status: 500 }));
 
-    render(<ScrapboxCardList project="project name" />);
+    const { container } = render(<ScrapboxCardList project="project name" />);
 
     await waitFor(
-      () => expect(screen.getByText("Scrapboxを読み込めませんでした")).toBeInTheDocument(),
+      () => expect(screen.getByText("Cosenseを読み込めませんでした")).toBeInTheDocument(),
       { timeout: 5000 },
     );
     expect(screen.getByRole("button", { name: /再読み込み/ })).toBeInTheDocument();
-    expect(screen.queryByText("Scrapboxのページがありません")).not.toBeInTheDocument();
+    expect(container.querySelector("[data-notes-empty]")).not.toBeInTheDocument();
   });
 
   it("project未指定ならfetchせずエラー表示する", () => {

@@ -1,7 +1,6 @@
 "use client";
 
-import { AlertCircle, ChevronLeft, ChevronRight, FileQuestion, RefreshCw } from "lucide-react";
-import { useRef, useState } from "react";
+import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "./QueryProvider";
@@ -13,11 +12,6 @@ interface ScrapboxCardListProps {
   limit?: number;
   className?: string;
   pages?: ScrapboxPageData[];
-  /**
-   * carousel: カードを横スクロールで並べる
-   * notes: タイトルと更新日だけを縦に並べる。補助領域へ置くときに使う
-   */
-  variant?: "carousel" | "notes";
 }
 
 function formatDate(dateString: string): string {
@@ -37,54 +31,26 @@ function cleanScrapboxDescription(text: string): string {
     .trim();
 }
 
-function ScrapboxCardListInner({
-  project,
-  limit,
-  className,
-  pages,
-  variant = "carousel",
-}: ScrapboxCardListProps) {
-  const isNotes = variant === "notes";
+function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCardListProps) {
   const { data, isLoading, isError, refetch } = useScrapboxData(project, {
     initialData: pages,
     limit,
   });
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-
-  const checkScroll = () => {
-    if (!scrollRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-    setCanScrollLeft(scrollLeft > 0);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
-  };
-
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return;
-    const scrollAmount = 280;
-    scrollRef.current.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
-      behavior: "smooth",
-    });
-  };
-
   // project 未指定
   if (!project) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
-        <AlertCircle className="h-12 w-12 text-destructive" />
-        <p className="text-muted-foreground">プロジェクト名を指定してください</p>
-      </div>
+      <p className={cn("py-phi-sm text-sm text-muted-foreground", className)}>
+        プロジェクト名を指定してください
+      </p>
     );
   }
 
   // ローディング
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12" data-testid="loading-spinner">
-        <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className={cn("flex py-phi-sm", className)} data-testid="loading-spinner">
+        <RefreshCw className="h-5 w-5 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -92,10 +58,9 @@ function ScrapboxCardListInner({
   // エラー
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
-        <AlertCircle className="h-12 w-12 text-destructive" />
-        <p className="text-muted-foreground">Cosenseを読み込めませんでした</p>
-        <Button variant="outline" onClick={() => refetch()}>
+      <div className={cn("flex flex-col items-start gap-phi-sm py-phi-sm", className)}>
+        <p className="text-sm text-muted-foreground">Cosenseを読み込めませんでした</p>
+        <Button variant="outline" size="sm" onClick={() => refetch()}>
           <RefreshCw className="mr-2 h-4 w-4" />
           再読み込み
         </Button>
@@ -104,119 +69,37 @@ function ScrapboxCardListInner({
   }
 
   // データ 0 件
+  // 補助領域では、中身がないのに見出しと枠だけ残さない。
+  // 親が :has() で領域ごと畳めるように印を出す。
   if (!data || data.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
-        <FileQuestion className="h-12 w-12 text-muted-foreground" />
-        <p className="text-muted-foreground">Cosenseのページがありません</p>
-      </div>
-    );
-  }
-
-  if (isNotes) {
-    return (
-      <ul className={cn("flex flex-col", className)}>
-        {data.map((page) => (
-          <li key={page.id} className="border-b border-border/60 last:border-b-0">
-            <a
-              href={page.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group/note block py-phi-sm transition-colors hover:text-link"
-            >
-              <span className="block text-base leading-snug text-foreground line-clamp-2 group-hover/note:text-link">
-                {page.title}
-              </span>
-              {page.description && (
-                <span className="mt-phi-2xs block text-sm leading-normal text-muted-foreground/70 line-clamp-2">
-                  {cleanScrapboxDescription(page.description)}
-                </span>
-              )}
-              <span className="mt-phi-2xs block text-sm text-muted-foreground/60">
-                {formatDate(page.updatedAt)}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    );
+    return <div data-notes-empty="true" hidden />;
   }
 
   return (
-    <div className={cn("relative group", className)}>
-      <div
-        ref={scrollRef}
-        onScroll={checkScroll}
-        className="flex gap-phi-xs overflow-x-auto scrollbar-hide scroll-smooth pb-2"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        {data.map((page) => (
+    <ul className={cn("flex flex-col", className)}>
+      {data.map((page) => (
+        <li key={page.id} className="border-b border-border/60 last:border-b-0">
           <a
-            key={page.id}
             href={page.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(
-              "shrink-0 w-56 h-40 p-4",
-              "rounded-lg border",
-              "bg-card transition-colors hover:bg-accent/50",
-              "group/card",
-              "flex flex-col",
-            )}
+            className="group/note block py-phi-sm transition-colors hover:text-link"
           >
-            <h3 className="text-sm font-medium text-foreground line-clamp-2 leading-snug group-hover/card:text-link transition-colors duration-200">
+            <span className="block text-base leading-snug text-foreground line-clamp-2 group-hover/note:text-link">
               {page.title}
-            </h3>
-            <p className="text-xs text-muted-foreground/70 line-clamp-2 mt-2 flex-1">
-              {cleanScrapboxDescription(page.description || "")}
-            </p>
-            <span className="text-[10px] text-muted-foreground/50 mt-auto pt-2">
+            </span>
+            {page.description && (
+              <span className="mt-phi-2xs block text-sm leading-normal text-muted-foreground/70 line-clamp-2">
+                {cleanScrapboxDescription(page.description)}
+              </span>
+            )}
+            <span className="mt-phi-2xs block text-sm text-muted-foreground/60">
               {formatDate(page.updatedAt)}
             </span>
           </a>
-        ))}
-      </div>
-
-      <>
-        {/* Navigation - only visible on hover */}
-        <button
-          type="button"
-          onClick={() => scroll("left")}
-          className={cn(
-            "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3",
-            "h-8 w-8 rounded-full",
-            "bg-background border border-border shadow-sm",
-            "flex items-center justify-center",
-            "opacity-0 group-hover:opacity-100 transition-opacity duration-200",
-            "hover:bg-muted",
-            !canScrollLeft && "invisible",
-          )}
-          aria-label="前へ"
-        >
-          <ChevronLeft className="h-4 w-4 text-muted-foreground" />
-        </button>
-        <button
-          type="button"
-          onClick={() => scroll("right")}
-          className={cn(
-            "absolute right-0 top-1/2 -translate-y-1/2 translate-x-3",
-            "h-8 w-8 rounded-full",
-            "bg-background border border-border shadow-sm",
-            "flex items-center justify-center",
-            "opacity-0 group-hover:opacity-100 transition-opacity duration-200",
-            "hover:bg-muted",
-            !canScrollRight && "invisible",
-          )}
-          aria-label="次へ"
-        >
-          <ChevronRight className="h-4 w-4 text-muted-foreground" />
-        </button>
-
-        {/* Subtle fade edges */}
-        <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
-        <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
-      </>
-    </div>
+        </li>
+      ))}
+    </ul>
   );
 }
 
