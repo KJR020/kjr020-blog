@@ -223,7 +223,7 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
 
   <div class="spec-item" id="table-of-contents">
     <h3>6-3. Table of Contents</h3>
-    <p class="src">Desktopは右側250px・sticky・内部scrollで、読書中に隠して再表示できる。Mobileは記事ヘッダー直後に置き、Radix Collapsibleで開閉して、項目選択後に閉じる。</p>
+    <p class="src">Desktopは右4列・sticky・内部scrollで常時表示する。Mobileは記事ヘッダー直後に置き、Radix Collapsibleで開閉して、項目選択後に閉じる。</p>
     <div class="demo toc-specimen">
       <TableOfContents headings={tocHeadings} variant="responsive" client:load />
       <div class="toc-specimen-summary"><strong>Desktop</strong><span>sticky · internal scroll · collapsible</span><strong>Mobile</strong><span>Inline · Collapsible · aria-expanded</span></div>

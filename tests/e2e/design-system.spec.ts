@@ -252,7 +252,7 @@ test("実装とつながったデザインシステムを表示する", async ({
   await expect(header.getByRole("link", { name: "KJR020's Blog" })).toHaveAttribute("href", "/");
   await expect(header.getByRole("link", { name: "Posts" })).toHaveAttribute("href", "/posts");
   await expect(header.getByRole("button", { name: /Search/ })).toBeVisible();
-  await expect(header.getByRole("link", { name: /Scrapbox/ })).toHaveAttribute(
+  await expect(header.getByRole("link", { name: /Cosense/ })).toHaveAttribute(
     "href",
     "https://scrapbox.io/kjr020/",
   );
@@ -499,7 +499,7 @@ test("記事ページの読書設計をパターンの共通レイアウト内�
   await expect(header.getByRole("link", { name: "KJR020's Blog" })).toHaveAttribute("href", "/");
   await expect(header.getByRole("link", { name: "Posts" })).toHaveAttribute("href", "/posts");
   await expect(header.getByRole("button", { name: /Search/ })).toBeVisible();
-  await expect(header.getByRole("link", { name: /Scrapbox/ })).toHaveAttribute(
+  await expect(header.getByRole("link", { name: /Cosense/ })).toHaveAttribute(
     "href",
     "https://scrapbox.io/kjr020/",
   );
