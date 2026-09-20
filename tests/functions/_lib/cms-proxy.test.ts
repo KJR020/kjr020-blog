@@ -25,7 +25,9 @@ const MOCK_API_RESPONSE = Object.freeze({
   ],
 });
 
-function mockApiResponse(overrides?: { pages?: Partial<(typeof MOCK_API_RESPONSE.pages)[0]>[] }) {
+function mockApiResponse(overrides?: {
+  pages?: (Partial<Omit<(typeof MOCK_API_RESPONSE.pages)[0], "image">> & { image?: string | null })[];
+}) {
   const data = {
     ...MOCK_API_RESPONSE,
     pages: overrides?.pages

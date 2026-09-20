@@ -22,7 +22,7 @@ export type ProxyResult =
   | { ok: true; pages: PageData[] }
   | {
       ok: false;
-      code: "network_error" | "upstream_error";
+      code: "network_error" | "timeout" | "upstream_error";
       message: string;
       status?: number;
     };
@@ -52,16 +52,24 @@ export async function fetchPages(
   search: string,
   scrapboxSid: string,
 ): Promise<ProxyResult> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5_000);
   let response: Response;
   try {
     response = await fetch(`${UPSTREAM_BASE}/${project}${search}`, {
       headers: { Cookie: `connect.sid=${scrapboxSid}` },
+      signal: controller.signal,
     });
   } catch (error) {
+    clearTimeout(timeout);
+    if (controller.signal.aborted) {
+      return { ok: false, code: "timeout", message: "Upstream timeout" };
+    }
     return { ok: false, code: "network_error", message: String(error) };
   }
 
   if (!response.ok) {
+    clearTimeout(timeout);
     return {
       ok: false,
       code: "upstream_error",
@@ -74,6 +82,10 @@ export async function fetchPages(
   try {
     data = await response.json();
   } catch {
+    clearTimeout(timeout);
+    if (controller.signal.aborted) {
+      return { ok: false, code: "timeout", message: "Upstream timeout" };
+    }
     return {
       ok: false,
       code: "upstream_error",
@@ -81,7 +93,20 @@ export async function fetchPages(
       status: response.status,
     };
   }
+  clearTimeout(timeout);
 
-  const pages = data.pages.map((page) => transformPage(page, data.projectName));
-  return { ok: true, pages };
+  try {
+    if (typeof data.projectName !== "string" || !Array.isArray(data.pages)) {
+      throw new Error("Invalid page list");
+    }
+    const pages = data.pages.map((page) => transformPage(page, data.projectName));
+    return { ok: true, pages };
+  } catch {
+    return {
+      ok: false,
+      code: "upstream_error",
+      message: "Invalid response body",
+      status: response.status,
+    };
+  }
 }
