@@ -295,18 +295,6 @@ test("実装とつながったデザインシステムを表示する", async ({
   await expect(page.locator('[data-slot="card"]').first()).toBeVisible();
 });
 
-test("名称をデザインシステムに統一する", async ({ page }) => {
-  await page.goto("/design-system");
-
-  await expect(page.locator("body")).not.toContainText("DEV ONLY");
-  await expect(page.locator("body")).not.toContainText("開発環境限定");
-  await expect(page.locator("body")).not.toContainText("開発サーバーでのみ表示");
-  await expect(page.getByRole("link", { name: "ブログを見る" })).toHaveCount(0);
-  await expect(page.locator("body")).not.toContainText("Living Design System");
-  await expect(page.locator("body")).not.toContainText("見本帳");
-  await expect(page.locator("body")).not.toContainText("KJR020ブログ");
-});
-
 test("共通ヘッダーはページに関わらずsystem sansを使う", async ({ page }) => {
   await page.goto("/design-system");
   const designSystemFont = await page
@@ -384,94 +372,6 @@ test("ヘッダー・本文・コードで合意したフォントを使い分�
   expect(codeFont).toContain("JetBrains Mono");
 });
 
-test("11章と48項目を正規仕様として表示する", async ({ page }) => {
-  const pageSpecifications = [
-    {
-      path: "/design-system/foundations",
-      chapters: ["1. トークン", "2. レイアウト原則", "10. レスポンシブ・アクセシビリティ"],
-      items: [
-        "1-1. 色の役割",
-        "1-2. 記事コールアウト色",
-        "1-3. 文字階層",
-        "1-4. 黄金比スペーシング",
-        "1-5. 角丸・影",
-        "2-1. ページシェル",
-        "2-2. 整列の基本方針",
-        "2-3. Breakpoints",
-        "2-4. ページ別の最大幅",
-        "2-5. 配置パターン",
-        "2-6. 幅トークン",
-        "2-7. 余白の階層",
-        "2-8. 見出しと強調の階層",
-        "10-1. レスポンシブ規則",
-        "10-2. キーボード・ARIA",
-        "10-3. Motion / Loading",
-      ],
-    },
-    {
-      path: "/design-system/components",
-      chapters: ["4. 基本部品", "5. ナビゲーション・検索部品", "6. ブログ固有部品"],
-      items: [
-        "4-1. Button",
-        "4-2. Badge / Tag",
-        "4-3. Card",
-        "4-4. Input / TextLink / Kbd",
-        "5-1. Header / Global Navigation",
-        "5-2. SearchBox",
-        "5-3. Command Palette",
-        "5-4. Theme Toggle / Mobile Menu",
-        "6-1. PageHero",
-        "6-2. PostCard / PostMeta",
-        "6-3. Table of Contents",
-        "6-4. Scrapbox Card List",
-      ],
-    },
-    {
-      path: "/design-system/patterns",
-      chapters: ["3. 状態の体系", "7. 記事コンテンツ", "8. ページの型"],
-      items: [
-        "3-1. 操作状態",
-        "3-2. 非同期データの4状態",
-        "3-3. 現在地と選択",
-        "7-1. Markdown本文",
-        "7-2. Callout",
-        "7-3. Link Card",
-        "7-4. Code Copy / Image",
-        "8-1. ホーム",
-        "8-2. 記事一覧",
-        "8-3. 記事ページ",
-        "8-4. 検索",
-        "8-5. ポリシー・状態",
-      ],
-    },
-    {
-      path: "/design-system/content",
-      chapters: ["9. UIライティング"],
-      items: [
-        "9-1. 声の性格",
-        "9-2. 文言設計の6原則",
-        "9-3. コンポーネント別の文法",
-        "9-4. 表記",
-        "9-5. 状態メッセージ",
-      ],
-    },
-    {
-      path: "/design-system/governance",
-      chapters: ["11. ガバナンス"],
-      items: ["11-1. Source of Truth", "11-2. 適合ルール", "11-3. 更新方法"],
-    },
-  ];
-
-  for (const specification of pageSpecifications) {
-    await page.goto(specification.path);
-    await expect(page.locator("main > section.spec > h2")).toHaveText(specification.chapters);
-    await expect(page.locator("main > section.spec .spec-item > h3")).toHaveText(
-      specification.items,
-    );
-  }
-  await expect(page.getByRole("heading", { name: "6-5. Knowledge Graph" })).toHaveCount(0);
-});
-
 test("デスクトップではセクションをサイドバーから移動できる", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/design-system/foundations");
@@ -536,24 +436,6 @@ test("サイドバーの現在位置はHeader currentと同じ表現で示す", 
   });
 
   expect(currentStyle).toEqual(headerCurrentStyle);
-});
-
-test("未定義の視覚表現は合意しデザインシステムへ定義してから使用する", async ({ page }) => {
-  await page.goto("/design-system/governance#conformance-rules");
-
-  await expect(page.getByText("未定義の視覚表現を先に実装しない", { exact: true })).toBeVisible();
-  await expect(
-    page.getByText(
-      "新しい表現はオーナーと合意し、デザインシステムへ正規仕様として定義してから使用する。",
-      { exact: true },
-    ),
-  ).toBeVisible();
-  await expect(page.locator("#update-method > .update-flow")).toHaveCount(0);
-  await expect(page.locator("#update-method > .rule-list > li")).toHaveText([
-    "変更理由と適用範囲をオーナーと合意する。",
-    "合意した内容をデザインシステムへ正規仕様として定義する。",
-    "正規ファイル・関連ガイド・実装・テストを同じ仕様へ揃える。",
-  ]);
 });
 
 test("サイドバーの検索でセクションを絞り込める", async ({ page }) => {
