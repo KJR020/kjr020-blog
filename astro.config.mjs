@@ -58,6 +58,8 @@ export default defineConfig({
       styles: ["normal"],
       subsets: ["japanese"],
       fallbacks: ["system-ui", "sans-serif"],
+      // 全角グリフ基準のsize-adjust(約197%)で、読み込み中に英数字だけ拡大されるのを防ぐ
+      optimizedFallbacks: false,
     },
     {
       provider: fontProviders.google(),
