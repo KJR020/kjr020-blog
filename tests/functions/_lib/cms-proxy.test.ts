@@ -26,7 +26,9 @@ const MOCK_API_RESPONSE = Object.freeze({
 });
 
 function mockApiResponse(overrides?: {
-  pages?: (Partial<Omit<(typeof MOCK_API_RESPONSE.pages)[0], "image">> & { image?: string | null })[];
+  pages?: (Partial<Omit<(typeof MOCK_API_RESPONSE.pages)[0], "image">> & {
+    image?: string | null;
+  })[];
 }) {
   const data = {
     ...MOCK_API_RESPONSE,
@@ -110,10 +112,18 @@ describe("fetchPages", () => {
   });
 
   it("ページURLには上流のprojectNameでなく検証済みprojectを使う", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({
-      ...MOCK_API_RESPONSE,
-      projectName: "other-project",
-    }), { status: 200 })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            ...MOCK_API_RESPONSE,
+            projectName: "other-project",
+          }),
+          { status: 200 },
+        ),
+      ),
+    );
     const result = await fetchPages("KJR020", "?limit=100", "sid");
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -146,10 +156,12 @@ describe("fetchPages", () => {
   });
 
   it("認証Cookieを別ホストへ転送しないようリダイレクトを追わない", async () => {
-    const mockFetch = vi.fn().mockResolvedValue(new Response(null, {
-      status: 302,
-      headers: { Location: "https://example.org/collect" },
-    }));
+    const mockFetch = vi.fn().mockResolvedValue(
+      new Response(null, {
+        status: 302,
+        headers: { Location: "https://example.org/collect" },
+      }),
+    );
     vi.stubGlobal("fetch", mockFetch);
     const result = await fetchPages("KJR020", "?limit=100", "secret-sid");
     expect(mockFetch.mock.calls[0][1].redirect).toBe("manual");
