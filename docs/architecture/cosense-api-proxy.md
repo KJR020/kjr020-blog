@@ -58,6 +58,8 @@ GET /api/pages/KJR020?limit=100
 
 Browserから受け取るquery parameterはすべて無視する。Cosense APIへ送る取得条件とキャッシュキーには、Pages Function側で固定した`limit=100`を使用する。結果が0件なら空配列を返し、順序はCosense APIの取得順を維持する。
 
+`KJR020`から取得したページはすべて公開対象とし、[PageData](../../functions/_lib/cms-proxy.ts)に定義した項目だけを返す。変換に必要な項目の型が不正なページが1件でもあれば、部分的な成功にはせず全体をエラーとする。
+
 ## キャッシュ
 
 | レイヤー | 時間に関する設定 | 範囲 |
@@ -93,10 +95,13 @@ Cache APIがHITした場合は保存済みのJSONを返し、Cosense APIを呼�
 | 不正なproject | 400 |
 | Cosense APIが5秒以内に応答しない | 504 |
 | Cosense APIが4xx・5xxを返す | 502 |
+| Cosense APIへの通信に失敗する、またはリダイレクトを返す | 502 |
 | Cosense APIのJSONを変換できない | 502 |
 | `SCRAPBOX_SID`が未設定 | 500 |
 
 エラーレスポンスは保存せず、`Cache-Control: no-store`を付与する。Cosenseの応答本文、内部エラー、`SCRAPBOX_SID`をBrowserへ返さない。
+
+5秒の制限は上流への接続開始からJSON本文の読み取り完了までに適用する。上流がリダイレクトを返しても追跡しない。
 
 ## セキュリティ境界
 

@@ -1,4 +1,4 @@
-import type { ScrapboxApiResponse, ScrapboxApiPage } from "./types";
+import type { ScrapboxApiPage } from "./types";
 
 const UPSTREAM_BASE = "https://scrapbox.io/api/pages";
 const PROJECT_NAME_PATTERN = /^[\w-]+$/;
@@ -33,17 +33,35 @@ export function validateProject(project: string): boolean {
   return PROJECT_NAME_PATTERN.test(project);
 }
 
-function transformPage(
-  page: ScrapboxApiPage,
-  projectName: string,
-): PageData {
+type PublicPageFields = Pick<
+  ScrapboxApiPage,
+  "id" | "title" | "image" | "descriptions" | "updated"
+>;
+
+function isPublicPage(value: unknown): value is PublicPageFields {
+  if (value === null || typeof value !== "object") return false;
+  const page = value as Record<string, unknown>;
+  return (
+    typeof page.id === "string" &&
+    typeof page.title === "string" &&
+    (typeof page.image === "string" || page.image === null) &&
+    Array.isArray(page.descriptions) &&
+    page.descriptions.every((line) => typeof line === "string") &&
+    typeof page.updated === "number" &&
+    Number.isFinite(page.updated) &&
+    Number.isFinite(page.updated * 1000) &&
+    !Number.isNaN(new Date(page.updated * 1000).getTime())
+  );
+}
+
+function transformPage(page: PublicPageFields, project: string): PageData {
   return {
     id: page.id,
     title: page.title,
     imageUrl: page.image,
     description: page.descriptions.slice(0, 3).join(" "),
     updatedAt: new Date(page.updated * 1000).toISOString(),
-    url: `https://scrapbox.io/${projectName}/${encodeURIComponent(page.title)}`,
+    url: `https://scrapbox.io/${project}/${encodeURIComponent(page.title)}`,
   };
 }
 
@@ -58,6 +76,7 @@ export async function fetchPages(
   try {
     response = await fetch(`${UPSTREAM_BASE}/${project}${search}`, {
       headers: { Cookie: `connect.sid=${scrapboxSid}` },
+      redirect: "manual",
       signal: controller.signal,
     });
   } catch (error) {
@@ -78,7 +97,7 @@ export async function fetchPages(
     };
   }
 
-  let data: ScrapboxApiResponse;
+  let data: unknown;
   try {
     data = await response.json();
   } catch {
@@ -96,10 +115,16 @@ export async function fetchPages(
   clearTimeout(timeout);
 
   try {
-    if (typeof data.projectName !== "string" || !Array.isArray(data.pages)) {
+    if (
+      data === null ||
+      typeof data !== "object" ||
+      !("pages" in data) ||
+      !Array.isArray(data.pages) ||
+      !data.pages.every(isPublicPage)
+    ) {
       throw new Error("Invalid page list");
     }
-    const pages = data.pages.map((page) => transformPage(page, data.projectName));
+    const pages = data.pages.map((page) => transformPage(page, project));
     return { ok: true, pages };
   } catch {
     return {

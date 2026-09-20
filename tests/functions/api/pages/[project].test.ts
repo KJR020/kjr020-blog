@@ -228,6 +228,31 @@ describe("GET /api/pages/:project", () => {
     expect(put).not.toHaveBeenCalled();
   });
 
+  it("型が不正なページを200として共有保存しない", async () => {
+    const put = vi.fn();
+    vi.stubGlobal("caches", { default: { match: vi.fn().mockResolvedValue(undefined), put } });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      projectName: "KJR020",
+      pages: [{ id: "p1", title: { unexpected: "object" }, image: null, descriptions: ["説明"], updated: 1_700_000_000 }],
+    }), { status: 200 })));
+    const res = await onRequestGet(createContext("KJR020"));
+    expect(res.status).toBe(502);
+    expect(put).not.toHaveBeenCalled();
+  });
+
+  it("上流リダイレクトは502として扱い、Locationも保存もしない", async () => {
+    const put = vi.fn();
+    vi.stubGlobal("caches", { default: { match: vi.fn().mockResolvedValue(undefined), put } });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, {
+      status: 302,
+      headers: { Location: "https://example.org/collect" },
+    })));
+    const res = await onRequestGet(createContext("KJR020"));
+    expect(res.status).toBe(502);
+    expect(res.headers.get("Location")).toBeNull();
+    expect(put).not.toHaveBeenCalled();
+  });
+
   it("廃止された github.io ドメインは CORS で弾かれる", async () => {
     vi.stubGlobal("fetch", mockSuccessfulScrapboxFetch());
     const ctx = createContext("KJR020", { origin: "https://kjr020.github.io" });
