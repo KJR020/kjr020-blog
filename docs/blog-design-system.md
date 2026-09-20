@@ -180,7 +180,7 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 - [ページナビゲーション](../src/design-system/navigation.ts) - 6ページとセクションの対応
 - [デザインシステム固有スタイル](../src/design-system/styles.css) - 標本固有のレイアウト
 - [Dev integration](../src/integrations/devDesignSystem.ts) - 非公開ルートの登録条件
-- [デザインシステム E2E](../e2e/design-system.spec.ts) - 実装との接続、章目次、Mobile表示
+- [デザインシステム E2E](../tests/e2e/design-system.spec.ts) - 実装との接続、章目次、Mobile表示
 - [button.tsx](../src/components/ui/button.tsx) - Button variants
 - [badge.tsx](../src/components/ui/badge.tsx) - Badge variants
 - [card.tsx](../src/components/ui/card.tsx) - Card composition

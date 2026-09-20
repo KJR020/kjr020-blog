@@ -3,7 +3,7 @@ import { defineConfig, devices } from "playwright/test";
 const port = process.env.DESIGN_SYSTEM_PORT ?? "4321";
 
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: "./tests/e2e",
   testMatch: ["design-system.spec.ts", "post-tags.spec.ts"],
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,

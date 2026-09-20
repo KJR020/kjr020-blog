@@ -4,7 +4,7 @@ Cloudflare Pages Functions で提供している Scrapbox API Proxy (`/api/pages
 
 ## 位置付け
 
-- Vitest では `fetch` をモックした単体テストでセキュリティ観点を検証している (`functions/**/*.test.ts`)。
+- Vitest では `fetch` をモックした単体テストでセキュリティ観点を検証している (`tests/functions/**/*.test.ts`)。
 - このチェックリストは「実際の Cloudflare Edge (Preview / 本番) でも同じ挙動になっているか」を確認する**補完的な手動検証**。
 - 自動スキャナ (OWASP ZAP / nuclei / Burp 等) は**使わない**方針。チェックリスト化することで差分をレビューしやすくする。
 
@@ -93,5 +93,5 @@ Cloudflare Pages Functions で提供している Scrapbox API Proxy (`/api/pages
 ## 関連
 
 - 実装: `functions/_lib/cms-proxy.ts`、`functions/_lib/http.ts`
-- 単体テスト: `functions/_lib/*.test.ts`、`functions/api/**/*.test.ts`
+- 単体テスト: `tests/functions/_lib/*.test.ts`、`tests/functions/api/**/*.test.ts`
 - セキュリティ要件 ID: K-1 (Secret 非露出), K-2 (project バリデーション), K-9 (CORS 制限), K-10 (Cache-Control)

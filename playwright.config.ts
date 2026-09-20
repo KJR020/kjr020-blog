@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "playwright/test";
 
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: "./tests/e2e",
   testIgnore: ["**/design-system.spec.ts"],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -14,7 +14,7 @@ export default defineConfig({
     toHaveScreenshot: {
       maxDiffPixelRatio: 0.005,
       animations: "disabled",
-      stylePath: "./e2e/snapshot.css",
+      stylePath: "./tests/e2e/snapshot.css",
     },
   },
   use: {

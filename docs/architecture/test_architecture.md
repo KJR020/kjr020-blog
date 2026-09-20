@@ -27,29 +27,39 @@ Browser E2Eは固定fixtureを入力に使う。通常ページのDOM検証と�
 Visual Regression Test（VRT）は同じfixtureページを使い、記事ページのDOM検証は固定fixture記事を使う。
 
 ### ファイル配置
-Unit / Component テストファイルは、ソースファイルと同じディレクトリに配置する（コロケーション）。
+
+テストコードは種別を問わず `tests/` へ集約する。アプリケーションの実装と検証用のコードを分け、
+テスト全体を一か所から確認できるようにするためである。
+
+`tests/src/` と `tests/functions/` は対象実装のディレクトリ構成とファイル名を引き継ぐ。
+テスト種別ごとの階層を増やさず、実装側のパスから対応するテストの配置先を判断できるようにする。
 
 ```
-src/
-├── lib/
-│   ├── utils.ts          # ソースファイル
-│   └── utils.test.ts     # テストファイル
-└── components/
-    └── ui/
-        ├── button.tsx
-        └── button.test.tsx
+tests/
+├── setup.ts                        # Vitest共通セットアップ
+├── src/                            # src/ を対象とするUnit / Componentテスト
+│   ├── lib/
+│   │   └── utils.test.ts           # src/lib/utils.ts のテスト
+│   └── components/
+│       └── toc/
+│           └── TOCList.test.tsx    # src/components/toc/TOCList.tsx のテスト
+├── functions/                      # functions/ を対象とするテスト
+│   └── _lib/
+│       └── http.test.ts            # functions/_lib/http.ts のテスト
+└── e2e/                            # E2EとVRT（playwright.config.ts の testDir）
+    ├── header.spec.ts
+    ├── snapshot.spec.ts
+    ├── snapshot.css
+    └── helpers/
+        └── snapshot.ts
 ```
 
-E2E テストは `playwright.config.ts` の `testDir` に合わせて配置する。現状は `e2e/` を使用している。
+`tests/src/` からは `@/` エイリアスで、`tests/functions/` からは相対パスで対象実装を参照する。
 
-```
-e2e/
-├── header.spec.ts
-├── snapshot.spec.ts
-├── snapshot.css
-└── helpers/
-    └── snapshot.ts
-```
+テスト専用のヘルパーとセットアップも `tests/` 配下へ置く。複数種別で共有するセットアップは
+`tests/setup.ts`、E2E専用のヘルパーは `tests/e2e/helpers/` に置く。
+一方、アプリケーションの実行時にも使用するコードやデータはテスト専用として移動しない。
+開発サーバーとテストビルドで公開する `src/test-fixtures/` は `src/` に残す。
 
 ## テスト対象の評価基準
 
@@ -85,7 +95,7 @@ e2e/
 
 ### E2E Tests
 - Playwright を使用
-- 配置: `e2e/**/*.spec.ts`
+- 配置: `tests/e2e/**/*.spec.ts`
 - `pnpm test:e2e` で実行
 - リンク遷移、検索、表示順、件数、インタラクションをDOMで検証する
 - 固定fixtureページまたは固定fixture記事を使う
@@ -109,7 +119,7 @@ VRTはBrowser E2Eのうち、スクリーンショットで意図しないレイ
 fixtureページは開発サーバーと `TEST_FIXTURES=true` のテストビルドで `/__test/*` に公開し、
 通常の本番ビルドには含めない。本番ページとfixtureページは `src/components/pages/` の
 ページコンポーネントを共有し、前者には実データ、後者には `src/test-fixtures/fixtures.ts` の固定データを渡す。
-機能検証と `e2e/snapshot.spec.ts` の画像比較は同じfixtureページを使う。
+機能検証と `tests/e2e/snapshot.spec.ts` の画像比較は同じfixtureページを使う。
 
 #### fixtureの要件
 
@@ -161,9 +171,9 @@ Playwright用のCompose構成はE2EとVRTの再現性を担保するために使
 - [playwright.design-system.config.ts](../../playwright.design-system.config.ts) - デザインシステムのブラウザテスト設定
 - [compose.playwright.yml](../../compose.playwright.yml) - ローカルとCIで共有するPlaywright実行環境
 - [Dockerfile.playwright](../../Dockerfile.playwright) - Playwrightコンテナの依存関係
-- [snapshot.spec.ts](../../e2e/snapshot.spec.ts) - 固定fixtureページのVRT
-- [snapshot.ts](../../e2e/helpers/snapshot.ts) - 撮影前の安定化と画像比較
-- [snapshot.css](../../e2e/snapshot.css) - 撮影時のアニメーションと開発UIの制御
+- [snapshot.spec.ts](../../tests/e2e/snapshot.spec.ts) - 固定fixtureページのVRT
+- [snapshot.ts](../../tests/e2e/helpers/snapshot.ts) - 撮影前の安定化と画像比較
+- [snapshot.css](../../tests/e2e/snapshot.css) - 撮影時のアニメーションと開発UIの制御
 - [fixtures.ts](../../src/test-fixtures/fixtures.ts) - Browser E2Eへ渡す固定データ
 - [fixture pages](../../src/test-fixtures/pages/) - 開発サーバーとテストビルドだけで公開するテスト対象ページ
 - [fixture article](../../content/posts/__test/article.md) - テストビルドだけで公開する固定Markdown記事
