@@ -175,7 +175,7 @@ Pagefind、API、proxyなどの実装語は、記事本文や開発者向けロ�
 | Cosenseの取得に失敗した | 読み込めなかったことを伝える | 操作: `再読み込み` |
 | コピー操作が成功した | `コードをコピーしました` | Accessible Nameと`aria-live="polite"`の双方へ伝える |
 | コピー操作が失敗した | `コードをコピーできませんでした` | コードを選択してコピーする手段を案内する |
-| 指定されたページを表示できない | `ページが見つかりません` | `お探しのページが見つかりませんでした。` と `トップへ戻る`。原因の説明は標準では付けない |
+| 指定されたページを表示できない | `ページが見つかりません` | `お探しのページが見つかりませんでした。`と`トップへ戻る`。原因の説明は標準では付けない |
 
 取得の成功と失敗を、同じ0件表示へ流さない。読み込み前の状態を0件として表示しない。原因を確認していない場合は説明を作らない。
 
@@ -260,7 +260,7 @@ Cosenseの0件と404は、同じ文言にしない。どちらも「ページ」
 
 ## 関連ファイル
 
-- [デザインシステムのコンテンツページ](../../src/design-system/pages/content.astro) - UIライティングの視覚サマリー（`pnpm dev`の`/design-system/content`）
+- [デザインシステムのコンテンツページ](../../src/design-system/pages/content.astro) - UIライティングの視覚サマリー(`pnpm dev`の`/design-system/content`)
 - [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
 - [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - 検索UI
 - [ThemeToggleAnimated.tsx](../../src/components/theme/ThemeToggleAnimated.tsx) - Theme切り替え

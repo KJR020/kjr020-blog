@@ -1,9 +1,9 @@
-# Pull Request 作成ガイド
+# Pull Request作成ガイド
 
 ## 言語
 
-- PRのタイトルと本文は日本語で記述する。
-- コマンド、ファイルパス、識別子などは原文の表記を維持する。
+- PRのタイトルと本文は日本語で記述する
+- コマンド、ファイルパス、識別子などは原文の表記を維持する
 
 ## ブランチ名
 
@@ -13,9 +13,9 @@
 <type>/<short-description>
 ```
 
-- `type`には`feat`、`fix`、`docs`、`refactor`、`test`、`chore`のいずれかを使用する。
-- `short-description`は変更内容を表す英語のkebab-caseにする。
-- `main`へ直接コミットせず、変更内容に対応するブランチからPRを作成する。
+- `type`には`feat`、`fix`、`docs`、`refactor`、`test`、`chore`のいずれかを使用する
+- `short-description`は変更内容を表す英語のkebab-caseにする
+- `main`へ直接コミットせず、変更内容に対応するブランチからPRを作成する
 
 例: `feat/home-search`、`fix/rss-published-date`、`docs/development-setup`
 

@@ -1,4 +1,4 @@
-# 記事検索 UIデザイン
+# 記事検索UIデザイン
 
 記事検索をHomeの常設コンテンツではなく、必要なときだけ呼び出すグローバルユーティリティとして提供する。
 
@@ -10,14 +10,14 @@ Homeの主役をLatest PostsとScrapboxに絞りながら、過去記事を探�
 
 | ID | ユースケース記述 |
 |:---|:----------------|
-| UC_S_1 | 読者が Headerから記事検索を開ける |
+| UC_S_1 | 読者がHeaderから記事検索を開ける |
 | UC_S_2 | 読者が キーワードで記事を検索できる |
 | UC_S_3 | 読者が 検索結果から記事へ移動できる |
 | UC_S_4 | 読者が 検索を閉じて元のページへ戻れる |
 
 ## タスク
 
-| ユーザー（アクション） | システム（働き） | 関連UC |
+| ユーザー(アクション) | システム(働き) | 関連UC |
 |:----------------------|:----------------|:-------|
 | HeaderのSearchを押す | Command Paletteを開いて入力へfocusする | UC_S_1 |
 | ⌘K / Ctrl Kを押す | 現在のページ上でCommand Paletteを開く | UC_S_1 |
@@ -52,7 +52,7 @@ Home
 └── Scrapbox
 
 Global utility
-└── Search（Header / ⌘K / Ctrl K）
+└── Search(Header / ⌘K / Ctrl K)
     └── 検索結果 → 記事詳細
 ```
 
@@ -75,8 +75,8 @@ Global utility
 
 ## アクセシビリティ
 
-- Search triggerはリンクではなく、同一ページ上のdialogを開く`button`とする。
-- dialogを開いたら検索入力へfocusする。
-- 入力は`combobox`、結果は`listbox` / `option`で表す。
-- Arrow Up / Down、Enter、Escapeで主要操作を完了できるようにする。
-- dialogを閉じた後も閲覧中のページを維持する。
+- Search triggerはリンクではなく、同一ページ上のdialogを開く`button`とする
+- dialogを開いたら検索入力へfocusする
+- 入力は`combobox`、結果は`listbox` / `option`で表す
+- Arrow Up / Down、Enter、Escapeで主要操作を完了できるようにする
+- dialogを閉じた後も閲覧中のページを維持する

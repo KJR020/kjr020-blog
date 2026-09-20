@@ -6,7 +6,7 @@ Cosenseの記事情報を、秘密情報をBrowserへ公開せずブログに提
 
 ブログはAstroで静的生成し、Cosenseの記事情報だけをBrowserから動的に取得する。
 
-- BrowserはCosense APIを直接呼び出さず、同一OriginのCosense API Proxy（Cloudflare Workers上で実行）を介する
+- BrowserはCosense APIを直接呼び出さず、同一OriginのCosense API Proxy(Cloudflare Workers上で実行)を介する
 - Cosense API Proxyは入力検証、認証付きの上流取得、公開用データへの変換、共有キャッシュを担当する
   - ブログの再ビルドなしで記事情報を更新し、Cosense APIへの呼び出しと上流待ち時間を抑える
   - 更新の即時反映やデータセンター間でのキャッシュ同期は要求しない
@@ -66,13 +66,13 @@ GET /api/pages/KJR020?limit=100
 
 ## キャッシュ
 
-- React Query：`staleTime: 300秒`
+- React Query: `staleTime: 300秒`
   - 同じQueryClientとquery keyを使うBrowser内でデータをfreshとみなす期間
   - 期限切れや定期更新の設定ではなく、画面を開いたままにしても自動更新は保証しない
   - ウィンドウ復帰時の再取得は無効とする
-- Browser HTTP cache：`max-age=300`
+- Browser HTTP cache: `max-age=300`
   - 各Browserで再利用する
-- Cloudflare Cache API：`s-maxage=600`
+- Cloudflare Cache API: `s-maxage=600`
   - Cloudflareの各データセンターで共有する
 
 成功レスポンスは、Browser向けの`max-age`と共有キャッシュ向けの`s-maxage`を分けて指定する。
@@ -104,12 +104,12 @@ https://<deployment-host>/api/pages/KJR020?limit=100
 
 ## エラー処理
 
-- 400：不正なproject
-- 500：`SCRAPBOX_SID`が未設定
-- 502：Cosense APIから正常な公開用データを取得できない
+- 400: 不正なproject
+- 500: `SCRAPBOX_SID`が未設定
+- 502: Cosense APIから正常な公開用データを取得できない
   - 上流が4xx・5xxまたはリダイレクトを返す、通信に失敗する、JSONを変換できない場合
   - 上流のリダイレクトは追跡しない
-- 504：Cosense APIが5秒以内に応答しない
+- 504: Cosense APIが5秒以内に応答しない
   - 上流への接続開始からJSON本文の読み取り完了までを制限する
 - エラーレスポンスは保存せず、`Cache-Control: no-store`を付与する
   - Cosenseの応答本文、内部エラー、`SCRAPBOX_SID`をBrowserへ返さない
@@ -131,17 +131,17 @@ https://<deployment-host>/api/pages/KJR020?limit=100
 ## 環境設定
 
 - Production
-  - 公開Origin：`https://kjr020.dev`
-  - `SCRAPBOX_SID`：Cloudflare Workers secret
-  - 実行経路：Cloudflare Workers上のCosense API Proxy
+  - 公開Origin: `https://kjr020.dev`
+  - `SCRAPBOX_SID`: Cloudflare Workers secret
+  - 実行経路: Cloudflare Workers上のCosense API Proxy
 - workers.dev
-  - 公開Origin：`https://kjr020-blog.johnjiro1114.workers.dev`
-  - 本番と同じデプロイ先 `kjr020-blog` とSecretを使用する。PRごとの自動Previewデプロイは行っていない
+  - 公開Origin: `https://kjr020-blog.johnjiro1114.workers.dev`
+  - 本番と同じデプロイ先`kjr020-blog`とSecretを使用する。PRごとの自動Previewデプロイは行っていない
 - Local
-  - 公開Origin：`http://localhost:8788`
-  - `SCRAPBOX_SID`：`.dev.vars`
-  - `pnpm build` 後に `pnpm exec wrangler dev --port 8788` を実行する
-  - WranglerのOriginから開き、`/api/*` はCosense API Proxy、それ以外はビルド済み `dist/` を配信する
+  - 公開Origin: `http://localhost:8788`
+  - `SCRAPBOX_SID`: `.dev.vars`
+  - `pnpm build`後に`pnpm exec wrangler dev --port 8788`を実行する
+  - WranglerのOriginから開き、`/api/*`はCosense API Proxy、それ以外はビルド済み`dist/`を配信する
 
 設定方法は[Cloudflare Workers運用手順](../development/workers-operations.md)を参照する。
 
