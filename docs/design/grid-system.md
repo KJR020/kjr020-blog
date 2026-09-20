@@ -54,7 +54,7 @@ Tailwindの`md`と`lg`に合わせて3段階とする。判定はコンテンツ
 | --- | --- | --- |
 | 記事詳細 | 1152px（`max-w-6xl`） | 本文とRailを横に並べる |
 | Privacy Policy | 768px（`max-w-3xl`） | 読むことが主目的で、補助領域を持たない |
-| ホーム、記事一覧、検索、タグ別一覧 | Breakpoint連動（Tailwindの`container`） | 固定の上限を設けていない |
+| ホーム、記事一覧、タグ別一覧 | Breakpoint連動（Tailwindの`container`） | 固定の上限を設けていない |
 | 404 | シェルを使わず中央揃えで配置する | 単一のメッセージと導線だけを持つ |
 
 これらの上限は、Tailwindの`container`の既定に従い、各Breakpointの値になる。記事詳細と同じ上限へ揃えるかは未決とし、決めるまでこの表を正本とする。
@@ -80,17 +80,15 @@ WideではArticleとRailを横に並べる。Railの幅は列数から導かず�
 | ページ | カラム構成 | 列間 |
 | --- | --- | --- |
 | 記事詳細 | `minmax(0, 1fr)` と 250px | 2.618rem（φ²） |
-| 検索 | `minmax(0, 1fr)` と 250px | 2rem |
 
-CompactとMediumでは1カラムへ戻し、Railの内容を本文の前後へ移す。記事詳細では目次を記事ヘッダーの直後へ、検索ではTag filtersを検索結果の下へ置く。
+CompactとMediumでは1カラムへ戻し、記事詳細の目次を記事ヘッダーの直後へ置く。
 
 #### 補助領域を固定幅とする理由
 
-目次とTag filtersの情報量は画面幅に比例しない。ページ幅が広がった分は主領域へ割り当てる。シェル幅に連動する比例幅は、補助領域の目的に必要ではなく、確認すべき表示の組み合わせを増やすため採用しない。
+目次の情報量は画面幅に比例しない。ページ幅が広がった分は主領域へ割り当てる。シェル幅に連動する比例幅は、補助領域の目的に必要ではなく、確認すべき表示の組み合わせを増やすため採用しない。
 
-固定幅であっても、内容を切り取ってよいわけではない。長い見出し、階層の深い目次、長いタグ、文字拡大時でも、内容と操作へ到達できることを確認する。
+固定幅であっても、内容を切り取ってよいわけではない。長い見出し、階層の深い目次、文字拡大時でも、内容と操作へ到達できることを確認する。
 
-記事詳細と検索で列間の値が異なるが、同じ配置パターンに別の間隔を維持する理由は確認できていない。揃えるかは未決とする。
 
 ### 記事ヘッダー
 
@@ -107,7 +105,7 @@ Article内部の行長がこのとき広がるが、その値は[記事の読書
 シェルとカラムへ揃えるもの
 
 - Page heroとsection
-- Article、aside、検索結果、filter sidebar
+- Article、aside
 - 同じ階層で横に並ぶ主要領域
 
 揃えないもの
@@ -148,6 +146,6 @@ Article内部の行長がこのとき広がるが、その値は[記事の読書
 - [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - 配置の視覚例（`pnpm dev`の`/design-system/foundations`）
 - [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - Page shell
 - [記事詳細](../../src/pages/posts/[...slug].astro) - 本文＋目次layoutと目次の開閉
-- [SearchPage.astro](../../src/components/pages/SearchPage.astro) - 検索結果＋filter layout
+- [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - Grid外の検索UI
 - [PostsPage.astro](../../src/components/pages/PostsPage.astro) - 記事一覧layout
 - [HomePage.astro](../../src/components/pages/HomePage.astro) - ホームlayout

@@ -5,7 +5,7 @@ import { ThemeToggleAnimated } from "@/components/theme/ThemeToggleAnimated";
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/posts", label: "Posts" },
-  { href: "/search", label: "Search" },
+  { action: "search" as const, label: "Search" },
   { href: "https://scrapbox.io/kjr020/", label: "Scrapbox", external: true },
 ];
 
@@ -32,35 +32,43 @@ const isActive = (href: string) => {
       {/* デスクトップナビゲーション */}
       <nav class="hidden items-center gap-phi-3xs md:flex">
         {navItems.map((item) => (
-          <a
-            href={item.href}
-            target={item.external ? "_blank" : undefined}
-            rel={item.external ? "noopener noreferrer" : undefined}
-            class={`inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${isActive(item.href) ? "text-link font-semibold" : ""}`}
-          >
-            {item.label}
-            {item.href === "/search" && (
+          item.action === "search" ? (
+            <button
+              type="button"
+              data-command-palette-trigger
+              class="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            >
+              Search
               <kbd class="ml-1.5 hidden rounded border border-border px-1 py-0.5 text-xs leading-none text-muted-foreground md:inline-flex">⌘K</kbd>
-            )}
-            {item.external && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="ml-1"
-              >
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" x2="21" y1="14" y2="3" />
-              </svg>
-            )}
-          </a>
+            </button>
+          ) : (
+            <a
+              href={item.href}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+              class={`inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${isActive(item.href) ? "text-link font-semibold" : ""}`}
+            >
+              {item.label}
+              {item.external && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="ml-1"
+                >
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+              )}
+            </a>
+          )
         ))}
       </nav>
       {/* モバイルメニュー */}

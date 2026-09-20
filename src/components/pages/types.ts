@@ -6,8 +6,3 @@ export interface PostSummary {
     tags?: string[];
   };
 }
-
-export interface TagSummary {
-  name: string;
-  count: number;
-}

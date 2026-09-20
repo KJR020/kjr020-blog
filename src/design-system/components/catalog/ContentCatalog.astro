@@ -84,7 +84,7 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="home-page">
     <h3>8-1. ホーム</h3>
-    <p class="src">ブログを紹介し、最新の記事とScrapboxへ案内する。プロフィール → Latest Posts → Scrapboxの順で配置する。</p>
+    <p class="src">ブログを紹介し、最新の記事とScrapboxへ案内する。プロフィール → Latest Posts → Scrapboxの順で配置し、検索とTag一覧は常設しない。</p>
     <article class="demo page-card" aria-label="ホームのページ構造">
       <div class="wire"><div class="wire-title"></div><div class="wire-line wire-medium"></div><div class="wire-card"></div><div class="wire-card"></div><div class="wire-line wire-short"></div></div>
     </article>
@@ -101,10 +101,10 @@ const spacing = phi ** 2;`;
   <ArticleReadingSpec />
 
   <div class="spec-item" id="search-page">
-    <h3>8-4. 検索</h3>
-    <p class="src">全文またはタグから記事を探せるようにする。SearchBoxとTagBubbleCloudを組み合わせ、検索結果を主領域へ表示する。</p>
-    <article class="demo page-card" aria-label="検索のページ構造">
-      <div class="wire"><div class="wire-title wire-short"></div><div class="wire-two-col"><div class="wire-card"></div><div><div class="wire-line"></div><div class="wire-line"></div><div class="wire-line"></div></div></div></div>
+    <h3>8-4. 検索ユーティリティ</h3>
+    <p class="src">検索は独立ページやHomeのsectionではなく、Headerから必要なときだけ開くCommand Paletteとして提供する。旧URLからも同じdialogへ到達させる。</p>
+    <article class="demo page-card" aria-label="検索ユーティリティの構造">
+      <div class="wire"><div class="wire-title wire-short"></div><div class="wire-card"></div><div class="wire-line"></div><div class="wire-line"></div></div>
     </article>
   </div>
 

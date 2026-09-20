@@ -1,4 +1,4 @@
-import type { PostSummary, TagSummary } from "@/components/pages/types";
+import type { PostSummary } from "@/components/pages/types";
 import type { ScrapboxPageData } from "@/components/scrapbox/types";
 
 export const fixturePosts: PostSummary[] = [
@@ -69,12 +69,4 @@ export const fixtureScrapboxPages: ScrapboxPageData[] = [
     updatedAt: "2026-01-18T12:00:00.000Z",
     url: "https://example.com/scrapbox/web",
   },
-];
-
-export const fixtureTags: TagSummary[] = [
-  { name: "Astro", count: 8 },
-  { name: "Testing", count: 5 },
-  { name: "Frontend", count: 3 },
-  { name: "Accessibility", count: 2 },
-  { name: "Visual Regression", count: 1 },
 ];

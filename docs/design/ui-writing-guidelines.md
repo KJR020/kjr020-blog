@@ -261,8 +261,7 @@ Scrapboxの0件と404は、同じ文言にしない。どちらも「ページ�
 
 - [デザインシステムのコンテンツページ](../../src/design-system/pages/content.astro) - UIライティングの視覚サマリー（`pnpm dev`の`/design-system/content`）
 - [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
-- [SearchBox.tsx](../../src/components/search/SearchBox.tsx) - 検索UI
-- [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - Command Palette
+- [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - 検索UI
 - [ThemeToggleAnimated.tsx](../../src/components/theme/ThemeToggleAnimated.tsx) - Theme切り替え
 - [ScrapboxCardList.tsx](../../src/components/scrapbox/ScrapboxCardList.tsx) - Scrapboxの状態表示
 - [posts/[...slug].astro](../../src/pages/posts/[...slug].astro) - Code Copy

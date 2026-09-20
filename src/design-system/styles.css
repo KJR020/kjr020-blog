@@ -991,23 +991,23 @@ table.map th {
   gap: var(--phi-neg3);
 }
 
-.nav-demo a {
+.nav-demo a,
+.nav-demo button {
   display: inline-flex;
   min-block-size: 2.25rem;
   align-items: center;
   padding-inline: var(--phi-neg1);
   border-radius: calc(var(--radius) - 0.125rem);
+  border: 0;
+  background: transparent;
   color: var(--muted-foreground);
   font-size: var(--font-size-small);
   text-decoration: none;
 }
 
-.nav-demo a:hover { background: var(--accent); color: var(--accent-foreground); }
+.nav-demo a:hover,
+.nav-demo button:hover { background: var(--accent); color: var(--accent-foreground); }
 .nav-demo a.is-active { color: var(--link); font-weight: 600; }
-
-.search-box-specimen {
-  overflow: visible;
-}
 
 .command-demo {
   display: grid;
@@ -1597,7 +1597,8 @@ table.map th {
     align-items: start;
   }
 
-  .nav-demo a:not(.is-active) {
+  .nav-demo a:not(.is-active),
+  .nav-demo button {
     display: none;
   }
 

@@ -1,17 +1,3 @@
 ---
-import { getCollection } from "astro:content";
-import SearchPage from "@/components/pages/SearchPage.astro";
-
-const posts = await getCollection("posts", ({ data }) => !data.draft);
-const tagCounts = new Map<string, number>();
-for (const post of posts) {
-  for (const tag of post.data.tags) {
-    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-  }
-}
-const tags = Array.from(tagCounts, ([name, count]) => ({ name, count })).sort(
-  (a, b) => b.count - a.count || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0),
-);
+return Astro.redirect("/?search=open", 308);
 ---
-
-<SearchPage tags={tags} />

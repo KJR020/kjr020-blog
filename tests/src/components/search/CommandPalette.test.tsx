@@ -44,6 +44,21 @@ describe("CommandPalette", () => {
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
   });
 
+  it("検索トリガーをクリックするとダイアログが開く", () => {
+    render(
+      <>
+        <button type="button" data-command-palette-trigger>
+          Search
+        </button>
+        <CommandPalette />
+      </>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+
+    expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
+  });
+
   it("ダイアログが開いている状態で⌘Kを押すと閉じる", () => {
     render(<CommandPalette />);
     fireEvent.keyDown(document, { key: "k", metaKey: true });

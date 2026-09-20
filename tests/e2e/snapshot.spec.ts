@@ -9,7 +9,6 @@ const snapshotStylePath = fileURLToPath(new URL("./snapshot.css", import.meta.ur
 const fixturePages: PageConfig[] = [
   { route: "/__test/home", name: "index", hasIslands: true },
   { route: "/__test/posts", name: "posts", hasIslands: true },
-  { route: "/__test/search", name: "search", hasIslands: true },
   { route: "/__test/404", name: "404", hasIslands: true },
 ];
 

@@ -47,7 +47,11 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
           </div>
         </div>
       </section>
-      <section class="py-phi-xl animate-fade-in-up" style="animation-delay: 80ms">
+      <section
+        id="latest-posts"
+        class="py-phi-xl animate-fade-in-up"
+        style="animation-delay: 80ms"
+      >
         <div class="flex items-center justify-between mb-phi-md">
           <h2
             class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
@@ -84,7 +88,11 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
         </div>
       </section>
 
-      <section class="py-phi-xl animate-fade-in-up" style="animation-delay: 210ms">
+      <section
+        id="scrapbox"
+        class="py-phi-xl animate-fade-in-up"
+        style="animation-delay: 210ms"
+      >
         <div class="flex items-center justify-between mb-phi-md">
           <h2
             class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
@@ -118,6 +126,7 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
         </div>
         <ScrapboxCardList project="KJR020" pages={scrapboxPages} client:load />
       </section>
+
     </div>
   </div>
 </BaseLayout>

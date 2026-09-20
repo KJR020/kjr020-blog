@@ -116,7 +116,6 @@ export const designSystemPageGroups: Record<
       href: "/design-system/components#navigation",
       links: [
         { label: "Header", href: "/design-system/components#global-navigation" },
-        { label: "SearchBox", href: "/design-system/components#search-box" },
         { label: "Command Palette", href: "/design-system/components#command-palette" },
         { label: "Theme / Mobile Menu", href: "/design-system/components#theme-mobile" },
       ],
@@ -159,7 +158,7 @@ export const designSystemPageGroups: Record<
         { label: "ホーム", href: "/design-system/patterns#home-page" },
         { label: "記事一覧", href: "/design-system/patterns#post-archive-page" },
         { label: "記事ページ", href: "/design-system/patterns#article-reading" },
-        { label: "検索", href: "/design-system/patterns#search-page" },
+        { label: "検索ユーティリティ", href: "/design-system/patterns#search-page" },
         { label: "ポリシー・状態", href: "/design-system/patterns#policy-state-page" },
       ],
     },

@@ -53,10 +53,29 @@ export function CommandPalette() {
   }, []);
 
   const openDialog = useCallback(() => {
-    dialogRef.current?.showModal();
+    if (!dialogRef.current?.open) {
+      dialogRef.current?.showModal();
+    }
     setTimeout(() => inputRef.current?.focus(), 0);
     loadPagefind();
   }, [loadPagefind]);
+
+  useEffect(() => {
+    const handleTriggerClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest("[data-command-palette-trigger]")) {
+        openDialog();
+      }
+    };
+
+    document.addEventListener("click", handleTriggerClick);
+
+    if (new URLSearchParams(window.location.search).get("search") === "open") {
+      openDialog();
+    }
+
+    return () => document.removeEventListener("click", handleTriggerClick);
+  }, [openDialog]);
 
   // Reset state on dialog close (handles Escape, backdrop click, programmatic close)
   useEffect(() => {
@@ -186,6 +205,7 @@ export function CommandPalette() {
             ref={inputRef}
             type="text"
             role="combobox"
+            aria-label="記事を検索"
             aria-autocomplete="list"
             aria-controls="command-palette-results"
             aria-activedescendant={

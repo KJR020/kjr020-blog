@@ -75,7 +75,7 @@ test("記事ページを記事要素ではなくページの型として分類�
     "8-1. ホーム",
     "8-2. 記事一覧",
     "8-3. 記事ページ",
-    "8-4. 検索",
+    "8-4. 検索ユーティリティ",
     "8-5. ポリシー・状態",
   ]);
   await expect(page.locator("#pages > #article-reading")).toBeVisible();
@@ -266,7 +266,7 @@ test("実装とつながったデザインシステムを表示する", async ({
   await expect(header).toBeVisible();
   await expect(header.getByRole("link", { name: "KJR020's Blog" })).toHaveAttribute("href", "/");
   await expect(header.getByRole("link", { name: "Posts" })).toHaveAttribute("href", "/posts");
-  await expect(header.getByRole("link", { name: /Search/ })).toHaveAttribute("href", "/search");
+  await expect(header.getByRole("button", { name: /Search/ })).toBeVisible();
   await expect(header.getByRole("link", { name: /Scrapbox/ })).toHaveAttribute(
     "href",
     "https://scrapbox.io/kjr020/",
@@ -513,7 +513,7 @@ test("記事ページの読書設計をパターンの共通レイアウト内�
   const header = page.getByRole("banner");
   await expect(header.getByRole("link", { name: "KJR020's Blog" })).toHaveAttribute("href", "/");
   await expect(header.getByRole("link", { name: "Posts" })).toHaveAttribute("href", "/posts");
-  await expect(header.getByRole("link", { name: /Search/ })).toHaveAttribute("href", "/search");
+  await expect(header.getByRole("button", { name: /Search/ })).toBeVisible();
   await expect(header.getByRole("link", { name: /Scrapbox/ })).toHaveAttribute(
     "href",
     "https://scrapbox.io/kjr020/",

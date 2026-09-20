@@ -1,11 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 
-interface NavItem {
+interface LinkNavItem {
   href: string;
   label: string;
   external?: boolean;
+  action?: never;
 }
+
+interface ActionNavItem {
+  action: "search";
+  label: string;
+  href?: never;
+  external?: never;
+}
+
+type NavItem = LinkNavItem | ActionNavItem;
 
 interface MobileMenuProps {
   navItems: NavItem[];
@@ -89,37 +99,49 @@ export function MobileMenu({ navItems }: MobileMenuProps) {
       {isOpen && (
         <nav className="fixed right-[1%] top-16 z-50 w-[98vw] rounded-lg border border-border bg-background shadow-lg">
           <div className="flex flex-col py-2">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                target={item.external ? "_blank" : undefined}
-                rel={item.external ? "noopener noreferrer" : undefined}
-                onClick={closeMenu}
-                className="flex items-center px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                {item.label}
-                {item.external && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="ml-1"
-                    aria-hidden="true"
-                  >
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" x2="21" y1="14" y2="3" />
-                  </svg>
-                )}
-              </a>
-            ))}
+            {navItems.map((item) =>
+              item.action === "search" ? (
+                <button
+                  key={item.action}
+                  type="button"
+                  data-command-palette-trigger
+                  onClick={closeMenu}
+                  className="flex items-center px-4 py-3 text-left text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  {item.label}
+                </button>
+              ) : (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
+                  onClick={closeMenu}
+                  className="flex items-center px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  {item.label}
+                  {item.external && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="ml-1"
+                      aria-hidden="true"
+                    >
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" x2="21" y1="14" y2="3" />
+                    </svg>
+                  )}
+                </a>
+              ),
+            )}
           </div>
         </nav>
       )}

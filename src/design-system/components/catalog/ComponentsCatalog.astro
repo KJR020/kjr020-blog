@@ -5,7 +5,6 @@ import PostCard from "@/components/PostCard.astro";
 import PostMeta from "@/components/PostMeta.astro";
 import { ScrapboxCard } from "@/components/scrapbox";
 import { CommandPalette } from "@/components/search/CommandPalette";
-import { SearchBox } from "@/components/search/SearchBox";
 import { ThemeToggleAnimated } from "@/components/theme/ThemeToggleAnimated";
 import { TableOfContents } from "@/components/toc";
 import { Badge } from "@/components/ui/badge";
@@ -168,25 +167,16 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
       <nav class="nav-demo" aria-label="ヘッダー例">
         <a class="is-active" href="#global-navigation" aria-current="page">Home</a>
         <a href="#global-navigation">Posts</a>
-        <a href="#global-navigation">Search <kbd>⌘K</kbd></a>
+        <button type="button">Search <kbd>⌘K</kbd></button>
         <a href="https://scrapbox.io/KJR020">Scrapbox</a>
       </nav>
     </div>
     <p class="source-row"><strong>Source</strong><code>src/components/Header.astro</code></p>
   </div>
 
-  <div class="spec-item" id="search-box">
-    <h3>5-2. SearchBox</h3>
-    <p class="src">Pagefindを動的ロードし、入力に応じて検索する。1回5件を表示し、「さらに表示」で追加する。条件をクリアした後は入力へfocusを戻す。</p>
-    <div class="demo search-box-specimen">
-      <SearchBox client:load />
-    </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/search/SearchBox.tsx</code></p>
-  </div>
-
   <div class="spec-item" id="command-palette">
-    <h3>5-3. Command Palette</h3>
-    <p class="src"><kbd>⌘K</kbd> / <kbd>Ctrl K</kbd> でnative dialogを開く。Arrow Up/Downで選択、Enterで遷移、Escape/背景クリックで閉じる。</p>
+    <h3>5-2. Command Palette</h3>
+    <p class="src">HeaderのSearchまたは<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd> でnative dialogを開く。Arrow Up/Downで選択、Enterで遷移、Escape/背景クリックで閉じる。</p>
     <div class="demo command-demo">
       <div class="command-search"><span aria-hidden="true">⌕</span><span>記事を検索</span><kbd>Esc</kbd></div>
       <div class="command-results" role="listbox" aria-label="検索候補の例">
@@ -200,7 +190,7 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
   </div>
 
   <div class="spec-item" id="theme-mobile">
-    <h3>5-4. Theme Toggle / Mobile Menu</h3>
+    <h3>5-3. Theme Toggle / Mobile Menu</h3>
     <p class="src">Theme Toggleは画面全体を覆う波とアイコン遷移を使う。Mobile Menuは右上からfixed dropdownで開き、外側クリックとEscapeで閉じる。</p>
     <div class="demo navigation-actions-demo">
       <div><span>Theme Toggle</span><ThemeToggleAnimated client:load /></div>
