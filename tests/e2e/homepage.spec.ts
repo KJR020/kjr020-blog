@@ -19,11 +19,8 @@ test.describe("トップページのブランド表現", () => {
     const heroImage = page.locator("main img[alt='KJR020']");
     await expect(heroImage).toHaveCount(1);
     await expect(heroImage).toHaveAttribute("src", "/images/kuri_photo.png");
-    if ((page.viewportSize()?.width ?? 0) >= 640) {
-      await expect(heroImage).toBeVisible();
-    } else {
-      await expect(heroImage).toBeHidden();
-    }
+    // 著者を示す役割があるため、画面幅によらず表示する
+    await expect(heroImage).toBeVisible();
   });
 
   test("ライトテーマではOSの配色設定に関係なくロゴを反転しない", async ({ page }) => {
@@ -103,13 +100,13 @@ test.describe("トップページのブランド表現", () => {
 });
 
 test.describe("トップページの記事探索", () => {
-  test("Latest Posts、Scrapboxの順で配置し検索とタグは常設しない", async ({ page }) => {
+  test("記事を主領域、メモを補助領域へ配置し検索とタグは常設しない", async ({ page }) => {
     await page.goto("/");
 
     const sections = page.locator("main section");
-    await expect(sections).toHaveCount(3);
+    await expect(sections).toHaveCount(2);
     await expect(sections.nth(1)).toHaveAttribute("id", "latest-posts");
-    await expect(sections.nth(2)).toHaveAttribute("id", "scrapbox");
+    await expect(page.locator("aside#scrapbox")).toHaveCount(1);
     await expect(page.locator("section#search")).toHaveCount(0);
     await expect(page.locator("section#tags")).toHaveCount(0);
   });

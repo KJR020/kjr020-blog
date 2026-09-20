@@ -16,12 +16,12 @@ const latestPosts = posts.slice(0, 3);
 const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
 ---
 
-<BaseLayout title="KJR020's Blog" description="KJR020の技術ブログ">
+<BaseLayout title="KJR020's Blog" description="KJR020の技術ブログ" hideKuri>
   <div class="index-wrapper">
-    <div class="container mx-auto px-4 pb-phi-2xl">
+    <div class="container mx-auto px-4 pb-phi-2xl max-w-6xl">
       <section class="py-phi-xl animate-fade-in-up">
         <div class="flex items-start gap-phi-md">
-          <div class="hero-image-frame hidden sm:block">
+          <div class="hero-image-frame">
             <img
               src="/images/kuri_photo.png"
               alt="KJR020"
@@ -47,18 +47,22 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
           </div>
         </div>
       </section>
-      <section
-        id="latest-posts"
-        class="py-phi-xl animate-fade-in-up"
+      <div class="home-content py-phi-xl">
+        <section
+          id="latest-posts"
+          class="home-main animate-fade-in-up"
         style="animation-delay: 80ms"
       >
-        <div class="flex items-center justify-between mb-phi-md">
-          <h2
-            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
-            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-          >
-            Latest Posts
-          </h2>
+        <div class="flex items-end justify-between mb-phi-md">
+          <div class="border-l-2 border-link pl-3">
+            <h2
+              class="font-bold font-heading tracking-tight"
+              style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
+            >
+              Posts
+            </h2>
+            <p class="section-lead text-sm text-muted-foreground">ブログ記事</p>
+          </div>
           {
             posts.length > 3 && (
               <a
@@ -86,20 +90,22 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
         <div class="grid gap-phi-xs">
           {latestPosts.map((post) => <PostCard post={post} />)}
         </div>
-      </section>
-
-      <section
-        id="scrapbox"
-        class="py-phi-xl animate-fade-in-up"
+        </section>
+        <aside
+          id="scrapbox"
+          class="home-aside animate-fade-in-up"
         style="animation-delay: 210ms"
       >
-        <div class="flex items-center justify-between mb-phi-md">
-          <h2
-            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
-            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-          >
-            Scrapbox
-          </h2>
+        <div class="flex items-end justify-between mb-phi-md">
+          <div class="border-l-2 border-link pl-3">
+            <h2
+              class="font-bold font-heading tracking-tight"
+              style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
+            >
+              Notes
+            </h2>
+            <p class="section-lead text-sm text-muted-foreground">Cosenseのメモ書き</p>
+          </div>
           <a
             href="https://scrapbox.io/KJR020"
             target="_blank"
@@ -124,8 +130,14 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
             </svg>
           </a>
         </div>
-        <ScrapboxCardList project="KJR020" pages={scrapboxPages} client:load />
-      </section>
+        <ScrapboxCardList
+            project="KJR020"
+            pages={scrapboxPages}
+            limit={4}
+            client:load
+          />
+        </aside>
+      </div>
 
     </div>
   </div>
@@ -133,6 +145,9 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
 
 <style>
   .index-wrapper {
+    /* 主領域と補助領域の内容どうしを離すための内側余白 */
+    --home-column-inset: var(--phi-1);
+
     position: relative;
   }
 
@@ -140,9 +155,44 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
     position: relative;
   }
 
-  .index-wrapper > .container > section + section {
+  .index-wrapper > .container > section + section,
+  .index-wrapper > .container > section + .home-content {
     border-top: 1px solid var(--border);
     padding-top: 1.618rem;
+  }
+
+  /*
+   * 主領域と補助領域を同じ行へ並べるためGridを使う。
+   * 単一領域しかないHeroはpaddingで幅を決めており、Gridにしていない。
+   */
+  @media (min-width: 64rem) {
+    .home-content {
+      display: grid;
+      grid-template-columns: repeat(16, minmax(0, 1fr));
+      column-gap: 1rem;
+      align-items: start;
+    }
+
+    .home-main {
+      grid-column: 1 / span 12;
+      padding-inline-end: var(--home-column-inset);
+    }
+
+    .home-aside {
+      grid-column: 13 / span 4;
+      padding-inline-start: var(--home-column-inset);
+    }
+  }
+
+  @media (max-width: 63.999rem) {
+    .home-aside {
+      margin-block-start: var(--phi-2);
+    }
+  }
+
+  /* メモが0件のときは、見出しと枠だけ残さず領域ごと畳む */
+  .home-aside:has([data-notes-empty]) {
+    display: none;
   }
 
   .index-wrapper :global([data-slot="card"]:hover) {
@@ -169,7 +219,28 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
     position: absolute;
   }
 
+  @media (max-width: 40rem) {
+    .hero-image-frame {
+      --hero-lockup-size: var(--phi-3);
+    }
+  }
+
   .hero-copy {
     text-wrap: pretty;
+  }
+
+  /*
+   * Wideでは内容を16列グリッドの1〜11列ぶんに収め、残りは余白として残す。
+   * 区切り線はsectionのボーダーなので全幅のまま。
+   */
+  @media (min-width: 64rem) {
+    .index-wrapper > .container > section {
+      /*
+       * 16列グリッドでn列ぶんに収めるとき、空ける量は (1 - n/16) × (100% + gutter)。
+       * n=12、gutter 1rem なので 0.25 × (100% + 1rem)。
+       * さらに主領域と同じ内側余白を足し、右端を揃える。
+       */
+      padding-inline-end: calc(25% + 0.25rem + var(--home-column-inset));
+    }
   }
 </style>

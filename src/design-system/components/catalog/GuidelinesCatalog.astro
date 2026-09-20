@@ -21,7 +21,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
         <thead><tr><th>特性</th><th>目指す状態</th><th>避ける状態</th></tr></thead>
         <tbody>
           <tr><td><strong>簡潔</strong></td><td>判断に必要な情報だけを伝える</td><td>背景説明をUIへ詰め込む</td></tr>
-          <tr><td><strong>具体的</strong></td><td>「記事」「検索」「Scrapbox」と対象を示す</td><td>「データ」「処理」だけで済ませる</td></tr>
+          <tr><td><strong>具体的</strong></td><td>「記事」「検索」「Cosense」と対象を示す</td><td>「データ」「処理」だけで済ませる</td></tr>
           <tr><td><strong>落ち着き</strong></td><td>確認できた事実を穏やかに伝える</td><td>過剰な謝罪・煽り・感嘆符</td></tr>
           <tr><td><strong>中立</strong></td><td>読者の選択とペースを尊重する</td><td>急かす、読者に責任を向ける</td></tr>
         </tbody>
@@ -54,7 +54,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
           <tr><td>Empty</td><td>状態 + 必要な次の手段</td><td>記事が見つかりません</td></tr>
           <tr><td>Error</td><td>完了できなかったこと</td><td>検索できません</td></tr>
           <tr><td>Success</td><td>完了した操作</td><td>コードをコピーしました</td></tr>
-          <tr><td>External link</td><td>移動先 + 操作</td><td>Scrapboxを開く</td></tr>
+          <tr><td>External link</td><td>移動先 + 操作</td><td>Cosenseで見る</td></tr>
         </tbody>
       </table>
     </div>
@@ -82,8 +82,8 @@ const shows = (section: GuidelineSection) => sections.includes(section);
           <tr><td>検索中</td><td>検索しています…</td><td>追加説明なし</td></tr>
           <tr><td>検索結果0件</td><td>記事が見つかりません</td><td>キーワードを変えて検索してください。</td></tr>
           <tr><td>検索エラー</td><td>検索できません</td><td>しばらくしてから、もう一度お試しください。</td></tr>
-          <tr><td>Scrapbox 0件</td><td>Scrapboxのページがありません</td><td>追加説明なし</td></tr>
-          <tr><td>Scrapboxエラー</td><td>Scrapboxを読み込めませんでした</td><td>再読み込み</td></tr>
+          <tr><td>Cosense 0件</td><td>Cosenseのページがありません</td><td>追加説明なし</td></tr>
+          <tr><td>Cosenseエラー</td><td>Cosenseを読み込めませんでした</td><td>再読み込み</td></tr>
           <tr><td>コピー完了</td><td>コードをコピーしました</td><td><code>aria-live="polite"</code></td></tr>
         </tbody>
       </table>
@@ -132,7 +132,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
     </div>
     <ul class="rule-list motion-rules">
       <li><code>prefers-reduced-motion: reduce</code>では不要なanimationを停止する。</li>
-      <li>Scrapbox画像は表示領域へ近づいてから読み込み、opacity transitionで表示する。</li>
+      <li>Cosense画像は表示領域へ近づいてから読み込み、opacity transitionで表示する。</li>
     </ul>
   </div>
 </section>

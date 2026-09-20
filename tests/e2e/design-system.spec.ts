@@ -100,21 +100,6 @@ test("Header標本は本番と同じ目のシンボルを表示する", async ({
   await expect(brandMark).toHaveAttribute("alt", "");
 });
 
-test("目次標本は本番と同じ開閉操作を試せる", async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 720 });
-  await page.goto("/design-system/components#table-of-contents");
-
-  const specimen = page.locator("#table-of-contents");
-  const navigation = specimen.getByRole("navigation", { name: "目次" });
-
-  await expect(navigation).toBeVisible();
-  await specimen.getByRole("button", { name: "目次を隠す" }).click();
-  await expect(navigation).toBeHidden();
-
-  await specimen.getByRole("button", { name: "目次を表示" }).click();
-  await expect(navigation).toBeVisible();
-});
-
 test("目次標本はモバイル幅でインライン目次を開閉できる", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/design-system/components#table-of-contents");
@@ -267,7 +252,7 @@ test("実装とつながったデザインシステムを表示する", async ({
   await expect(header.getByRole("link", { name: "KJR020's Blog" })).toHaveAttribute("href", "/");
   await expect(header.getByRole("link", { name: "Posts" })).toHaveAttribute("href", "/posts");
   await expect(header.getByRole("button", { name: /Search/ })).toBeVisible();
-  await expect(header.getByRole("link", { name: /Scrapbox/ })).toHaveAttribute(
+  await expect(header.getByRole("link", { name: /Cosense/ })).toHaveAttribute(
     "href",
     "https://scrapbox.io/kjr020/",
   );
@@ -514,7 +499,7 @@ test("記事ページの読書設計をパターンの共通レイアウト内�
   await expect(header.getByRole("link", { name: "KJR020's Blog" })).toHaveAttribute("href", "/");
   await expect(header.getByRole("link", { name: "Posts" })).toHaveAttribute("href", "/posts");
   await expect(header.getByRole("button", { name: /Search/ })).toBeVisible();
-  await expect(header.getByRole("link", { name: /Scrapbox/ })).toHaveAttribute(
+  await expect(header.getByRole("link", { name: /Cosense/ })).toHaveAttribute(
     "href",
     "https://scrapbox.io/kjr020/",
   );

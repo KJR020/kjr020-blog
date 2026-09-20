@@ -155,16 +155,16 @@ const shows = (section: FoundationSection) => sections.includes(section);
   </div>
 
   <div class="spec-item" id="grid">
-    <h3>2-2. 整列の基本方針</h3>
-    <p class="src">共通の列体系は持たない。シェルとページパターンへ揃えるのはトップレベルのコンテナで、部品内部はspacing tokenで配置する。</p>
+    <h3>2-2. 16列グリッド</h3>
+    <p class="src">Wideではシェルの内容幅を16列とgutter 16pxへ分割し、主要領域の幅と位置を列で決める。列は配置を揃えるための座標系で、CSS Gridの使用そのものは要件にしない。部品内部はspacing tokenで配置する。</p>
     <div class="demo">
       <div class="shell-anatomy" aria-label="シェルと内部配置の見本">
         <span class="shell-margin">16px</span>
         <div class="shell-inner">
-          <div class="shell-container">トップレベルコンテナはシェルへ揃える</div>
+          <div class="shell-container">主領域 1〜12列（1120pxのとき836px）</div>
           <div class="shell-part">
-            <strong>Card</strong>
-            <span>内部のtitle・meta・actionはspacing tokenで配置する</span>
+            <strong>補助領域 13〜16列</strong>
+            <span>1120pxのとき268px。補助情報がなければ余白として残す</span>
           </div>
         </div>
         <span class="shell-margin">16px</span>
@@ -190,14 +190,15 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="grid-types">
     <h3>2-4. ページ別の最大幅</h3>
-    <p class="src">最大幅はページごとに定める。共通の列体系は持たない。</p>
+    <p class="src">最大幅はページごとに定める。16列へ分割するのはシェルの内容幅。</p>
     <div class="demo table-scroll">
       <table class="map">
         <thead><tr><th>ページ</th><th>最大幅</th><th>指定</th></tr></thead>
         <tbody>
           <tr><td>記事詳細</td><td>1152px / 72rem</td><td>max-w-6xl</td></tr>
+          <tr><td>ホーム</td><td>1152px / 72rem</td><td>max-w-6xl</td></tr>
           <tr><td>Privacy Policy</td><td>768px / 48rem</td><td>max-w-3xl</td></tr>
-          <tr><td>ホーム、記事一覧、検索</td><td>Breakpoint連動</td><td>container</td></tr>
+          <tr><td>記事一覧、タグ別一覧、検索</td><td>Breakpoint連動</td><td>container</td></tr>
         </tbody>
       </table>
     </div>
@@ -205,11 +206,11 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="grid-composition">
     <h3>2-5. 配置パターン</h3>
-    <p class="src">Wideでは主領域へ残り幅を割り当て、補助領域に250pxを確保する。Medium以下はDOM順を保ったまま全幅で縦積みし、目次は折りたたみ表示へ切り替える。</p>
+    <p class="src">Wideでは主領域を1〜12列、補助領域を13〜16列へ置く。Medium以下はDOM順を保ったまま全幅で縦積みし、記事詳細の目次は折りたたみ表示へ切り替える。</p>
     <div class="demo grid-composition">
-      <div class="grid-region grid-region-header"><strong>Page header</strong><span>全幅</span></div>
-      <div class="grid-region grid-region-main"><strong>Article / Search results</strong><span>Wide: minmax(0, 1fr)</span></div>
-      <div class="grid-region grid-region-aside"><strong>TOC / Filters</strong><span>Wide: 250px</span></div>
+      <div class="grid-region grid-region-header"><strong>記事ヘッダー</strong><span>タイトル 1〜12列 / マスコット 14〜16列</span></div>
+      <div class="grid-region grid-region-main"><strong>本文 / 記事一覧</strong><span>Wide: 1〜12列</span></div>
+      <div class="grid-region grid-region-aside"><strong>目次 / メモ</strong><span>Wide: 13〜16列</span></div>
     </div>
   </div>
 
@@ -232,7 +233,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
         <tbody>
           <tr><td>同一要素内</td><td>φ⁻³〜φ⁻¹</td><td>ナビ間隔、タイトルと補足、カード行間</td></tr>
           <tr><td>関連要素間</td><td>φ⁰〜φ¹</td><td>カードpadding、見出しと一覧</td></tr>
-          <tr><td>セクション間</td><td>φ¹〜φ²</td><td>Latest Posts / Scrapbox、記事header</td></tr>
+          <tr><td>セクション間</td><td>φ¹〜φ²</td><td>Posts / Notes、記事header</td></tr>
           <tr><td>ページ外周</td><td>px-4 + py-φ²</td><td>一覧・記事詳細・ヒーロー</td></tr>
         </tbody>
       </table>
