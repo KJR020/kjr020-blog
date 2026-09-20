@@ -94,7 +94,7 @@ function ScrapboxCardListInner({
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
         <AlertCircle className="h-12 w-12 text-destructive" />
-        <p className="text-muted-foreground">Scrapboxを読み込めませんでした</p>
+        <p className="text-muted-foreground">Cosenseを読み込めませんでした</p>
         <Button variant="outline" onClick={() => refetch()}>
           <RefreshCw className="mr-2 h-4 w-4" />
           再読み込み
@@ -108,7 +108,7 @@ function ScrapboxCardListInner({
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
         <FileQuestion className="h-12 w-12 text-muted-foreground" />
-        <p className="text-muted-foreground">Scrapboxのページがありません</p>
+        <p className="text-muted-foreground">Cosenseのページがありません</p>
       </div>
     );
   }
@@ -124,10 +124,15 @@ function ScrapboxCardListInner({
               rel="noopener noreferrer"
               className="group/note block py-phi-sm transition-colors hover:text-link"
             >
-              <span className="block text-sm leading-snug text-foreground line-clamp-2 group-hover/note:text-link">
+              <span className="block text-base leading-snug text-foreground line-clamp-2 group-hover/note:text-link">
                 {page.title}
               </span>
-              <span className="mt-phi-3xs block text-[10px] text-muted-foreground/60">
+              {page.description && (
+                <span className="mt-phi-2xs block text-sm leading-normal text-muted-foreground/70 line-clamp-2">
+                  {cleanScrapboxDescription(page.description)}
+                </span>
+              )}
+              <span className="mt-phi-2xs block text-sm text-muted-foreground/60">
                 {formatDate(page.updatedAt)}
               </span>
             </a>

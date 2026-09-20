@@ -53,13 +53,16 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
           class="home-main animate-fade-in-up"
         style="animation-delay: 80ms"
       >
-        <div class="flex items-center justify-between mb-phi-md">
-          <h2
-            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
-            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-          >
-            Latest Posts
-          </h2>
+        <div class="flex items-end justify-between mb-phi-md">
+          <div class="border-l-2 border-link pl-3">
+            <h2
+              class="font-bold font-heading tracking-tight"
+              style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
+            >
+              Posts
+            </h2>
+            <p class="section-lead text-sm text-muted-foreground">ブログ記事</p>
+          </div>
           {
             posts.length > 3 && (
               <a
@@ -93,13 +96,16 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
           class="home-aside animate-fade-in-up"
         style="animation-delay: 210ms"
       >
-        <div class="flex items-center justify-between mb-phi-md">
-          <h2
-            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
-            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-          >
-            Recent Notes
-          </h2>
+        <div class="flex items-end justify-between mb-phi-md">
+          <div class="border-l-2 border-link pl-3">
+            <h2
+              class="font-bold font-heading tracking-tight"
+              style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
+            >
+              Notes
+            </h2>
+            <p class="section-lead text-sm text-muted-foreground">Cosenseのメモ書き</p>
+          </div>
           <a
             href="https://scrapbox.io/KJR020"
             target="_blank"
@@ -128,7 +134,7 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
             project="KJR020"
             pages={scrapboxPages}
             variant="notes"
-            limit={6}
+            limit={4}
             client:load
           />
         </aside>

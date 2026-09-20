@@ -103,13 +103,13 @@ test.describe("トップページのブランド表現", () => {
 });
 
 test.describe("トップページの記事探索", () => {
-  test("Latest Posts、Scrapboxの順で配置し検索とタグは常設しない", async ({ page }) => {
+  test("記事を主領域、メモを補助領域へ配置し検索とタグは常設しない", async ({ page }) => {
     await page.goto("/");
 
     const sections = page.locator("main section");
-    await expect(sections).toHaveCount(3);
+    await expect(sections).toHaveCount(2);
     await expect(sections.nth(1)).toHaveAttribute("id", "latest-posts");
-    await expect(sections.nth(2)).toHaveAttribute("id", "scrapbox");
+    await expect(page.locator("aside#scrapbox")).toHaveCount(1);
     await expect(page.locator("section#search")).toHaveCount(0);
     await expect(page.locator("section#tags")).toHaveCount(0);
   });
