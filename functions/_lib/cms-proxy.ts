@@ -27,6 +27,7 @@ export type ProxyResult =
       status?: number;
     };
 
+/** プロジェクト名が許可された文字種と長さに収まるか検証する。 */
 export function validateProject(project: string): boolean {
   if (typeof project !== "string") return false;
   if (project.length === 0 || project.length > PROJECT_NAME_MAX_LENGTH) return false;
@@ -38,6 +39,7 @@ type PublicPageFields = Pick<
   "id" | "title" | "image" | "descriptions" | "updated"
 >;
 
+/** Cosenseのページが公開レスポンスに必要なフィールドを持つか検証する。 */
 function isPublicPage(value: unknown): value is PublicPageFields {
   if (value === null || typeof value !== "object") return false;
   const page = value as Record<string, unknown>;
@@ -54,6 +56,7 @@ function isPublicPage(value: unknown): value is PublicPageFields {
   );
 }
 
+/** Cosenseのページをブログ向けの公開データへ変換する。 */
 function transformPage(page: PublicPageFields, project: string): PageData {
   return {
     id: page.id,
@@ -65,6 +68,7 @@ function transformPage(page: PublicPageFields, project: string): PageData {
   };
 }
 
+/** Cosense APIからページを取得し、検証済みの公開データを返す。 */
 export async function fetchPages(
   project: string,
   search: string,

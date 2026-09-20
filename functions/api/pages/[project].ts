@@ -8,6 +8,7 @@ interface Env {
 
 const CACHE_CONTROL = "public, max-age=300, s-maxage=600";
 
+/** Cosenseのページ一覧を共有キャッシュから返し、未保存なら上流から取得する。 */
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const project = context.params.project as string;
   const scrapboxSid = context.env.SCRAPBOX_SID;
