@@ -21,6 +21,7 @@ graph TB
     subgraph Cloudflare["Cloudflare Pages"]
         CDN[静的ファイル配信]
         Functions[GET /api/pages/:project]
+        Cache[(Cache API)]
     end
 
     subgraph Browser["ブラウザ"]
@@ -40,6 +41,7 @@ graph TB
     Page --> Islands
     Islands --> Search
     Islands --> Functions
+    Functions --> Cache
     Functions --> Cosense[Cosense API]
     Islands --> Giscus[Giscus / GitHub Discussions]
 ```
@@ -56,7 +58,7 @@ graph TB
 | `src/components/` | Astroの静的UIとReactの対話的UI | ビルド時／ブラウザ |
 | `src/integrations/` | AstroとMarkdownのカスタム処理 | ビルド時／開発時 |
 | `src/lib/` | ルーティング、構造化データ、OGP生成などのドメインロジック | ビルド時／テスト時 |
-| `functions/` | Cosense API Proxy、入力検証、CORS、キャッシュ制御 | リクエスト時 |
+| `functions/` | Cosense API Proxy、入力検証、キャッシュ、エラー制御 | リクエスト時 |
 | `scripts/` | 公開入力の検査、出力の初期化、共通OGP生成 | ビルド前 |
 
 ## ビルド時のデータフロー
@@ -95,7 +97,7 @@ MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラ�
 | コメント | ブラウザ | Giscus / GitHub Discussions |
 | Cosenseカード | ブラウザ＋Pages Functions | Cosense API |
 
-Cosense（旧Scrapbox）連携では、ブラウザが `/api/pages/:project` を呼び出す。Pages Functionsはプロジェクト名を検証し、Cloudflare側の `SCRAPBOX_SID` を使ってCosense APIへ接続する。レスポンスは表示に必要な項目だけへ変換し、成功時は5分間の公開キャッシュ、エラー時は `no-store` を返す。許可したOrigin以外にはCORSヘッダーを付与しない。
+Cosense（旧Scrapbox）連携では、ブラウザが同一Originの`/api/pages/:project`を呼び出す。Pages Functionsはプロジェクト名を検証し、Cloudflare側の`SCRAPBOX_SID`を使ってCosense APIへ接続する。レスポンスは表示に必要な項目だけへ変換し、Browserで300秒、Cloudflare Cache APIで600秒キャッシュする。エラーは保存しない。cross-originのBrowser JavaScriptからの読み取りは許可しない。詳細は[Cosense API Proxy](cosense-api-proxy.md)に定義する。
 
 ## 設計上の判断
 
@@ -142,7 +144,8 @@ Pull Requestでは以下を独立したGitHub Actionsジョブとして実行す
 - [ビルド前処理](../../scripts/prepare-public-build.ts) - 出力初期化、公開入力検査、共通OGP生成
 - [Cosense APIエンドポイント](../../functions/api/pages/%5Bproject%5D.ts) - Pages Functionsの入口
 - [Cosense Proxy](../../functions/_lib/cms-proxy.ts) - 外部API接続とレスポンス変換
-- [HTTPポリシー](../../functions/_lib/http.ts) - CORSとCache-Control
+- [HTTPポリシー](../../functions/_lib/http.ts) - Cache-Controlとエラーレスポンス
+- [Cosense API Proxy仕様](cosense-api-proxy.md) - 入力、キャッシュ、エラー、セキュリティ仕様
 - [CI workflow](../../.github/workflows/ci.yml) - Pull Requestの品質検証
 - [Deploy workflow](../../.github/workflows/deploy.yml) - Cloudflare Pagesへのデプロイ
 - [テストアーキテクチャ](test_architecture.md) - テスト種別と配置方針

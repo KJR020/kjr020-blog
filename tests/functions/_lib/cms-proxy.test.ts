@@ -25,7 +25,11 @@ const MOCK_API_RESPONSE = Object.freeze({
   ],
 });
 
-function mockApiResponse(overrides?: { pages?: Partial<(typeof MOCK_API_RESPONSE.pages)[0]>[] }) {
+function mockApiResponse(overrides?: {
+  pages?: (Partial<Omit<(typeof MOCK_API_RESPONSE.pages)[0], "image">> & {
+    image?: string | null;
+  })[];
+}) {
   const data = {
     ...MOCK_API_RESPONSE,
     pages: overrides?.pages
@@ -107,6 +111,25 @@ describe("fetchPages", () => {
     expect(result.pages[0].url).toContain(encodeURIComponent("テストページ"));
   });
 
+  it("ページURLには上流のprojectNameでなく検証済みprojectを使う", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            ...MOCK_API_RESPONSE,
+            projectName: "other-project",
+          }),
+          { status: 200 },
+        ),
+      ),
+    );
+    const result = await fetchPages("KJR020", "?limit=100", "sid");
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.pages[0].url).toContain("scrapbox.io/KJR020/");
+  });
+
   it("image が null のページを変換する", async () => {
     vi.stubGlobal(
       "fetch",
@@ -130,6 +153,20 @@ describe("fetchPages", () => {
     vi.stubGlobal("fetch", mockFetch);
     await fetchPages("KJR020", "", "s:test.sig");
     expect(mockFetch.mock.calls[0][1].headers.Cookie).toBe("connect.sid=s:test.sig");
+  });
+
+  it("認証Cookieを別ホストへ転送しないようリダイレクトを追わない", async () => {
+    const mockFetch = vi.fn().mockResolvedValue(
+      new Response(null, {
+        status: 302,
+        headers: { Location: "https://example.org/collect" },
+      }),
+    );
+    vi.stubGlobal("fetch", mockFetch);
+    const result = await fetchPages("KJR020", "?limit=100", "secret-sid");
+    expect(mockFetch.mock.calls[0][1].redirect).toBe("manual");
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(result.ok).toBe(false);
   });
 
   it("クエリパラメータを Upstream URL に透過する", async () => {
