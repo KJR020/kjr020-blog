@@ -75,17 +75,21 @@ describe("GET /api/pages/:project", () => {
     const res = await onRequestGet(ctx);
     expect(res.status).toBe(200);
     expect(res.headers.get("Cache-Control")).toBe("public, max-age=300, s-maxage=600");
-    expect(match.mock.calls[0][0].url).toBe("https://preview.example.dev/api/pages/KJR020?limit=100");
+    expect(match.mock.calls[0][0].url).toBe(
+      "https://preview.example.dev/api/pages/KJR020?limit=100",
+    );
     expect(put.mock.calls[0][0].url).toBe("https://preview.example.dev/api/pages/KJR020?limit=100");
     expect((await put.mock.calls[0][1].json())[0].id).toBe("p1");
     expect(ctx.waitUntil).toHaveBeenCalledTimes(1);
   });
 
   it("キャッシュ読み取り失敗時も上流データを返す", async () => {
-    vi.stubGlobal("caches", { default: {
-      match: vi.fn().mockRejectedValue(new Error("cache unavailable")),
-      put: vi.fn().mockResolvedValue(undefined),
-    } });
+    vi.stubGlobal("caches", {
+      default: {
+        match: vi.fn().mockRejectedValue(new Error("cache unavailable")),
+        put: vi.fn().mockResolvedValue(undefined),
+      },
+    });
     const fetchMock = mockSuccessfulScrapboxFetch();
     vi.stubGlobal("fetch", fetchMock);
     const res = await onRequestGet(createContext("KJR020"));
@@ -94,10 +98,14 @@ describe("GET /api/pages/:project", () => {
   });
 
   it("キャッシュ保存が同期的に失敗しても200を返す", async () => {
-    vi.stubGlobal("caches", { default: {
-      match: vi.fn().mockResolvedValue(undefined),
-      put: vi.fn().mockImplementation(() => { throw new Error("write unavailable"); }),
-    } });
+    vi.stubGlobal("caches", {
+      default: {
+        match: vi.fn().mockResolvedValue(undefined),
+        put: vi.fn().mockImplementation(() => {
+          throw new Error("write unavailable");
+        }),
+      },
+    });
     vi.stubGlobal("fetch", mockSuccessfulScrapboxFetch());
     const res = await onRequestGet(createContext("KJR020"));
     expect(res.status).toBe(200);
@@ -113,9 +121,11 @@ describe("GET /api/pages/:project", () => {
   it("入力queryを無視し、上流にはlimit=100だけを送る", async () => {
     const fetchMock = mockSuccessfulScrapboxFetch();
     vi.stubGlobal("fetch", fetchMock);
-    const res = await onRequestGet(createContext("KJR020", {
-      url: "https://kjr020.pages.dev/api/pages/KJR020?limit=1&skip=5",
-    }));
+    const res = await onRequestGet(
+      createContext("KJR020", {
+        url: "https://kjr020.pages.dev/api/pages/KJR020?limit=1&skip=5",
+      }),
+    );
     expect(res.status).toBe(200);
     expect(fetchMock.mock.calls[0][0]).toBe("https://scrapbox.io/api/pages/KJR020?limit=100");
   });
@@ -178,7 +188,10 @@ describe("GET /api/pages/:project", () => {
   });
 
   it("上流4xxを502へ正規化する", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("Unauthorized", { status: 401 })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(new Response("Unauthorized", { status: 401 })),
+    );
     const res = await onRequestGet(createContext("KJR020"));
     expect(res.status).toBe(502);
     expect(res.headers.get("Cache-Control")).toBe("no-store");
@@ -187,9 +200,17 @@ describe("GET /api/pages/:project", () => {
   it("上流が5秒応答しない場合は504を返す", async () => {
     vi.useFakeTimers();
     try {
-      vi.stubGlobal("fetch", vi.fn().mockImplementation((_url, options) => new Promise((_resolve, reject) => {
-        options.signal.addEventListener("abort", () => reject(new DOMException("aborted", "AbortError")));
-      })));
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockImplementation(
+          (_url, options) =>
+            new Promise((_resolve, reject) => {
+              options.signal.addEventListener("abort", () =>
+                reject(new DOMException("aborted", "AbortError")),
+              );
+            }),
+        ),
+      );
       const responsePromise = onRequestGet(createContext("KJR020"));
       await vi.advanceTimersByTimeAsync(5_000);
       const res = await responsePromise;
@@ -203,13 +224,21 @@ describe("GET /api/pages/:project", () => {
   it("上流のJSON bodyが5秒完了しない場合も504を返す", async () => {
     vi.useFakeTimers();
     try {
-      vi.stubGlobal("fetch", vi.fn().mockImplementation((_url, options) => Promise.resolve({
-        ok: true,
-        status: 200,
-        json: () => new Promise((_resolve, reject) => {
-          options.signal.addEventListener("abort", () => reject(new DOMException("aborted", "AbortError")));
-        }),
-      })));
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockImplementation((_url, options) =>
+          Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () =>
+              new Promise((_resolve, reject) => {
+                options.signal.addEventListener("abort", () =>
+                  reject(new DOMException("aborted", "AbortError")),
+                );
+              }),
+          }),
+        ),
+      );
       const responsePromise = onRequestGet(createContext("KJR020"));
       await vi.advanceTimersByTimeAsync(5_000);
       const res = await responsePromise;
@@ -222,7 +251,10 @@ describe("GET /api/pages/:project", () => {
   it("不正な上流データを502で返し、キャッシュしない", async () => {
     const put = vi.fn();
     vi.stubGlobal("caches", { default: { match: vi.fn().mockResolvedValue(undefined), put } });
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ pages: null }), { status: 200 })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(new Response(JSON.stringify({ pages: null }), { status: 200 })),
+    );
     const res = await onRequestGet(createContext("KJR020"));
     expect(res.status).toBe(502);
     expect(put).not.toHaveBeenCalled();
@@ -231,10 +263,26 @@ describe("GET /api/pages/:project", () => {
   it("型が不正なページを200として共有保存しない", async () => {
     const put = vi.fn();
     vi.stubGlobal("caches", { default: { match: vi.fn().mockResolvedValue(undefined), put } });
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({
-      projectName: "KJR020",
-      pages: [{ id: "p1", title: { unexpected: "object" }, image: null, descriptions: ["説明"], updated: 1_700_000_000 }],
-    }), { status: 200 })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            projectName: "KJR020",
+            pages: [
+              {
+                id: "p1",
+                title: { unexpected: "object" },
+                image: null,
+                descriptions: ["説明"],
+                updated: 1_700_000_000,
+              },
+            ],
+          }),
+          { status: 200 },
+        ),
+      ),
+    );
     const res = await onRequestGet(createContext("KJR020"));
     expect(res.status).toBe(502);
     expect(put).not.toHaveBeenCalled();
@@ -243,58 +291,30 @@ describe("GET /api/pages/:project", () => {
   it("上流リダイレクトは502として扱い、Locationも保存もしない", async () => {
     const put = vi.fn();
     vi.stubGlobal("caches", { default: { match: vi.fn().mockResolvedValue(undefined), put } });
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, {
-      status: 302,
-      headers: { Location: "https://example.org/collect" },
-    })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(null, {
+          status: 302,
+          headers: { Location: "https://example.org/collect" },
+        }),
+      ),
+    );
     const res = await onRequestGet(createContext("KJR020"));
     expect(res.status).toBe(502);
     expect(res.headers.get("Location")).toBeNull();
     expect(put).not.toHaveBeenCalled();
   });
 
-  it("廃止された github.io ドメインは CORS で弾かれる", async () => {
+  it.each([
+    "https://kjr020.dev",
+    "http://localhost:4321",
+    "https://kjr020.github.io",
+  ])("Origin %s にCORSヘッダーを付与しない", async (origin) => {
     vi.stubGlobal("fetch", mockSuccessfulScrapboxFetch());
-    const ctx = createContext("KJR020", { origin: "https://kjr020.github.io" });
+    const ctx = createContext("KJR020", { origin });
     const res = await onRequestGet(ctx);
     expect(res.headers.get("Access-Control-Allow-Origin")).toBeNull();
-  });
-
-  it("Origin: null は CORS で弾かれる", async () => {
-    vi.stubGlobal("fetch", mockSuccessfulScrapboxFetch());
-    const ctx = createContext("KJR020", { origin: "null" });
-    const res = await onRequestGet(ctx);
-    expect(res.headers.get("Access-Control-Allow-Origin")).toBeNull();
-  });
-
-  it("Origin: file:// は CORS で弾かれる", async () => {
-    vi.stubGlobal("fetch", mockSuccessfulScrapboxFetch());
-    const ctx = createContext("KJR020", { origin: "file://" });
-    const res = await onRequestGet(ctx);
-    expect(res.headers.get("Access-Control-Allow-Origin")).toBeNull();
-  });
-
-  it("サブドメイン偽装 (https://kjr020.dev.evil.com) は CORS で弾かれる", async () => {
-    vi.stubGlobal("fetch", mockSuccessfulScrapboxFetch());
-    const ctx = createContext("KJR020", {
-      origin: "https://kjr020.dev.evil.com",
-    });
-    const res = await onRequestGet(ctx);
-    expect(res.headers.get("Access-Control-Allow-Origin")).toBeNull();
-  });
-
-  it("末尾スラッシュ付きの許可ドメインは CORS で弾かれる", async () => {
-    vi.stubGlobal("fetch", mockSuccessfulScrapboxFetch());
-    const ctx = createContext("KJR020", { origin: "https://kjr020.dev/" });
-    const res = await onRequestGet(ctx);
-    expect(res.headers.get("Access-Control-Allow-Origin")).toBeNull();
-  });
-
-  it("localhost Origin は開発用途で許可される", async () => {
-    vi.stubGlobal("fetch", mockSuccessfulScrapboxFetch());
-    const ctx = createContext("KJR020", { origin: "http://localhost:4321" });
-    const res = await onRequestGet(ctx);
-    expect(res.headers.get("Access-Control-Allow-Origin")).toBe("http://localhost:4321");
   });
 
   it("レスポンスには SCRAPBOX_SID 値が含まれない", async () => {
