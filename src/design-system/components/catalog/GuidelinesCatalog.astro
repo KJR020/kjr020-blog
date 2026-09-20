@@ -106,9 +106,9 @@ const shows = (section: GuidelineSection) => sections.includes(section);
       <li>リンクカードは60chを境にOG画像の幅とaspect-ratioを切り替える。</li>
     </ul>
     <div class="responsive-summary" aria-label="レスポンシブレイアウトの要約">
-      <div><strong>Compact</strong><span>2 columns · Mobile controls</span></div>
-      <div><strong>Medium</strong><span>6 columns · stacked support</span></div>
-      <div><strong>Wide</strong><span>12 columns · content + rail</span></div>
+      <div><strong>Compact</strong><span>縦積み · Mobile controls</span></div>
+      <div><strong>Medium</strong><span>縦積み · stacked support</span></div>
+      <div><strong>Wide</strong><span>content + rail</span></div>
     </div>
   </div>
 
@@ -152,13 +152,13 @@ const shows = (section: GuidelineSection) => sections.includes(section);
           <tr><td>Color / Type / Spacing</td><td><code>src/styles/globals.css</code></td><td>ライト/ダークの標本</td></tr>
           <tr><td>UI components</td><td><code>src/components/ui/</code></td><td>variant・size・状態</td></tr>
           <tr><td>Blog patterns</td><td><code>src/components/</code></td><td>実データに近い標本</td></tr>
-          <tr><td>Grid / Writing</td><td><code>docs/</code></td><td>仕様と標本の一致</td></tr>
+          <tr><td>Grid / Writing</td><td><code>docs/design/</code></td><td>仕様と標本の一致</td></tr>
         </tbody>
       </table>
     </div>
     <ul class="rule-list governance-principles">
       <li>採用済みのトークン、部品、パターン、ライティングだけを記載する。</li>
-      <li>改善候補、優先度、移行状況、実装との差分はIssueまたはADRで管理する。</li>
+      <li>改善候補、優先度、移行状況、実装との差分はIssueで管理する。</li>
       <li>実装とテストはデザインシステムへ適合させる。</li>
     </ul>
   </div>

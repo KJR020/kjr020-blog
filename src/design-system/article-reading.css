@@ -111,7 +111,7 @@
 
 .column-ruler {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(9, minmax(0, 1fr)) minmax(5rem, 7rem);
   border-block-end: 1px solid var(--border);
   background: var(--secondary);
 }
@@ -131,16 +131,9 @@
 
 .lane-map {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(9, minmax(0, 1fr)) minmax(5rem, 7rem);
   gap: var(--phi-neg1);
   padding: var(--phi-1);
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent 0,
-    transparent calc(8.333% - 1px),
-    color-mix(in srgb, var(--border) 45%, transparent) calc(8.333% - 1px),
-    color-mix(in srgb, var(--border) 45%, transparent) 8.333%
-  );
 }
 
 .lane {
@@ -190,7 +183,7 @@
 }
 
 .lane-rail {
-  grid-column: 10 / span 3;
+  grid-column: 10;
   grid-row: 2 / span 2;
   background: var(--secondary);
 }
@@ -311,7 +304,6 @@
 
   .lane-map {
     grid-template-columns: 1fr;
-    background-image: none;
   }
 
   .lane-reading,
