@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy to Cloudflare Workers
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: "pages"
+  group: "workers-production"
   cancel-in-progress: false
 
 env:
@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      deployments: write
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -47,9 +46,99 @@ jobs:
           PUBLIC_GISCUS_CATEGORY: ${{ vars.PUBLIC_GISCUS_CATEGORY }}
           PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.PUBLIC_GISCUS_CATEGORY_ID }}
 
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Workers
+        id: deploy
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist/ --project-name=kjr020-blog --commit-dirty=true
+          # Worker スクリプトと dist/ の Static Assets を wrangler.toml の設定でまとめて配信する。
+          command: deploy
+
+      # デプロイ成果物がCloudflare上で実際に配信され、Static AssetsとWorkerの
+      # ルーティングが生きているかを確認する。ビルド時のテストでは検知できない
+      # 設定ミス（assets の指定漏れ、run_worker_first の不一致など）を拾う。
+      - name: Smoke test
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${DEPLOYMENT_URL}" ]; then
+            echo "::error::デプロイURLを取得できなかったため疎通確認を実行できません。"
+            exit 1
+          fi
+
+          echo "Smoke testing ${DEPLOYMENT_URL}"
+          failed=0
+
+          # $1=説明 $2=パス $3=期待status $4=メソッド $5=期待ヘッダー名 $6=期待ヘッダー値
+          check() {
+            local label="$1" path="$2" want_status="$3" method="${4:-GET}"
+            local want_header="${5:-}" want_value="${6:-}"
+            local headers status
+
+            headers=$(curl -sS -o /dev/null -D - -X "${method}" "${DEPLOYMENT_URL}${path}" || true)
+            status=$(printf '%s' "${headers}" | head -1 | awk '{print $2}')
+
+            if [ "${status}" != "${want_status}" ]; then
+              echo "::error::${label}: ${method} ${path} -> ${status} (expected ${want_status})"
+              failed=1
+              return
+            fi
+
+            if [ -n "${want_header}" ]; then
+              local actual
+              actual=$(printf '%s' "${headers}" \
+                | grep -i "^${want_header}:" \
+                | head -1 \
+                | cut -d' ' -f2- \
+                | tr -d '\r')
+              if [ "${actual}" != "${want_value}" ]; then
+                echo "::error::${label}: ${want_header}=${actual} (expected ${want_value})"
+                failed=1
+                return
+              fi
+            fi
+
+            echo "ok: ${label}"
+          }
+
+          # Static Assets が配信されている
+          check "トップページ" / 200
+          check "robots.txt" /robots.txt 200
+          # not_found_handling = "404-page" が効いている
+          check "存在しないページ" /does-not-exist 404
+          # html_handling = "auto-trailing-slash" が効いている
+          check "末尾スラッシュ補完" /posts 307 GET location /posts/
+          # Worker の /api/* ルーティングが動いている。SCRAPBOX_SID を設定するまで
+          # GET は 500 になるため、Secret に依存しないメソッド判定で確認する。
+          check "APIルーティング" /api/pages/KJR020 405 POST allow GET
+
+          # run_worker_first = ["/api/*"] が効いている。
+          # この設定が無いと navigation リクエストは Static Assets 側で処理され、
+          # /api/* が 404 の HTML になる。上の POST では検知できない。
+          api_navigate_type=$(curl -sS -o /dev/null -D - \
+            -H "Sec-Fetch-Mode: navigate" \
+            "${DEPLOYMENT_URL}/api/pages/KJR020" \
+            | grep -i "^content-type:" \
+            | head -1 \
+            | cut -d' ' -f2- \
+            | tr -d '\r' || true)
+
+          case "${api_navigate_type}" in
+            application/json*)
+              echo "ok: run_worker_first"
+              ;;
+            *)
+              echo "::error::run_worker_first: navigation リクエストが Worker に到達していません (content-type=${api_navigate_type})"
+              failed=1
+              ;;
+          esac
+
+          if [ "${failed}" -ne 0 ]; then
+            echo "::error::疎通確認に失敗しました。"
+            exit 1
+          fi
+
+          echo "疎通確認をすべて通過しました。"
