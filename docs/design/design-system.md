@@ -115,15 +115,11 @@ Homeではプロフィール、最新記事、Scrapboxを順に示す。検索�
 
 独立したHTMLへ値や部品を複製しない。確認用カタログへCSS値やコンポーネントの見た目を再実装しない。標本固有のレイアウトだけを[styles.css](../../src/design-system/styles.css)へ置く。
 
-## 個別仕様
-
-### ブランド表現
-
-#### 目的・適用範囲
+## ブランド表現
 
 Headerとソーシャルカードで、このブログを識別できるようにする。記事への集中を妨げない強さに留める(原則1)。
 
-#### Header
+### Header
 
 Headerのブランドリンクは、栗マスコットの目を切り出したシンボルと`KJR020's Blog`を組み合わせる。
 
@@ -136,7 +132,7 @@ Headerのブランドリンクは、栗マスコットの目を切り出した�
 | Theme | Light / Darkで同じSVGを使い、反転filterを適用しない |
 | Accessibility | 隣接するブログ名がリンクのAccessible Nameを担うため、シンボルは空の代替テキストで装飾画像として扱う |
 
-#### OGP
+### OGP
 
 OGPはブログ名、ページの主題、サイトURL、栗マスコットを組み合わせる。
 
@@ -153,7 +149,7 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 | Content | 技術スタックなど、ホームの説明に含まれない補助文言は表示しない |
 | Routing | 全体ページは`/og-image.png`、記事は`/og/posts/{記事ID}.png` |
 
-#### ページ内のマスコット
+### ページ内のマスコット
 
 栗のマスコットは、他にキャラクター要素を持たないページへ置く。読むことが主目的の文書には置かない。
 
@@ -169,29 +165,27 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 
 `kuri.svg`のviewBoxは描画領域へ詰めてあるため、指定した大きさがそのまま見える大きさになる。負のオフセットで画面外へ逃がすと、余白ではなく本体が欠ける。
 
-#### 判断理由
+### 判断理由
 
 生成AIや手作業で完成画像を編集すると、記事が増えるたびに人手が必要になり、見た目も揃わない。ローカルアセットと固定レイアウトからビルド時に再生成することで、記事の追加だけで一貫した画像が得られる(原則5)。SatoriでSVGを組み立て、SharpでPNGへ変換する。
 
-#### 期待する結果
+### 期待する結果
 
 - ライトとダークの両方で、Headerのシンボルの輪郭と黒目が判別できる
 - 支援技術では、Headerのブランドリンクがブログ名だけで読み上げられ、シンボルが重複して読まれない
 - 長いタイトルの記事でも、OGPのタイトルが3行に収まり、途中で欠落しない
 
-#### 関連実装
+### 関連実装
 
 [Header.astro](../../src/components/Header.astro)、[src/lib/og-image/](../../src/lib/og-image/)、[og/posts/[...slug].png.ts](../../src/pages/og/posts/[...slug].png.ts)、[siteCopy.ts](../../src/lib/siteCopy.ts)
 
-### 記事の読書設計
-
-#### 目的・適用範囲
+## 記事の読書設計
 
 記事本文を続けて読む場面と、コード・表・図の詳細を確認する場面では、読者が行うことが異なる。幅と表示手段を使い分けて、どちらも成立させる(原則2)。
 
 記事ページと、確認用カタログの記事標本に適用する。両者は同じMarkdown変換、DOM拡張、CSSを使用する。
 
-#### 幅の判断
+### 幅の判断
 
 本文を読み進める要素はReading laneへ、横方向の情報量が意味を持つ要素はWide laneへ置く。
 
@@ -202,7 +196,7 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 
 Compactでは両方を1 columnへ戻す。Article内の9 tracksは、記事本文の内側だけに存在するGridであり、ページシェルやRailの幅とは独立している。外側の配置は[Grid system](grid-system.md)で定める。
 
-#### 標準値
+### 標準値
 
 本文の幅はReading laneの利用可能幅を超えず、次の上限に収める。
 
@@ -215,19 +209,19 @@ Compactでは両方を1 columnへ戻す。Article内の9 tracksは、記事本�
 
 43icは17pxで約731pxとなり、Reading laneの上限(Article 836pxの8 / 9で約743px)をほぼ使い切る。40icでは680pxとなり、laneに対して余っていた。
 
-#### 図・画像の挙動
+### 図・画像の挙動
 
 - Markdown画像と直後の強調文を`figure`と`figcaption`へ変換し、本文と同じ横幅へ揃える
 - キャプションには説明文だけを表示し、連番ラベルは付けない
 - 画像は原寸へのリンクとする。JavaScript利用時はDialogで拡大し、閉じた後は画像リンクへフォーカスを戻す
 - Mermaid図は本文と同じ横幅へ揃える。インラインSVGとして描画するため拡大表示の対象外とし、本文幅に収まる情報量で作図する
 
-#### コードの挙動
+### コードの挙動
 
 - Shikiが生成する`data-language`を可視ラベルへ変換する
 - Copy操作を右上へ置き、成功・失敗をAccessible Nameと`aria-live="polite"`で伝える
 
-#### ヘッダーと目次
+### ヘッダーと目次
 
 記事ヘッダーは本文と目次より上に置き、シェルと同じ16列に乗せる。
 
@@ -238,37 +232,35 @@ Compactでは両方を1 columnへ戻す。Article内の9 tracksは、記事本�
 
 Wideでは目次を隠さない。本文が約75px広がる効果に対し、状態の分岐、本文幅の特例、再表示操作、それらの検証を維持する必要があり、釣り合わない。
 
-#### タイトル
+### タイトル
 
 記事タイトルは全Breakpointで`--font-size-title1`(φ×√φ、32.9px)とする。Wideだけ`--font-size-display`(φ²、41.9px)へ上げる扱いはしない。本文17px、h3 20.4px、h2 25.9pxに対し、41.9pxはh2から一段飛ばしになる。
 
-#### 期待する結果
+### 期待する結果
 
 - 長い見出し、横に長いコード、列の多い表を含む記事でも、本文の段落を読むために横スクロールを必要としない。コード・表で横スクロールが必要な場合は、その領域内で操作でき、内容が切り取られず全体へ到達できる。320px相当の狭い表示でも同じとする
 - JavaScriptが動作しない状態でも、記事本文が表示され、画像の原寸へ到達できる
 - 画像の拡大を閉じた後、キーボードのフォーカスが元の画像リンクに戻る
 - コードのコピー結果が、視覚と支援技術の両方へ伝わる
 
-#### 関連実装
+### 関連実装
 
 [posts/[...slug].astro](../../src/pages/posts/[...slug].astro)、[rehypeArticleFigures.ts](../../src/integrations/rehypeArticleFigures.ts)、[ImageLightbox.astro](../../src/components/article/ImageLightbox.astro)、[articleCode.ts](../../src/lib/articleCode.ts)、[article-content.css](../../src/styles/article-content.css)、[article-code.css](../../src/styles/article-code.css)
 
-### Tag interaction
-
-#### 目的・適用範囲
+## Tag interaction
 
 記事カードでは、カード全体が記事へのリンクであり、その中のTagは分類ページへの別のリンクである。読者が遷移先を取り違えないようにする(原則3)。
 
 記事メタ情報のTagに適用する。
 
-#### 要件
+### 要件
 
 - Tagは分類先へ移動する独立したリンクとして扱い、記事へのリンクと操作領域を区別する
 - Hoverの有無にかかわらず、Tagが操作対象であることを識別できる。通常時はSecondaryの面と通常の文字色を表示する
 - キーボード操作では、現在のフォーカス位置を輪郭で確認できる
 - 面移動は操作可能性を補強する演出であり、識別や操作の成立条件にはしない
 
-#### 演出仕様
+### 演出仕様
 
 HoverとKeyboard focusでは、前景色6%の傾いた背景面を左から通し、文字色をLinkへ変える。
 
@@ -280,14 +272,14 @@ HoverとKeyboard focusでは、前景色6%の傾いた背景面を左から通�
 | Card coordination | Tag上では親PostCardの背景色とタイトル色のhoverを重ねない |
 | Reduced motion | `prefers-reduced-motion: reduce`では面移動の遷移時間を0sにし、状態変化は維持する |
 
-#### 期待する結果
+### 期待する結果
 
 - Hoverできない環境でも、Tagがリンクであることが分かる
 - Tagをタッチまたはキーボードで実行すると分類ページへ移動し、記事カード側の遷移は同時に実行されない
 - キーボードでTagへ移動したとき、フォーカスの位置が面の変化だけでなく輪郭でも分かる
 - 動きを減らす設定では面の移動を行わない。Hover時の状態表示と、キーボードフォーカス時の輪郭は維持する
 
-#### 関連実装
+### 関連実装
 
 [PostMeta.astro](../../src/components/PostMeta.astro)、[PostCard.astro](../../src/components/PostCard.astro)
 
@@ -297,93 +289,44 @@ HoverとKeyboard focusでは、前景色6%の傾いた背景面を左から通�
 
 このルートはAstroの`dev`コマンドでだけ注入する。`build`、`preview`、`sync`では登録せず、公開成果物へ出力しない。検索エンジン向けにも`noindex,nofollow`を指定する。
 
-### ページ構成
-
-| ページ | ルート | 収録する章 |
-| --- | --- | --- |
-| 概要 | `/design-system` | 適用範囲と5カテゴリへの入口 |
-| 基盤 | `/design-system/foundations` | 1. トークン、2. レイアウト原則、10. レスポンシブ・アクセシビリティ |
-| コンポーネント | `/design-system/components` | 4. 基本部品、5. ナビゲーション・検索部品、6. ブログ固有部品 |
-| パターン | `/design-system/patterns` | 3. 状態の体系、7. 記事コンテンツ、8. ページの型 |
-| コンテンツ | `/design-system/content` | 9. UIライティング |
-| ガバナンス | `/design-system/governance` | 11. ガバナンス |
-
-記事ページの読書仕様は`/design-system/patterns#article-reading`へ統合し、`8-3. 記事ページ`としてページの型から参照できるようにする。サイドバーはすべてのページで6カテゴリと下位項目を同じ構造で保持し、現在のカテゴリだけを初期展開する。カテゴリ名はページへのリンク、右端の開閉ボタンは下位項目の表示切り替えに用い、複数カテゴリを同時に展開できる。
-
-### 収録する章
-
-| 章 | 内容 | 参照先 |
-| --- | --- | --- |
-| 1. トークン | 色、Callout色、文字、φスケール、角丸、影 | `globals.css` |
-| 2. レイアウト原則 | ページシェル、Grid、幅、配置、余白、強調 | Grid system・`BaseLayout.astro` |
-| 3. 状態の体系 | 操作状態、非同期状態、現在地、選択 | Components・Blog patterns |
-| 4. 基本部品 | Button、Badge / Tag、Card、Input、TextLink、Kbd | `src/components/ui/`・`PostMeta.astro` |
-| 5. ナビゲーション・検索部品 | Header、Command Palette、Theme、Mobile Menu | `src/components/` |
-| 6. ブログ固有部品 | PageHero、PostCard、TOC、Scrapbox | Blog components |
-| 7. 記事コンテンツ | Markdown、Callout、Link Card、Code、Image | 記事実装 |
-| 8. ページの型 | ホーム、記事一覧、記事ページ、検索ユーティリティ、ポリシー・状態 | Pages・Grid system・記事の読書設計 |
-| 9. UIライティング | 声、6原則、部品文法、表記、状態メッセージ | UIライティングガイドライン |
-| 10. レスポンシブ・アクセシビリティ | Breakpoint、Keyboard、ARIA、Motion、Loading | Components・guidelines |
-| 11. ガバナンス | Source of Truth、適合ルール、更新方法 | この文書 |
+ページとセクションの対応は[navigation.ts](../../src/design-system/navigation.ts)を正本とする。記事ページの読書仕様は`/design-system/patterns#article-reading`で確認できる。
 
 ## 運用
 
+文書の書き方は[ドキュメント執筆ガイドライン](../development/documentation-guidelines.md)に従う。ここではデザイン仕様に固有の運用だけを定める。
+
 ### 記述方針
 
-この文書群の書き方を定める。
-
-- `main`ブランチ上の仕様書には、採用済みの現行仕様を記載する。未採用の提案や代替案を現行仕様として混在させない
-- 満たすべき要件、現在採用している標準仕様、理解を助ける例を区別する。標準仕様には、採用している値・表現・条件別の振る舞いを含む。標準仕様の変更は変更管理の対象とし、具体的な値や文面であるという理由だけで例として扱わない
+- 満たすべき要件、現在採用している標準仕様、理解を助ける例を区別する
+  - 標準仕様には、採用している値・表現・条件別の振る舞いを含む
+  - 標準仕様の変更は変更管理の対象とし、具体的な値や文面であるという理由だけで例として扱わない
 - コードから読み取れない判断理由を残す。実装を詳細に言い直さない
 - 部品名は実装のコンポーネント名と対応させる
-- 用途を表すトークンは、その意味に基づいて命名する。異なる用途が同じ値を共有しても、値が同じという理由だけで統合しない。同じ用途の値は、テーマに応じて切り替えてよい。使用箇所では値の一致ではなく用途で選ぶ
+- 用途を表すトークンは、その意味に基づいて命名する
+  - 異なる用途が同じ値を共有しても、値が同じという理由だけで統合しない
+  - 使用箇所では値の一致ではなく用途で選ぶ
 
 ### 変更管理
 
-現行仕様は`main`ブランチで管理する。変更時は、作業ブランチの仕様書本文を改訂案として編集し、対応する実装・検証と同じPull Requestで確認する。マージによって現行仕様とする。
-
-原則と既存仕様が衝突する場合は、無断で例外を追加しない。変更理由と対象を明記して、更新フローに従って仕様を見直す。
-
-- 改善候補、優先度、未完了作業、既知の不一致はIssueで管理し、必要に応じて仕様から参照する
-- 長期的に参照する必要がある選択と、その理由・代替案は[docs/architecture/](../architecture/README.md)へ設計文書として残す。すべての視覚変更に設計文書を要求しない
-- オーナーとの合意は、原則、共通トークン、新しい視覚表現を追加・変更するときに必要とする。既存仕様の範囲内での適用には不要とする
+- 仕様の変更は、対応する実装・検証と同じPull Requestで確認する
+- 原則と既存仕様が衝突する場合は、無断で例外を追加しない
+  - 変更理由と対象を明記して、更新フローに従って仕様を見直す
+- 原則、共通トークン、新しい視覚表現を追加・変更するときは、オーナーと合意する
+  - 既存仕様の範囲内での適用には不要とする
 
 ### 更新フロー
 
 1. 変更理由と適用範囲を決める。変更管理で定める承認が必要な場合は、オーナーと合意する
 2. 作業ブランチで仕様書の改訂案を作成し、対応する実装・関連ガイド・確認用カタログ・検証を、変更の影響範囲に応じて更新する
-3. 変更対象の仕様に記載した期待する結果を、影響する画面幅・テーマ・入力方法・状態で確認する。自動化していない確認は、結果をPull Requestに記録する
+3. 変更対象の仕様に記載した要件と期待する結果を、影響する画面幅・テーマ・入力方法・状態で確認する。自動化していない確認は、結果をPull Requestに記録する
 4. `pnpm test:design-system`で実コンポーネントとの接続を確認する
 5. `pnpm build`で`dist/design-system`が生成されないことを確認する
 
 ## 関連ファイル
 
-### 仕様
-
 - [Grid system](grid-system.md) - ページ骨格とレスポンシブ
 - [UIライティングガイドライン](ui-writing-guidelines.md) - UI文言の判断と表記
-
-### トークンとレイアウト
-
 - [globals.css](../../src/styles/globals.css) - グローバルトークンと記事表現
 - [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - ページシェル
-
-### 部品
-
-- [button.tsx](../../src/components/ui/button.tsx) - Button variants
-- [badge.tsx](../../src/components/ui/badge.tsx) - Badge variants
-- [card.tsx](../../src/components/ui/card.tsx) - Card composition
-- [input.tsx](../../src/components/ui/input.tsx) - Input states
-- [Header.astro](../../src/components/Header.astro) - Global navigation
-- [PostCard.astro](../../src/components/PostCard.astro) - 記事一覧パターン
-- [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - 全文検索
-- [TableOfContents.tsx](../../src/components/toc/TableOfContents.tsx) - 記事目次
-
-### 確認用カタログ
-
-- [概要ページ](../../src/design-system/pages/index.astro) - 5カテゴリへの入口
-- [共通レイアウト](../../src/design-system/components/DesignSystemLayout.astro) - Header・Sidebar・Footer・共通script
-- [ページナビゲーション](../../src/design-system/navigation.ts) - 6ページとセクションの対応
-- [カタログ固有スタイル](../../src/design-system/styles.css) - 標本固有のレイアウト
-- [Dev integration](../../src/integrations/devDesignSystem.ts) - 非公開ルートの登録条件
-- [E2E](../../tests/e2e/design-system.spec.ts) - 実装との接続、章目次、Mobile表示
+- [Dev integration](../../src/integrations/devDesignSystem.ts) - 確認用カタログの登録条件
+- [E2E](../../tests/e2e/design-system.spec.ts) - 確認用カタログと実装の接続
