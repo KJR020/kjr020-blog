@@ -19,11 +19,8 @@ test.describe("トップページのブランド表現", () => {
     const heroImage = page.locator("main img[alt='KJR020']");
     await expect(heroImage).toHaveCount(1);
     await expect(heroImage).toHaveAttribute("src", "/images/kuri_photo.png");
-    if ((page.viewportSize()?.width ?? 0) >= 640) {
-      await expect(heroImage).toBeVisible();
-    } else {
-      await expect(heroImage).toBeHidden();
-    }
+    // 著者を示す役割があるため、画面幅によらず表示する
+    await expect(heroImage).toBeVisible();
   });
 
   test("ライトテーマではOSの配色設定に関係なくロゴを反転しない", async ({ page }) => {
