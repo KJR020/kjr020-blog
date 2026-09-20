@@ -1,4 +1,4 @@
-# KJR020's Blog ページレイアウト
+# KJR020's Blogページレイアウト
 
 ページ横方向の配置を決める仕様。ページシェルの幅、余白、主要領域の並べ方を扱う。
 
@@ -46,15 +46,15 @@ Tailwindの`md`と`lg`に合わせて3段階とする。判定はコンテンツ
 
 ## ページシェル
 
-すべてのページで、シェルに左右16pxの内側余白（`px-4`）を確保する。シェルは中央寄せする。中央寄せで生じる外側の余白は、この内側余白とは別のものとして扱う。
+すべてのページで、シェルに左右16pxの内側余白(`px-4`)を確保する。シェルは中央寄せする。中央寄せで生じる外側の余白は、この内側余白とは別のものとして扱う。
 
 最大幅は、左右の内側余白を含むシェルの幅とする。
 
 | ページ | 最大幅 | 根拠 |
 | --- | --- | --- |
-| 記事詳細 | 1152px（`max-w-6xl`） | 本文とRailを横に並べる |
-| Privacy Policy | 768px（`max-w-3xl`） | 読むことが主目的で、補助領域を持たない |
-| ホーム、記事一覧、タグ別一覧 | Breakpoint連動（Tailwindの`container`） | 固定の上限を設けていない |
+| 記事詳細 | 1152px(`max-w-6xl`) | 本文とRailを横に並べる |
+| Privacy Policy | 768px(`max-w-3xl`) | 読むことが主目的で、補助領域を持たない |
+| ホーム、記事一覧、タグ別一覧 | Breakpoint連動(Tailwindの`container`) | 固定の上限を設けていない |
 | 404 | シェルを使わず中央揃えで配置する | 単一のメッセージと導線だけを持つ |
 
 これらの上限は、Tailwindの`container`の既定に従い、各Breakpointの値になる。記事詳細と同じ上限へ揃えるかは未決とし、決めるまでこの表を正本とする。
@@ -79,7 +79,7 @@ WideではArticleとRailを横に並べる。Railの幅は列数から導かず�
 
 | ページ | カラム構成 | 列間 |
 | --- | --- | --- |
-| 記事詳細 | `minmax(0, 1fr)` と 250px | 2.618rem（φ²） |
+| 記事詳細 | `minmax(0, 1fr)` と 250px | 2.618rem(φ²) |
 
 CompactとMediumでは1カラムへ戻し、記事詳細の目次を記事ヘッダーの直後へ置く。
 
@@ -143,7 +143,7 @@ Article内部の行長がこのとき広がるが、その値は[記事の読書
 ## 関連ファイル
 
 - [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
-- [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - 配置の視覚例（`pnpm dev`の`/design-system/foundations`）
+- [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - 配置の視覚例(`pnpm dev`の`/design-system/foundations`)
 - [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - Page shell
 - [記事詳細](../../src/pages/posts/[...slug].astro) - 本文＋目次layoutと目次の開閉
 - [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - Grid外の検索UI

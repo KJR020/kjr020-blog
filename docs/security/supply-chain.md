@@ -1,20 +1,20 @@
 # Supply Chain Security
 
-npm パッケージと GitHub Actions のサプライチェーン侵害を前提に、依存追加・依存更新・CI 実行時の運用ルールを定義する。
+npmパッケージとGitHub Actionsのサプライチェーン侵害を前提に、依存追加・依存更新・CI実行時の運用ルールを定義する。
 
 ## パッケージマネージャ
 
-- pnpm 11.x を使う。GitHub Actions は `package.json` の `packageManager` から pnpm version を決定する。
-- lockfile は `pnpm-lock.yaml` に一本化する。`package-lock.json` / `yarn.lock` は追加しない。
-- registry は `.npmrc` の `https://npm.flatt.tech` に統一する。CI と Dependabot では `TAKUMI_GUARD_TOKEN` を secret から渡す。
-- CI は `pnpm install --frozen-lockfile` を使い、lockfile と manifest の不整合を検出する。
+- pnpm 11.xを使う。GitHub Actionsは`package.json`の`packageManager`からpnpm versionを決定する
+- lockfileは`pnpm-lock.yaml`に一本化する。`package-lock.json` / `yarn.lock`は追加しない
+- registryは`.npmrc`の`https://npm.flatt.tech`に統一する。CIとDependabotでは`TAKUMI_GUARD_TOKEN`をsecretから渡す
+- CIは`pnpm install --frozen-lockfile`を使い、lockfileとmanifestの不整合を検出する
 
-## pnpm install 時の防御
+## pnpm install時の防御
 
-- `minimumReleaseAge: 1440` で、公開直後の npm package を即時導入しない。
-- `blockExoticSubdeps: true` で、transitive dependency の exotic specifier をブロックする。
-- `strictDepBuilds: true` と `allowBuilds` で、未審査の install script / postinstall script を失敗扱いにする。
-- build script を許可する package は `pnpm-workspace.yaml` の `allowBuilds` に明示する。
+- `minimumReleaseAge: 1440`で、公開直後のnpm packageを即時導入しない
+- `blockExoticSubdeps: true`で、transitive dependencyのexotic specifierをブロックする
+- `strictDepBuilds: true`と`allowBuilds`で、未審査のinstall script / postinstall scriptを失敗扱いにする
+- build scriptを許可するpackageは`pnpm-workspace.yaml`の`allowBuilds`に明示する
 
 現在の許可方針:
 
@@ -31,26 +31,26 @@ pnpm install --frozen-lockfile
 pnpm ignored-builds
 ```
 
-`pnpm ignored-builds` に未審査の package が出た場合は、必要性を確認して `allowBuilds` に `true` または `false` を明示する。
+`pnpm ignored-builds`に未審査のpackageが出た場合は、必要性を確認して`allowBuilds`に`true`または`false`を明示する。
 
 ## 依存追加時のレビュー観点
 
-- 既存依存で代替できないか。
-- 直接依存として入れる必要があるか。
-- `install` / `postinstall` / `prepare` などの lifecycle script を持つか。
-- lockfile 差分に想定外の transitive dependency が増えていないか。
-- メンテナンス状況、直近リリース頻度、issue / advisory の状況に不自然さがないか。
-- GitHub Actions を追加する場合は full-length commit SHA で固定し、対応する tag を同じ行のコメントに残す。
+- 既存依存で代替できないか
+- 直接依存として入れる必要があるか
+- `install` / `postinstall` / `prepare`などのlifecycle scriptを持つか
+- lockfile差分に想定外のtransitive dependencyが増えていないか
+- メンテナンス状況、直近リリース頻度、issue / advisoryの状況に不自然さがないか
+- GitHub Actionsを追加する場合はfull-length commit SHAで固定し、対応するtagを同じ行のコメントに残す
 
 ## GitHub Actions
 
-- third-party actions は full-length commit SHA で固定する。
-- SHA の右側に tag コメントを残し、Dependabot が更新PRで追従できるようにする。
-- workflow の `permissions` は最小権限を明示する。CI は `contents: read`、deploy は `contents: read` と `deployments: write` のみを基本とする。
+- third-party actionsはfull-length commit SHAで固定する
+- SHAの右側にtagコメントを残し、Dependabotが更新PRで追従できるようにする
+- workflowの`permissions`は最小権限を明示する。CIは`contents: read`、deployは`contents: read`と`deployments: write`のみを基本とする
 
 ## 依存更新
 
-- Dependabot で npm 依存と GitHub Actions を週次更新する。
-- npm と GitHub Actions の更新は別PRに分ける。
-- Dependabot の npm 更新には、Dependabot secret として `TAKUMI_GUARD_TOKEN` を登録する。
-- Dependabot PR でも `pnpm ignored-builds` の結果と lockfile 差分を確認する。
+- Dependabotでnpm依存とGitHub Actionsを週次更新する
+- npmとGitHub Actionsの更新は別PRに分ける
+- Dependabotのnpm更新には、Dependabot secretとして`TAKUMI_GUARD_TOKEN`を登録する
+- Dependabot PRでも`pnpm ignored-builds`の結果とlockfile差分を確認する
