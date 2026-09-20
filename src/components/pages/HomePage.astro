@@ -2,19 +2,16 @@
 import PostCard from "@/components/PostCard.astro";
 import { ScrapboxCardList } from "@/components/scrapbox";
 import type { ScrapboxPageData } from "@/components/scrapbox/types";
-import { SearchBox } from "@/components/search/SearchBox";
-import { TagBubbleCloud } from "@/components/TagBubbleCloud";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { HOME_DESCRIPTION_LINES } from "@/lib/siteCopy";
-import type { PostSummary, TagSummary } from "./types";
+import type { PostSummary } from "./types";
 
 interface Props {
   posts: PostSummary[];
-  tags: TagSummary[];
   scrapboxPages?: ScrapboxPageData[];
 }
 
-const { posts, tags, scrapboxPages } = Astro.props;
+const { posts, scrapboxPages } = Astro.props;
 const latestPosts = posts.slice(0, 3);
 const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
 ---
@@ -130,37 +127,6 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
         <ScrapboxCardList project="KJR020" pages={scrapboxPages} client:load />
       </section>
 
-      <section
-        id="search"
-        class="scroll-mt-phi-3xl py-phi-xl animate-fade-in-up"
-        style="animation-delay: 260ms"
-      >
-        <div class="flex items-center justify-between mb-phi-md">
-          <h2
-            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
-            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-          >
-            Search
-          </h2>
-        </div>
-        <SearchBox client:load />
-      </section>
-
-      <section
-        id="tags"
-        class="py-phi-xl animate-fade-in-up"
-        style="animation-delay: 310ms"
-      >
-        <div class="flex items-center justify-between mb-phi-md">
-          <h2
-            class="font-bold font-heading tracking-tight border-l-2 border-link pl-3"
-            style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-          >
-            Tags
-          </h2>
-        </div>
-        <TagBubbleCloud tags={tags} client:load />
-      </section>
     </div>
   </div>
 </BaseLayout>

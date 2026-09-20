@@ -70,10 +70,6 @@ export function devDesignSystem(): AstroIntegration {
             entrypoint: new URL("../test-fixtures/pages/posts.astro", import.meta.url),
           });
           injectRoute({
-            pattern: "/__test/search",
-            entrypoint: new URL("../test-fixtures/pages/search.astro", import.meta.url),
-          });
-          injectRoute({
             pattern: "/__test/404",
             entrypoint: new URL("../test-fixtures/pages/404.astro", import.meta.url),
           });

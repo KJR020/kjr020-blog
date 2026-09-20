@@ -85,6 +85,8 @@ graph TB
 - 書体や演出の完全な再現より、内容が表示され利用できることを優先する
 - 基本導線の対象と、付加機能を利用できない場合の表示・代替操作は、個別仕様で定義する
 
+Homeではプロフィール、最新記事、Scrapboxを順に示す。検索は必要なときにヘッダーまたは⌘K / Ctrl Kから開くCommand Paletteで提供し、Homeに検索結果やTag一覧を常設しない。Tagは記事カードと記事詳細の分類リンクとして扱う。旧`/search`は`/?search=open`へ転送する。
+
 ### 5. 網羅的な体系の構築より、継続して改善できる規模を優先する
 
 個人で運営するため、読書と操作の要件を満たせる範囲で、保守負担の小さい構成を選ぶ。
@@ -293,10 +295,10 @@ HoverとKeyboard focusでは、前景色6%の傾いた背景面を左から通�
 | 2. レイアウト原則 | ページシェル、Grid、幅、配置、余白、強調 | Grid system・`BaseLayout.astro` |
 | 3. 状態の体系 | 操作状態、非同期状態、現在地、選択 | Components・Blog patterns |
 | 4. 基本部品 | Button、Badge / Tag、Card、Input、TextLink、Kbd | `src/components/ui/`・`PostMeta.astro` |
-| 5. ナビゲーション・検索部品 | Header、SearchBox、Command Palette、Theme、Mobile Menu | `src/components/` |
+| 5. ナビゲーション・検索部品 | Header、Command Palette、Theme、Mobile Menu | `src/components/` |
 | 6. ブログ固有部品 | PageHero、PostCard、TOC、Scrapbox | Blog components |
 | 7. 記事コンテンツ | Markdown、Callout、Link Card、Code、Image | 記事実装 |
-| 8. ページの型 | ホーム、記事一覧、記事ページ、検索、ポリシー・状態 | Pages・Grid system・記事の読書設計 |
+| 8. ページの型 | ホーム、記事一覧、記事ページ、検索ユーティリティ、ポリシー・状態 | Pages・Grid system・記事の読書設計 |
 | 9. UIライティング | 声、6原則、部品文法、表記、状態メッセージ | UIライティングガイドライン |
 | 10. レスポンシブ・アクセシビリティ | Breakpoint、Keyboard、ARIA、Motion、Loading | Components・guidelines |
 | 11. ガバナンス | Source of Truth、適合ルール、更新方法 | この文書 |
@@ -351,7 +353,7 @@ HoverとKeyboard focusでは、前景色6%の傾いた背景面を左から通�
 - [input.tsx](../../src/components/ui/input.tsx) - Input states
 - [Header.astro](../../src/components/Header.astro) - Global navigation
 - [PostCard.astro](../../src/components/PostCard.astro) - 記事一覧パターン
-- [SearchBox.tsx](../../src/components/search/SearchBox.tsx) - 全文検索
+- [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - 全文検索
 - [TableOfContents.tsx](../../src/components/toc/TableOfContents.tsx) - 記事目次
 
 ### 確認用カタログ

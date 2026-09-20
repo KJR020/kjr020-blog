@@ -41,7 +41,6 @@ describe("devDesignSystem integration", () => {
       "/design-system/article-reading",
       "/__test/home",
       "/__test/posts",
-      "/__test/search",
       "/__test/404",
     ]);
   });
@@ -63,7 +62,6 @@ describe("devDesignSystem integration", () => {
     expect(injectRoute.mock.calls.map(([route]) => route.pattern)).toEqual([
       "/__test/home",
       "/__test/posts",
-      "/__test/search",
       "/__test/404",
     ]);
   });

@@ -4,15 +4,6 @@ import HomePage from "@/components/pages/HomePage.astro";
 
 const posts = await getCollection("posts", ({ data }) => !data.draft);
 const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-const tagCounts = new Map<string, number>();
-for (const post of posts) {
-  for (const tag of post.data.tags) {
-    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-  }
-}
-const tags = Array.from(tagCounts, ([name, count]) => ({ name, count })).sort(
-  (a, b) => b.count - a.count || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0),
-);
 ---
 
-<HomePage posts={sortedPosts} tags={tags} />
+<HomePage posts={sortedPosts} />
