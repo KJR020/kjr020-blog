@@ -58,10 +58,14 @@ const {
 <style>
   .kuri-watermark {
     position: absolute;
-    top: -4rem;
-    right: -2rem;
-    width: var(--phi-6);
-    height: var(--phi-6);
+    /*
+     * kuri.svgのviewBoxを描画領域へ詰めたため、負のオフセットは余白ではなく
+     * 栗本体を削る。全体が見える位置へ置く。
+     */
+    top: var(--phi-0);
+    right: var(--phi-0);
+    width: var(--phi-5);
+    height: var(--phi-5);
     background-image: url("/images/kuri.svg");
     background-repeat: no-repeat;
     background-position: right center;
@@ -77,8 +81,8 @@ const {
 
   @media (max-width: 768px) {
     .kuri-watermark {
-      width: var(--phi-5);
-      right: -1rem;
+      width: var(--phi-4);
+      height: var(--phi-4);
       opacity: 0.12;
     }
   }
