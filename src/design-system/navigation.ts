@@ -81,9 +81,9 @@ export const designSystemPageGroups: Record<
       href: "/design-system/foundations#layout",
       links: [
         { label: "ページシェル", href: "/design-system/foundations#page-shell" },
-        { label: "Gridの基本構造", href: "/design-system/foundations#grid" },
-        { label: "Grid breakpoints", href: "/design-system/foundations#grid-breakpoints" },
-        { label: "Grid types", href: "/design-system/foundations#grid-types" },
+        { label: "整列の基本方針", href: "/design-system/foundations#grid" },
+        { label: "Breakpoints", href: "/design-system/foundations#grid-breakpoints" },
+        { label: "ページ別の最大幅", href: "/design-system/foundations#grid-types" },
         { label: "配置パターン", href: "/design-system/foundations#grid-composition" },
         { label: "幅トークン", href: "/design-system/foundations#width-tokens" },
         { label: "余白の階層", href: "/design-system/foundations#spacing-hierarchy" },
