@@ -1,97 +1,99 @@
-# Scrapbox API Proxy手動検証チェックリスト
+# Cosense API Proxy手動検証チェックリスト
 
-Cloudflare Pages Functionsで提供しているScrapbox API Proxy(`/api/pages/:project`)のセキュリティ境界を、**実HTTPリクエスト**で定期的に確認するためのチェックリスト。
+[Cosense API Proxy](../architecture/cosense-api-proxy.md)が定義するセキュリティ境界を、実環境へのHTTPリクエストで確認する手順を定める。
 
-## 位置付け
+## 概要
 
-- Vitestでは`fetch`をモックした単体テストでセキュリティ観点を検証している(`tests/functions/**/*.test.ts`)
-- このチェックリストは「実際のCloudflare Edge(Preview / 本番)でも同じ挙動になっているか」を確認する**補完的な手動検証**
-- 自動スキャナ(OWASP ZAP / nuclei / Burp等)は**使わない**方針。チェックリスト化することで差分をレビューしやすくする
+- 仕様の正本は[Cosense API Proxy](../architecture/cosense-api-proxy.md)とし、この文書は仕様を言い直さない
+  - 手順の側に仕様を複製すると、仕様が変わったときに期待値だけが古いまま残るため
+  - 各検証項目は、対応する仕様の節を参照する。仕様を変更したら、その節を参照する項目の期待値を更新する
+- 単体テストは`fetch`をモックして同じ観点を検証している。この手順は、実際のCloudflare環境でも同じ挙動になることを確認する補完とする
+- 自動スキャナ(OWASP ZAP、nuclei、Burpなど)は使わない
+  - 対象が1エンドポイントで、チェックリストのほうが差分をレビューしやすいため
 
 ## 前提
 
-- 対象環境のURLを環境変数で切り替える:
-  ```shell
-  export BASE_URL="https://kjr020.dev"                # 本番 (カスタムドメイン)
-  # export BASE_URL="https://kjr020.pages.dev"         # Preview / Cloudflare Pages デフォルト
-  # export BASE_URL="http://localhost:8788"            # wrangler pages dev
-  export PROJECT="KJR020"
-  ```
-- `-i`で**レスポンスヘッダを必ず確認**する(ステータス・`Cache-Control`・`Access-Control-Allow-Origin`)
-- 実行時は**本番ユーザーのセッションCookieを絶対に送らない**(`-b` / `--cookie`を使わない)
+対象環境のURLを環境変数で切り替える。
 
-## チェック項目
+```shell
+export BASE_URL="https://kjr020.dev"          # Production
+# export BASE_URL="<Preview deploymentのURL>"  # Preview
+# export BASE_URL="http://localhost:8788"      # wrangler pages dev
+```
 
-### 1. プロジェクト名バリデーション(K-2)
+- `-i`または`-I`でレスポンスヘッダを確認する
+- Cookieを送らない。`-b`と`--cookie`を使わない
 
-実装: `validateProject()`は`/^[\w-]+$/` + 1〜64文字で制限。
+## 検証項目
 
-| # | コマンド | 期待レスポンス |
-|---|---|---|
-| 1-1 | `curl -i "$BASE_URL/api/pages/$PROJECT"` | `200 OK`、`Content-Type: application/json` |
-| 1-2 | `curl -i "$BASE_URL/api/pages/..%2f..%2fetc"` | `400 Bad Request`、bodyにScrapboxの内部情報が含まれない |
-| 1-3 | `curl -i --path-as-is "$BASE_URL/api/pages/../../etc/passwd"` | `400`か`404`(Pagesのルーターに吸収される)、Scrapbox APIには到達しない |
-| 1-4 | `curl -i "$BASE_URL/api/pages/%2e%2e%2fetc"` | `400 Bad Request` |
-| 1-5 | `curl -i "$BASE_URL/api/pages/foo%00bar"` | `400 Bad Request`(NULLバイト) |
-| 1-6 | `LONG=$(printf 'a%.0s' {1..10000}); curl -i "$BASE_URL/api/pages/$LONG"` | `400`もしくは`414`(URI Too Long)。500はNG |
-| 1-7 | `curl -i "$BASE_URL/api/pages/$(printf 'a%.0s' {1..64})"` | `200` or `404`(Upstream次第)。**`400`で落ちないこと** |
-| 1-8 | `curl -i "$BASE_URL/api/pages/$(printf 'a%.0s' {1..65})"` | `400 Bad Request` |
+### 1. projectの制限
 
-### 2. CORSホワイトリスト(K-9)
+仕様: [API仕様](../architecture/cosense-api-proxy.md#api仕様)、[エラー処理](../architecture/cosense-api-proxy.md#エラー処理)
 
-実装: `getAllowedOrigin()`は本番2ドメイン + `http://localhost:*`のみを許可。
+| # | コマンド | 期待する結果 |
+| --- | --- | --- |
+| 1-1 | `curl -i "$BASE_URL/api/pages/KJR020"` | `200`、`Content-Type: application/json` |
+| 1-2 | `curl -i "$BASE_URL/api/pages/other-project"` | `400`。形式が正しくても`KJR020`以外は受け付けない |
+| 1-3 | `curl -i "$BASE_URL/api/pages/..%2f..%2fetc"` | `400` |
+| 1-4 | `curl -i --path-as-is "$BASE_URL/api/pages/../../etc/passwd"` | `400`か`404`。Cosense APIへ到達しない |
+| 1-5 | `curl -i "$BASE_URL/api/pages/foo%00bar"` | `400` |
+| 1-6 | `LONG=$(printf 'a%.0s' {1..10000}); curl -i "$BASE_URL/api/pages/$LONG"` | `400`か`414`。`500`にならない |
 
-| # | コマンド | 期待レスポンス |
-|---|---|---|
-| 2-1 | `curl -i -H "Origin: https://kjr020.dev" "$BASE_URL/api/pages/$PROJECT"` | `Access-Control-Allow-Origin: https://kjr020.dev` + `Vary: Origin` |
-| 2-2 | `curl -i -H "Origin: https://kjr020.pages.dev" "$BASE_URL/api/pages/$PROJECT"` | `Access-Control-Allow-Origin: https://kjr020.pages.dev` |
-| 2-3 | `curl -i -H "Origin: http://localhost:4321" "$BASE_URL/api/pages/$PROJECT"` | `Access-Control-Allow-Origin: http://localhost:4321` |
-| 2-4 | `curl -i "$BASE_URL/api/pages/$PROJECT"`(Originなし) | `Access-Control-Allow-Origin`ヘッダが**付かない** |
-| 2-5 | `curl -i -H "Origin: null" "$BASE_URL/api/pages/$PROJECT"` | `Access-Control-Allow-Origin`なし |
-| 2-6 | `curl -i -H "Origin: file://" "$BASE_URL/api/pages/$PROJECT"` | `Access-Control-Allow-Origin`なし |
-| 2-7 | `curl -i -H "Origin: https://kjr020.dev/" "$BASE_URL/api/pages/$PROJECT"`(末尾スラッシュ) | `Access-Control-Allow-Origin`なし |
-| 2-8 | `curl -i -H "Origin: https://KJR020.dev" "$BASE_URL/api/pages/$PROJECT"`(大文字違い) | `Access-Control-Allow-Origin`なし |
-| 2-9 | `curl -i -H "Origin: https://kjr020.dev.evil.com" "$BASE_URL/api/pages/$PROJECT"`(サブドメイン偽装) | `Access-Control-Allow-Origin`なし |
-| 2-10 | `curl -i -H "Origin: http://kjr020.dev" "$BASE_URL/api/pages/$PROJECT"`(httpスキーム) | `Access-Control-Allow-Origin`なし |
-| 2-11 | `curl -i -H "Origin: http://localhost.evil.com" "$BASE_URL/api/pages/$PROJECT"` | `Access-Control-Allow-Origin`なし |
-| 2-12 | `curl -i -H "Origin: https://kjr020.github.io" "$BASE_URL/api/pages/$PROJECT"`(廃止された旧本番ドメイン) | `Access-Control-Allow-Origin`なし |
+### 2. query parameterの無視
 
-### 3. Secret非露出(K-1)
+仕様: [API仕様](../architecture/cosense-api-proxy.md#api仕様)
 
-実装: レスポンスbody / ヘッダに`SCRAPBOX_SID` / `connect.sid`の値を出さない。
+| # | コマンド | 期待する結果 |
+| --- | --- | --- |
+| 2-1 | `curl -s "$BASE_URL/api/pages/KJR020?limit=1" \| jq length` | queryなしの場合と同じ件数 |
+| 2-2 | `curl -i "$BASE_URL/api/pages/KJR020?skip=99999&foo=bar"` | `200`。queryなしの場合と同じ応答 |
 
-| # | コマンド | 期待レスポンス |
-|---|---|---|
-| 3-1 | `curl -s "$BASE_URL/api/pages/$PROJECT" \| grep -i 'connect\.sid\|SCRAPBOX_SID\|Set-Cookie'` | **何もヒットしない** |
-| 3-2 | `curl -sI "$BASE_URL/api/pages/$PROJECT" \| grep -i 'Set-Cookie'` | **何もヒットしない**(ProxyはCookieを中継しない) |
-| 3-3 | 故意に401を誘発するため、Cloudflare管理画面で`SCRAPBOX_SID`を一時的に無効化したPreviewで`curl -i "$BASE_URL/api/pages/$PROJECT"`を叩く | `5xx`、bodyは`{"error":"Internal server error"}`等の**汎用メッセージ**のみ。内部スタックやSID値が漏れていないこと |
+### 3. CORS
 
-### 4. Cache-Control(K-10)
+仕様: [CORS](../architecture/cosense-api-proxy.md#cors)
 
-実装: 成功2xxは`public, max-age=300`、エラー4xx/5xxは`no-store`。
+| # | コマンド | 期待する結果 |
+| --- | --- | --- |
+| 3-1 | `curl -i -H "Origin: https://kjr020.dev" "$BASE_URL/api/pages/KJR020"` | `Access-Control-Allow-Origin`が付かない |
+| 3-2 | `curl -i -H "Origin: https://evil.example" "$BASE_URL/api/pages/KJR020"` | `Access-Control-Allow-Origin`が付かない |
 
-| # | コマンド | 期待レスポンス |
-|---|---|---|
-| 4-1 | `curl -sI "$BASE_URL/api/pages/$PROJECT" \| grep -i '^Cache-Control:'` | `public, max-age=300` |
-| 4-2 | `curl -sI "$BASE_URL/api/pages/../../etc" \| grep -i '^Cache-Control:'` | `no-store` |
-### 5. HTTPメソッド
+### 4. 秘密情報の非露出
 
-実装: `onRequestGet`のみexportしているため、他メソッドはCloudflare Pages Functions側で自動的に405相当になる。
+仕様: [秘密情報](../architecture/cosense-api-proxy.md#秘密情報)、[エラー処理](../architecture/cosense-api-proxy.md#エラー処理)
 
-| # | コマンド | 期待レスポンス |
-|---|---|---|
-| 5-1 | `curl -i -X POST "$BASE_URL/api/pages/$PROJECT"` | `405 Method Not Allowed` |
-| 5-2 | `curl -i -X PUT "$BASE_URL/api/pages/$PROJECT"` | `405 Method Not Allowed` |
-| 5-3 | `curl -i -X DELETE "$BASE_URL/api/pages/$PROJECT"` | `405 Method Not Allowed` |
+| # | コマンド | 期待する結果 |
+| --- | --- | --- |
+| 4-1 | `curl -si "$BASE_URL/api/pages/KJR020" \| grep -i 'connect\.sid\|SCRAPBOX_SID\|Set-Cookie'` | 何も一致しない |
+| 4-2 | Previewで`SCRAPBOX_SID`を無効な値にして`curl -i "$BASE_URL/api/pages/KJR020"` | `502`。bodyは汎用のエラーメッセージだけで、Cosenseの応答本文、内部エラー、SIDの値を含まない |
+
+### 5. Cache-Control
+
+仕様: [キャッシュ](../architecture/cosense-api-proxy.md#キャッシュ)、[エラー処理](../architecture/cosense-api-proxy.md#エラー処理)
+
+| # | コマンド | 期待する結果 |
+| --- | --- | --- |
+| 5-1 | `curl -sI "$BASE_URL/api/pages/KJR020" \| grep -i '^cache-control:'` | 仕様が定める成功時の値 |
+| 5-2 | `curl -sI "$BASE_URL/api/pages/other-project" \| grep -i '^cache-control:'` | `no-store` |
+
+### 6. HTTPメソッド
+
+仕様: [API仕様](../architecture/cosense-api-proxy.md#api仕様)
+
+| # | コマンド | 期待する結果 |
+| --- | --- | --- |
+| 6-1 | `curl -i -X POST "$BASE_URL/api/pages/KJR020"` | `405` |
+| 6-2 | `curl -i -X PUT "$BASE_URL/api/pages/KJR020"` | `405` |
+| 6-3 | `curl -i -X DELETE "$BASE_URL/api/pages/KJR020"` | `405` |
 
 ## 実行タイミング
 
-- **リリース前**: `feature/*` → `main`のマージ前Preview URLに対して1〜5を全項目実行
-- **定期**: 四半期ごと、もしくはCORS / バリデーション周りの変更があったPR時
-- **結果の記録**: 異常があった場合のみIssueとして残す。正常結果は記録不要
+- Pages Functionまたは`functions/_lib/`を変更するPull Requestでは、Preview deploymentに対して全項目を実行する
+- 変更がなくても、四半期ごとにProductionに対して全項目を実行する
+- 異常があった場合だけIssueに記録する。正常な結果は記録しない
 
-## 関連
+## 関連ファイル
 
-- 実装: `functions/_lib/cms-proxy.ts`、`functions/_lib/http.ts`
-- 単体テスト: `tests/functions/_lib/*.test.ts`、`tests/functions/api/**/*.test.ts`
-- セキュリティ要件ID: K-1(Secret非露出), K-2(projectバリデーション), K-9(CORS制限), K-10(Cache-Control)
+- [Cosense API Proxy](../architecture/cosense-api-proxy.md) - 検証対象の仕様
+- [Cosense APIエンドポイント](../../functions/api/pages/%5Bproject%5D.ts) - Pages Functionの入口
+- [Cosense Proxy](../../functions/_lib/cms-proxy.ts) - projectの検証と上流取得
+- [Pages Functionのテスト](../../tests/functions/api/pages/%5Bproject%5D.test.ts) - 同じ観点の単体テスト
