@@ -33,7 +33,7 @@ function cleanScrapboxDescription(text: string): string {
 }
 
 function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCardListProps) {
-  const { data, isLoading, isError, error, refetch } = useScrapboxData(project, {
+  const { data, isLoading, isError, refetch } = useScrapboxData(project, {
     initialData: pages,
     limit,
   });
@@ -82,10 +82,10 @@ function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCar
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
         <AlertCircle className="h-12 w-12 text-destructive" />
-        <p className="text-muted-foreground">{error?.message || "データの取得に失敗しました"}</p>
+        <p className="text-muted-foreground">Scrapboxを読み込めませんでした</p>
         <Button variant="outline" onClick={() => refetch()}>
           <RefreshCw className="mr-2 h-4 w-4" />
-          再試行
+          再読み込み
         </Button>
       </div>
     );
@@ -96,7 +96,7 @@ function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCar
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
         <FileQuestion className="h-12 w-12 text-muted-foreground" />
-        <p className="text-muted-foreground">ページが見つかりません</p>
+        <p className="text-muted-foreground">Scrapboxのページがありません</p>
       </div>
     );
   }
