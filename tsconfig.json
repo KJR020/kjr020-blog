@@ -9,5 +9,5 @@
     "jsxImportSource": "react"
   },
   "include": [".astro/types.d.ts", "src/**/*", "src/content.config.ts", "tests/**/*"],
-  "exclude": ["node_modules", "dist", "functions", "tests/functions"]
+  "exclude": ["node_modules", "dist", "worker", "tests/worker"]
 }

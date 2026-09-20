@@ -1,6 +1,6 @@
 /** @vitest-environment node */
 import { describe, expect, it, vi } from "vitest";
-import { logError } from "../../../functions/_lib/logger";
+import { logError } from "../../../worker/_lib/logger";
 
 describe("logError", () => {
   it("console.error に JSON 文字列を出力する", () => {

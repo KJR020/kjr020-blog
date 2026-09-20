@@ -1,17 +1,18 @@
-import { fetchPages, validateProject } from "../../_lib/cms-proxy";
-import { jsonResponse } from "../../_lib/http";
-import { logError } from "../../_lib/logger";
-
-interface Env {
-  SCRAPBOX_SID: string;
-}
+import { fetchPages, validateProject } from "../_lib/cms-proxy";
+import { jsonResponse } from "../_lib/http";
+import { logError } from "../_lib/logger";
+import type { Env } from "../env";
 
 const CACHE_CONTROL = "public, max-age=300, s-maxage=600";
 
 /** Cosenseのページ一覧を共有キャッシュから返し、未保存なら上流から取得する。 */
-export const onRequestGet: PagesFunction<Env> = async (context) => {
-  const project = context.params.project as string;
-  const scrapboxSid = context.env.SCRAPBOX_SID;
+export async function handlePagesRequest(
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
+  project: string,
+): Promise<Response> {
+  const scrapboxSid = env.SCRAPBOX_SID;
 
   if (project !== "KJR020" || !validateProject(project)) {
     return jsonResponse({ error: "Invalid project name" }, 400);
@@ -20,7 +21,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return jsonResponse({ error: "Server misconfigured" }, 500);
   }
 
-  const cacheUrl = new URL(context.request.url);
+  const cacheUrl = new URL(request.url);
   cacheUrl.pathname = "/api/pages/KJR020";
   cacheUrl.search = "?limit=100";
   const cacheKey = new Request(cacheUrl.toString());
@@ -54,7 +55,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   response.headers.set("Cache-Control", CACHE_CONTROL);
   if (cache) {
     try {
-      context.waitUntil(
+      ctx.waitUntil(
         cache.put(cacheKey, response.clone()).catch(() => {
           logError({ type: "cache_write_error", project });
         }),
@@ -64,4 +65,4 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     }
   }
   return response;
-};
+}

@@ -1,7 +1,7 @@
 /**
  * HTTP レスポンス共通ヘルパー。
  *
- * Pages Function のJSONレスポンスとCache-Controlを統一する。
+ * Worker のJSONレスポンスとCache-Controlを統一する。
  */
 
 /**
