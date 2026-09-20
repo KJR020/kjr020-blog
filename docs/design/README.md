@@ -4,7 +4,7 @@ KJR020's Blogの視覚言語、レイアウト骨格、UI文言に関する正�
 
 ## 文書一覧
 
-- [デザイン仕様](design-system.md) - デザイン原則、Source of Truth、個別仕様、運用
+- [デザイン仕様](design-system.md) - デザイン原則、Source of Truth、ブランド表現・記事の読書設計・Tag interactionの仕様、運用
 - [Grid system](grid-system.md) - Columns / Gutters / Margins、Breakpoint、配置パターン
 - [UIライティングガイドライン](ui-writing-guidelines.md) - 声、原則、部品文法、表記、状態メッセージ
 
