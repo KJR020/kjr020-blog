@@ -182,7 +182,7 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 | Reading lane | 本文、見出し、リスト、Figure、Diagram | 8 / 9 |
 | Wide lane | Code、Table | 9 / 9 |
 
-Compactでは両方を1 columnへ戻す。Article内の9 tracksは、ページ側の2 / 6 / 12 columnsとは独立した入れ子のGridである（[Grid system](grid-system.md)を参照）。
+Compactでは両方を1 columnへ戻す。Article内の9 tracksは、記事本文の内側だけに存在するGridであり、ページシェルやRailの幅とは独立している。外側の配置は[Grid system](grid-system.md)で定める。
 
 #### 標準値
 
