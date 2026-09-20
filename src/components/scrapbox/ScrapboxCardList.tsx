@@ -13,6 +13,11 @@ interface ScrapboxCardListProps {
   limit?: number;
   className?: string;
   pages?: ScrapboxPageData[];
+  /**
+   * carousel: カードを横スクロールで並べる
+   * notes: タイトルと更新日だけを縦に並べる。補助領域へ置くときに使う
+   */
+  variant?: "carousel" | "notes";
 }
 
 function formatDate(dateString: string): string {
@@ -32,7 +37,14 @@ function cleanScrapboxDescription(text: string): string {
     .trim();
 }
 
-function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCardListProps) {
+function ScrapboxCardListInner({
+  project,
+  limit,
+  className,
+  pages,
+  variant = "carousel",
+}: ScrapboxCardListProps) {
+  const isNotes = variant === "notes";
   const { data, isLoading, isError, refetch } = useScrapboxData(project, {
     initialData: pages,
     limit,
@@ -101,9 +113,32 @@ function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCar
     );
   }
 
+  if (isNotes) {
+    return (
+      <ul className={cn("flex flex-col", className)}>
+        {data.map((page) => (
+          <li key={page.id} className="border-b border-border/60 last:border-b-0">
+            <a
+              href={page.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/note block py-phi-sm transition-colors hover:text-link"
+            >
+              <span className="block text-sm leading-snug text-foreground line-clamp-2 group-hover/note:text-link">
+                {page.title}
+              </span>
+              <span className="mt-phi-3xs block text-[10px] text-muted-foreground/60">
+                {formatDate(page.updatedAt)}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   return (
     <div className={cn("relative group", className)}>
-      {/* Scroll container */}
       <div
         ref={scrollRef}
         onScroll={checkScroll}
@@ -117,11 +152,11 @@ function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCar
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "shrink-0 w-56 p-4",
+              "shrink-0 w-56 h-40 p-4",
               "rounded-lg border",
               "bg-card transition-colors hover:bg-accent/50",
               "group/card",
-              "flex flex-col h-40",
+              "flex flex-col",
             )}
           >
             <h3 className="text-sm font-medium text-foreground line-clamp-2 leading-snug group-hover/card:text-link transition-colors duration-200">
@@ -137,43 +172,45 @@ function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCar
         ))}
       </div>
 
-      {/* Navigation - only visible on hover */}
-      <button
-        type="button"
-        onClick={() => scroll("left")}
-        className={cn(
-          "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3",
-          "h-8 w-8 rounded-full",
-          "bg-background border border-border shadow-sm",
-          "flex items-center justify-center",
-          "opacity-0 group-hover:opacity-100 transition-opacity duration-200",
-          "hover:bg-muted",
-          !canScrollLeft && "invisible",
-        )}
-        aria-label="前へ"
-      >
-        <ChevronLeft className="h-4 w-4 text-muted-foreground" />
-      </button>
-      <button
-        type="button"
-        onClick={() => scroll("right")}
-        className={cn(
-          "absolute right-0 top-1/2 -translate-y-1/2 translate-x-3",
-          "h-8 w-8 rounded-full",
-          "bg-background border border-border shadow-sm",
-          "flex items-center justify-center",
-          "opacity-0 group-hover:opacity-100 transition-opacity duration-200",
-          "hover:bg-muted",
-          !canScrollRight && "invisible",
-        )}
-        aria-label="次へ"
-      >
-        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-      </button>
+      <>
+        {/* Navigation - only visible on hover */}
+        <button
+          type="button"
+          onClick={() => scroll("left")}
+          className={cn(
+            "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3",
+            "h-8 w-8 rounded-full",
+            "bg-background border border-border shadow-sm",
+            "flex items-center justify-center",
+            "opacity-0 group-hover:opacity-100 transition-opacity duration-200",
+            "hover:bg-muted",
+            !canScrollLeft && "invisible",
+          )}
+          aria-label="前へ"
+        >
+          <ChevronLeft className="h-4 w-4 text-muted-foreground" />
+        </button>
+        <button
+          type="button"
+          onClick={() => scroll("right")}
+          className={cn(
+            "absolute right-0 top-1/2 -translate-y-1/2 translate-x-3",
+            "h-8 w-8 rounded-full",
+            "bg-background border border-border shadow-sm",
+            "flex items-center justify-center",
+            "opacity-0 group-hover:opacity-100 transition-opacity duration-200",
+            "hover:bg-muted",
+            !canScrollRight && "invisible",
+          )}
+          aria-label="次へ"
+        >
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </button>
 
-      {/* Subtle fade edges */}
-      <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+        {/* Subtle fade edges */}
+        <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+      </>
     </div>
   );
 }
