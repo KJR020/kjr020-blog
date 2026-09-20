@@ -1,4 +1,4 @@
-# KJR020's Blog ページレイアウト
+# KJR020's Blogページレイアウト
 
 ページ横方向の配置を決める仕様。ページシェルの幅、余白、主要領域の並べ方を扱う。
 
@@ -43,7 +43,7 @@ CSS Gridを使うのは、複数の領域が同じ行で異なる列を占める
 
 | ページ | 構成 | 実装 |
 | --- | --- | --- |
-| 記事詳細 | 本文12列 + 目次4列 | CSS Grid（`repeat(16, minmax(0, 1fr))`） |
+| 記事詳細 | 本文12列 + 目次4列 | CSS Grid(`repeat(16, minmax(0, 1fr))`) |
 | ホーム | 記事一覧12列 + メモ4列 | CSS Grid |
 | ホームのヒーロー | 12列のみ | `padding-inline-end`で同じ幅を作る |
 
@@ -77,16 +77,16 @@ Tailwindの`md`と`lg`に合わせて3段階とする。判定はコンテンツ
 
 ## ページシェル
 
-すべてのページで、シェルに左右16pxの内側余白（`px-4`）を確保する。シェルは中央寄せする。中央寄せで生じる外側の余白は、この内側余白とは別のものとして扱う。
+すべてのページで、シェルに左右16pxの内側余白(`px-4`)を確保する。シェルは中央寄せする。中央寄せで生じる外側の余白は、この内側余白とは別のものとして扱う。
 
 最大幅は、左右の内側余白を含むシェルの幅とする。
 
 | ページ | 最大幅 | 根拠 |
 | --- | --- | --- |
-| 記事詳細 | 1152px（`max-w-6xl`） | 本文と目次を横に並べる |
-| ホーム | 1152px（`max-w-6xl`） | 記事一覧とメモを横に並べる |
-| Privacy Policy | 768px（`max-w-3xl`） | 読むことが主目的で、補助領域を持たない |
-| 記事一覧、タグ別一覧、検索 | Breakpoint連動（Tailwindの`container`） | 固定の上限を設けていない |
+| 記事詳細 | 1152px(`max-w-6xl`) | 本文と目次を横に並べる |
+| ホーム | 1152px(`max-w-6xl`) | 記事一覧とメモを横に並べる |
+| Privacy Policy | 768px(`max-w-3xl`) | 読むことが主目的で、補助領域を持たない |
+| 記事一覧、タグ別一覧、検索 | Breakpoint連動(Tailwindの`container`) | 固定の上限を設けていない |
 | 404 | シェルを使わず中央揃えで配置する | 単一のメッセージと導線だけを持つ |
 
 記事一覧、タグ別一覧、検索の上限はTailwindの`container`の既定に従い、各Breakpointの値になる。記事詳細と同じ上限へ揃えるかは未決とし、決めるまでこの表を正本とする。
@@ -111,8 +111,8 @@ Wideでは主領域と補助領域を横に並べる。どちらも列で幅を�
 
 | ページ | 主領域 | 補助領域 |
 | --- | --- | --- |
-| 記事詳細 | 本文 1〜12列 | 目次 13〜16列 |
-| ホーム | 記事一覧 1〜12列 | メモ 13〜16列 |
+| 記事詳細 | 本文1〜12列 | 目次13〜16列 |
+| ホーム | 記事一覧1〜12列 | メモ13〜16列 |
 
 CompactとMediumでは1カラムへ戻す。記事詳細では目次を記事ヘッダーの直後へ、ホームではメモを記事一覧の下へ置く。
 
@@ -179,7 +179,7 @@ Wideでは記事ヘッダーも同じ16列に乗せ、タイトルとメタ情�
 ## 関連ファイル
 
 - [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
-- [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - 配置の視覚例（`pnpm dev`の`/design-system/foundations`）
+- [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - 配置の視覚例(`pnpm dev`の`/design-system/foundations`)
 - [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - Page shell
 - [記事詳細](../../src/pages/posts/[...slug].astro) - 本文＋目次layoutと目次の開閉
 - [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - Grid外の検索UI

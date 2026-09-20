@@ -46,7 +46,7 @@ graph TB
     Islands --> Giscus[Giscus / GitHub Discussions]
 ```
 
-アプリケーションの中心は静的サイトである。Cloudflare Pages Functionsは、秘密情報をブラウザへ渡さずにCosense（旧Scrapbox）APIへ接続するための小さな境界としてのみ使用する。
+アプリケーションの中心は静的サイトである。Cloudflare Pages Functionsは、秘密情報をブラウザへ渡さずにCosense(旧Scrapbox)APIへ接続するための小さな境界としてのみ使用する。
 
 ## コンポーネントと責務
 
@@ -84,7 +84,7 @@ sequenceDiagram
     CI->>CF: distをデプロイ
 ```
 
-MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラグインがコールアウト、リンクカード、Mermaid、記事画像のfigure化を担当する。リンクカードは通常ビルド時に外部ページのメタデータを取得するため、テストでは `LINK_CARD_FETCH_MODE=offline` にして外部通信を切り離す。
+MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラグインがコールアウト、リンクカード、Mermaid、記事画像のfigure化を担当する。リンクカードは通常ビルド時に外部ページのメタデータを取得するため、テストでは`LINK_CARD_FETCH_MODE=offline`にして外部通信を切り離す。
 
 ## ブラウザ実行と外部サービス
 
@@ -97,7 +97,7 @@ MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラ�
 | コメント | ブラウザ | Giscus / GitHub Discussions |
 | Cosenseカード | ブラウザ＋Pages Functions | Cosense API |
 
-Cosense（旧Scrapbox）連携では、ブラウザが同一Originの`/api/pages/:project`を呼び出す。Pages Functionsはプロジェクト名を検証し、Cloudflare側の`SCRAPBOX_SID`を使ってCosense APIへ接続する。レスポンスは表示に必要な項目だけへ変換し、Browserで300秒、Cloudflare Cache APIで600秒キャッシュする。エラーは保存しない。cross-originのBrowser JavaScriptからの読み取りは許可しない。詳細は[Cosense API Proxy](cosense-api-proxy.md)に定義する。
+Cosense(旧Scrapbox)連携では、ブラウザが同一Originの`/api/pages/:project`を呼び出す。Pages Functionsはプロジェクト名を検証し、Cloudflare側の`SCRAPBOX_SID`を使ってCosense APIへ接続する。レスポンスは表示に必要な項目だけへ変換し、Browserで300秒、Cloudflare Cache APIで600秒キャッシュする。エラーは保存しない。cross-originのBrowser JavaScriptからの読み取りは許可しない。詳細は[Cosense API Proxy](cosense-api-proxy.md)に定義する。
 
 ## 設計上の判断
 
@@ -107,7 +107,7 @@ Cosense（旧Scrapbox）連携では、ブラウザが同一Originの`/api/pages
 
 ### Reactを操作のある箇所に限定する
 
-ページ全体をSPAにせず、検索、コメント、目次、テーマ切替などに `client:load` または `client:only` を指定する。記事本文と主要なナビゲーションはJavaScriptが実行される前から利用できる。
+ページ全体をSPAにせず、検索、コメント、目次、テーマ切替などに`client:load`または`client:only`を指定する。記事本文と主要なナビゲーションはJavaScriptが実行される前から利用できる。
 
 ### 秘密情報をPages Functionsへ隔離する
 
@@ -131,7 +131,7 @@ Pull Requestでは以下を独立したGitHub Actionsジョブとして実行す
 | 変数 | 用途 | 境界 |
 | --- | --- | --- |
 | `PUBLIC_GISCUS_*` | Giscusのリポジトリ・カテゴリ設定 | 公開されるビルド時設定 |
-| `SCRAPBOX_SID` | Cosense APIへの接続（変数名は旧名称を維持） | Pages Functionsのsecret／ローカルの`.dev.vars` |
+| `SCRAPBOX_SID` | Cosense APIへの接続(変数名は旧名称を維持) | Pages Functionsのsecret／ローカルの`.dev.vars` |
 | `LINK_CARD_FETCH_MODE` | リンクカードの外部取得を切り替える | ビルド・テストプロセス |
 | `CLOUDFLARE_API_TOKEN` | Pagesへのデプロイ | GitHub Actions secret |
 | `CLOUDFLARE_ACCOUNT_ID` | デプロイ先アカウントの指定 | GitHub Actions secret |

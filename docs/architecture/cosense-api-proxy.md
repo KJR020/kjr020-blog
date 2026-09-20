@@ -66,13 +66,13 @@ GET /api/pages/KJR020?limit=100
 
 ## キャッシュ
 
-- React Query：`staleTime: 300秒`
+- React Query: `staleTime: 300秒`
   - 同じQueryClientとquery keyを使うBrowser内でデータをfreshとみなす期間
   - 期限切れや定期更新の設定ではなく、画面を開いたままにしても自動更新は保証しない
   - ウィンドウ復帰時の再取得は無効とする
-- Browser HTTP cache：`max-age=300`
+- Browser HTTP cache: `max-age=300`
   - 各Browserで再利用する
-- Cloudflare Cache API：`s-maxage=600`
+- Cloudflare Cache API: `s-maxage=600`
   - Cloudflareの各データセンターで共有する
 
 成功レスポンスは、Browser向けの`max-age`と共有キャッシュ向けの`s-maxage`を分けて指定する。
@@ -104,12 +104,12 @@ https://<deployment-host>/api/pages/KJR020?limit=100
 
 ## エラー処理
 
-- 400：不正なproject
-- 500：`SCRAPBOX_SID`が未設定
-- 502：Cosense APIから正常な公開用データを取得できない
+- 400: 不正なproject
+- 500: `SCRAPBOX_SID`が未設定
+- 502: Cosense APIから正常な公開用データを取得できない
   - 上流が4xx・5xxまたはリダイレクトを返す、通信に失敗する、JSONを変換できない場合
   - 上流のリダイレクトは追跡しない
-- 504：Cosense APIが5秒以内に応答しない
+- 504: Cosense APIが5秒以内に応答しない
   - 上流への接続開始からJSON本文の読み取り完了までを制限する
 - エラーレスポンスは保存せず、`Cache-Control: no-store`を付与する
   - Cosenseの応答本文、内部エラー、`SCRAPBOX_SID`をBrowserへ返さない
@@ -131,17 +131,17 @@ https://<deployment-host>/api/pages/KJR020?limit=100
 ## 環境設定
 
 - Production
-  - 公開Origin：`https://kjr020.dev`
-  - `SCRAPBOX_SID`：Cloudflare Pages secret
-  - 実行経路：Pages Function
+  - 公開Origin: `https://kjr020.dev`
+  - `SCRAPBOX_SID`: Cloudflare Pages secret
+  - 実行経路: Pages Function
 - Preview
-  - 公開Origin：Preview deploymentのOrigin
-  - `SCRAPBOX_SID`：Cloudflare Pages secret
-  - 実行経路：Pages Function
+  - 公開Origin: Preview deploymentのOrigin
+  - `SCRAPBOX_SID`: Cloudflare Pages secret
+  - 実行経路: Pages Function
 - Local
-  - 公開Origin：WranglerのOrigin
-  - `SCRAPBOX_SID`：`.dev.vars`
-  - 実行経路：Wrangler Pages Function
+  - 公開Origin: WranglerのOrigin
+  - `SCRAPBOX_SID`: `.dev.vars`
+  - 実行経路: Wrangler Pages Function
     - ローカル開発ではWranglerのOriginからページを開く
     - Wranglerは`/api/...`をPages Functionで処理し、それ以外をAstro開発サーバーへProxyする
 
