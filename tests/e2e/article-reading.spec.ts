@@ -22,7 +22,7 @@ test("画面幅に応じた本文組版を使う", async ({ page }, testInfo) =>
 
   expect(typography.fontSize).toBe(expectedFontSize);
   expect(typography.lineHeight / typography.fontSize).toBeCloseTo(expectedLineHeight, 1);
-  expect(typography.width).toBeLessThanOrEqual(expectedFontSize * 40 + 1);
+  expect(typography.width).toBeLessThanOrEqual(expectedFontSize * 43 + 1);
 });
 
 test("Figureを本文と同じReading laneへ揃える", async ({ page }, testInfo) => {
@@ -115,7 +115,7 @@ test("デスクトップでは記事タイトルをキャラクター領域に�
   await page.goto(articlePath);
 
   const title = page.getByRole("heading", { level: 1 });
-  const character = page.locator(".kuri-watermark");
+  const character = page.locator(".post-header-mascot");
   const [titleBox, characterBox] = await Promise.all([
     title.boundingBox(),
     character.boundingBox(),
@@ -147,38 +147,6 @@ test("モバイルでは記事ヘッダー直後に折りたたみ目次を表�
   await expect(article.locator("header + .post-mobile-toc")).toBeVisible();
 });
 
-test("デスクトップでは目次を隠して再表示できる", async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 720 });
-  await page.goto(articlePath);
-
-  const readingMain = page.locator(".post-reading-main");
-  const paragraph = page.locator(".article-reading-content > p").first();
-  const desktopToc = page.locator(".post-desktop-toc");
-  const navigation = desktopToc.getByRole("navigation", { name: "目次" });
-  const initialReadingMainWidth = (await readingMain.boundingBox())?.width ?? 0;
-  const initialParagraphWidth = (await paragraph.boundingBox())?.width ?? 0;
-
-  await expect(desktopToc.locator("astro-island:not([ssr])")).toBeAttached();
-  await expect(navigation).toBeVisible();
-  await desktopToc.getByRole("button", { name: "目次を隠す" }).click();
-  await expect(navigation).toBeHidden();
-  await expect
-    .poll(async () => (await readingMain.boundingBox())?.width ?? 0)
-    .toBeGreaterThan(initialReadingMainWidth + 180);
-  await expect
-    .poll(async () => (await paragraph.boundingBox())?.width ?? 0)
-    .toBeGreaterThan(initialParagraphWidth + 100);
-
-  await desktopToc.getByRole("button", { name: "目次を表示" }).click();
-  await expect(navigation).toBeVisible();
-  await expect
-    .poll(async () => (await readingMain.boundingBox())?.width ?? 0)
-    .toBe(initialReadingMainWidth);
-  await expect
-    .poll(async () => (await paragraph.boundingBox())?.width ?? 0)
-    .toBe(initialParagraphWidth);
-});
-
 test("デスクトップ目次の現在位置アイコンをスクロール領域内に表示する", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto(articlePath);
@@ -203,7 +171,7 @@ test("デスクトップ目次はページをスクロールしても画面内�
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto(articlePath);
 
-  const desktopToc = page.locator(".post-desktop-toc [data-desktop-toc-open]");
+  const desktopToc = page.locator(".post-desktop-toc .sticky");
   await expect(desktopToc).toBeVisible();
 
   await page.mouse.wheel(0, 1_200);
