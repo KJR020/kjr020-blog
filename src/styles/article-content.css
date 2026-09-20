@@ -1,5 +1,5 @@
 .article-reading-content {
-  --article-reading-measure: 40ic;
+  --article-reading-measure: 43ic;
 
   display: grid;
   grid-template-columns: repeat(9, minmax(0, 1fr));
