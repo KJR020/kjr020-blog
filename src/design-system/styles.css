@@ -810,7 +810,7 @@ table.map th {
 }
 
 .width-wide { inline-size: 100%; }
-.width-narrow { inline-size: min(100%, 75%); }
+.width-narrow { inline-size: min(100%, 66.7%); }
 .width-overlay { inline-size: min(100%, 45%); }
 
 .grid-legend {

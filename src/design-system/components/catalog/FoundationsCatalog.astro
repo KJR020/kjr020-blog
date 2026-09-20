@@ -171,30 +171,30 @@ const shows = (section: FoundationSection) => sections.includes(section);
   </div>
 
   <div class="spec-item" id="grid-breakpoints">
-    <h3>2-3. Grid breakpoints</h3>
-    <p class="src">2 / 6 / 12 columnsを、ブログの基準である768pxと1024pxへ合わせる。Breakpointはviewport全体の幅で判定する。</p>
+    <h3>2-3. Breakpoints</h3>
+    <p class="src">Tailwindのmdとlgに合わせて3段階とする。Breakpointはviewport全体の幅で判定する。</p>
     <div class="demo table-scroll">
       <table class="map">
-        <thead><tr><th>Mode</th><th>Viewport</th><th>Columns</th><th>Gutter</th><th>Margin</th></tr></thead>
+        <thead><tr><th>Mode</th><th>Viewport</th><th>Tailwind</th><th>左右余白</th><th>主要領域</th></tr></thead>
         <tbody>
-          <tr><td>Compact</td><td>320–767px</td><td>2</td><td>12px</td><td>16px</td></tr>
-          <tr><td>Medium</td><td>768–1023px</td><td>6</td><td>12px</td><td>16px</td></tr>
-          <tr><td>Wide</td><td>1024px以上</td><td>12</td><td>16px</td><td>32px</td></tr>
+          <tr><td>Compact</td><td>767px以下</td><td>既定</td><td>16px</td><td>縦積み</td></tr>
+          <tr><td>Medium</td><td>768px以上</td><td>md</td><td>16px</td><td>縦積み</td></tr>
+          <tr><td>Wide</td><td>1024px以上</td><td>lg</td><td>16px</td><td>主領域＋補助領域</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
   <div class="spec-item" id="grid-types">
-    <h3>2-4. Grid types</h3>
-    <p class="src">長文を無制限に広げない。構造化ページはFixed-wide、読むことが中心のページはFixed-narrow、横方向の広がりに意味がある領域だけFluidを使う。</p>
+    <h3>2-4. ページシェル</h3>
+    <p class="src">最大幅はページごとに定める。共通の列体系は持たない。</p>
     <div class="demo table-scroll">
       <table class="map">
-        <thead><tr><th>Type</th><th>最大幅</th><th>用途</th></tr></thead>
+        <thead><tr><th>ページ</th><th>最大幅</th><th>指定</th></tr></thead>
         <tbody>
-          <tr><td>Fixed-wide</td><td>1152px / 72rem</td><td>記事＋目次、検索＋タグ</td></tr>
-          <tr><td>Fixed-narrow</td><td>864px / 54rem</td><td>記事単体、Privacy、長文の説明</td></tr>
-          <tr><td>Fluid</td><td>制限なし</td><td>横scroll領域の内部に限定</td></tr>
+          <tr><td>記事詳細</td><td>1152px / 72rem</td><td>max-w-6xl</td></tr>
+          <tr><td>Privacy Policy</td><td>768px / 48rem</td><td>max-w-3xl</td></tr>
+          <tr><td>ホーム、記事一覧、検索</td><td>Breakpoint連動</td><td>container</td></tr>
         </tbody>
       </table>
     </div>
@@ -202,21 +202,21 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="grid-composition">
     <h3>2-5. 配置パターン</h3>
-    <p class="src">Wideでは本文を9 columns、補助領域を3 columnsに置く。Medium以下はDOM順を保ったまま全幅で縦積みし、目次は折りたたみ表示へ切り替える。</p>
+    <p class="src">Wideでは主領域へ残り幅を割り当て、補助領域に250pxを確保する。Medium以下はDOM順を保ったまま全幅で縦積みし、目次は折りたたみ表示へ切り替える。</p>
     <div class="demo grid-composition">
-      <div class="grid-region grid-region-header"><strong>Page header</strong><span>2 / 6 / 12 columns</span></div>
-      <div class="grid-region grid-region-main"><strong>Article / Search results</strong><span>Wide: 9 / 12 columns</span></div>
-      <div class="grid-region grid-region-aside"><strong>TOC / Filters</strong><span>Wide: 3 / 12 columns</span></div>
+      <div class="grid-region grid-region-header"><strong>Page header</strong><span>全幅</span></div>
+      <div class="grid-region grid-region-main"><strong>Article / Search results</strong><span>Wide: minmax(0, 1fr)</span></div>
+      <div class="grid-region grid-region-aside"><strong>TOC / Filters</strong><span>Wide: 250px</span></div>
     </div>
   </div>
 
   <div class="spec-item" id="width-tokens">
     <h3>2-6. 幅トークン</h3>
-    <p class="src">最大幅は用途名で定義する。長文にはFixed-narrow、本文と補助領域を並べるページにはFixed-wide、overlayには専用幅を使う。</p>
+    <p class="src">最大幅はTailwindのユーティリティで指定する。ページごとの採用値は<code>docs/design/grid-system.md</code>を参照する。</p>
     <div class="demo layout-stack width-stack">
-      <div class="layout-bar width-wide"><strong>--grid-wide</strong><span>1152px · 本文＋補助領域</span></div>
-      <div class="layout-bar width-narrow"><strong>--grid-narrow</strong><span>864px · 長文</span></div>
-      <div class="layout-bar width-overlay"><strong>--overlay-lg</strong><span>512px · Page Gridの対象外</span></div>
+      <div class="layout-bar width-wide"><strong>max-w-6xl</strong><span>1152px · 記事詳細</span></div>
+      <div class="layout-bar width-narrow"><strong>max-w-3xl</strong><span>768px · Privacy Policy</span></div>
+      <div class="layout-bar width-overlay"><strong>max-w-lg</strong><span>512px · Command Palette</span></div>
     </div>
   </div>
 
