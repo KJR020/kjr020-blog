@@ -104,12 +104,12 @@ tests/
 記事ページのE2Eでは、`content/posts/__test/`のdraft記事を使う。テストビルドでは通常の記事と
 同じMarkdown変換と記事ルートを通して`/posts/__test/*`に出力し、通常の本番ビルドには含めない。
 
-### Visual Regression Tests
+## Visual Regression Tests
 
 VRTはBrowser E2Eのうち、スクリーンショットで意図しないレイアウトやスタイルの変更を
 検出するテストである。記事や外部サービスの更新を検出するテストにはしない。
 
-#### VRT対象
+### VRT対象
 
 - `src/test-fixtures/pages/`のfixtureページ、またはデザインシステムの標本を撮影する
 - 本番と同じコンポーネント、レイアウト、スタイルを使って描画する
@@ -121,7 +121,7 @@ fixtureページは開発サーバーと`TEST_FIXTURES=true`のテストビル�
 ページコンポーネントを共有し、前者には実データ、後者には`src/test-fixtures/fixtures.ts`の固定データを渡す。
 機能検証と`tests/e2e/snapshot.spec.ts`の画像比較は同じfixtureページを使う。
 
-#### fixtureの要件
+### fixtureの要件
 
 - 記事タイトル、日付、タグ、件数、画像サイズを固定する
 - 長いタイトル、複数行、空状態など、守りたいレイアウト条件を明示して含める
@@ -129,7 +129,7 @@ fixtureページは開発サーバーと`TEST_FIXTURES=true`のテストビル�
 - 現在時刻、乱数、ネットワーク、実コンテンツの追加・編集へ依存させない
 - fixtureはテスト対象の近くに置き、用途が分かる名前を付ける
 
-#### 外部依存とビルド時処理の境界
+### 外部依存とビルド時処理の境界
 
 Playwrightの通信モックが介入できるのは、ページを開いた後にブラウザが行う通信だけである。
 Astroのビルド時に`getCollection()`で読み込む記事や、Markdown変換中に生成する
@@ -138,7 +138,7 @@ Astroのビルド時に`getCollection()`で読み込む記事や、Markdown変�
 外部データを扱う機能は、取得・変換と描画を分ける。取得・変換はUnitまたは
 Integration Testで検証し、VRTでは解決済みの固定データを描画コンポーネントへ渡す。
 
-#### スナップショットを安定させるルール
+### スナップショットを安定させるルール
 
 - コンテンツ領域をmaskして差分を隠さない
 - 外部ウィジェットを含むページをそのままVRT対象にしない
@@ -146,7 +146,7 @@ Integration Testで検証し、VRTでは解決済みの固定データを描画�
 - フォント、画像、Astro Islandの準備完了後に撮影する
 - 基準画像は、意図したUI変更があった場合だけ更新する
 
-#### 実行環境
+### 実行環境
 
 - `playwright.config.ts`のDesktop ChromeとMobile Chromeで実行する
 - 公式Playwright LinuxコンテナでE2EとVRTを実行する
