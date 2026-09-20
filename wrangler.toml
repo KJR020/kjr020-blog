@@ -1,3 +1,8 @@
 name = "kjr020-blog"
-pages_build_output_dir = "./dist"
 compatibility_date = "2025-03-01"
+
+[assets]
+directory = "./dist"
+# Astro の build.format = "directory" に合わせ、/foo/ -> dist/foo/index.html を維持する。
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"
