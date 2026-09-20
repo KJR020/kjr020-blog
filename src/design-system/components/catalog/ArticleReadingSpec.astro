@@ -80,35 +80,36 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
     <div class="demo layout-specimen">
       <div class="column-ruler" aria-hidden="true">
-        {Array.from({ length: 12 }, (_, index) => (
+        {Array.from({ length: 9 }, (_, index) => (
           <span>{String(index + 1).padStart(2, "0")}</span>
         ))}
+        <span>RAIL</span>
       </div>
       <div class="lane-map">
         <div class="lane lane-header">
           <div class="lane-header-content">
-            <span>ARTICLE HEADER · 9 COL</span>
+            <span>ARTICLE HEADER · 全幅</span>
             <strong>記事ヘッダー</strong>
             <p>タイトルとメタ情報を本文・目次の上に置く。</p>
           </div>
           <div class="lane-character-area">
-            <span>CHARACTER · 3 COL</span>
+            <span>CHARACTER</span>
             <strong>キャラクター領域</strong>
             <p>タイトルを重ねない。</p>
           </div>
         </div>
         <div class="lane lane-reading">
-          <span>READING LANE · 8 COL</span>
+          <span>READING LANE · 8 / 9</span>
           <strong>本文・見出し・リスト・画像・図</strong>
           <p>視線が次の行頭を見失わない幅を優先する。</p>
         </div>
         <div class="lane lane-wide">
-          <span>WIDE LANE · 9 COL</span>
+          <span>WIDE LANE · 9 / 9</span>
           <strong>コード・表</strong>
           <p>情報量が必要なコンテンツだけを広げる。</p>
         </div>
         <aside class="lane lane-rail">
-          <span>RAIL · 3 COL</span>
+          <span>RAIL · 250px</span>
           <strong>目次</strong>
           <p>画面内に追従し、本文より弱い階層で現在位置を示す。</p>
         </aside>

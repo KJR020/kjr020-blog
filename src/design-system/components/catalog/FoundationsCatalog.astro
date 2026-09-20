@@ -158,13 +158,16 @@ const shows = (section: FoundationSection) => sections.includes(section);
     <h3>2-2. 整列の基本方針</h3>
     <p class="src">共通の列体系は持たない。シェルとページパターンへ揃えるのはトップレベルのコンテナで、部品内部はspacing tokenで配置する。</p>
     <div class="demo">
-      <div class="grid-anatomy" aria-label="12列グリッドの見本">
-        {Array.from({ length: 12 }).map((_, index) => <span>{index + 1}</span>)}
-      </div>
-      <div class="grid-legend" aria-hidden="true">
-        <span><i class="grid-key grid-key-column"></i>Column</span>
-        <span><i class="grid-key grid-key-gutter"></i>Gutter</span>
-        <span><i class="grid-key grid-key-margin"></i>Margin</span>
+      <div class="shell-anatomy" aria-label="シェルと内部配置の見本">
+        <span class="shell-margin">16px</span>
+        <div class="shell-inner">
+          <div class="shell-container">トップレベルコンテナはシェルへ揃える</div>
+          <div class="shell-part">
+            <strong>Card</strong>
+            <span>内部のtitle・meta・actionはspacing tokenで配置する</span>
+          </div>
+        </div>
+        <span class="shell-margin">16px</span>
       </div>
     </div>
     <p class="source-row"><strong>Specification</strong><code>docs/design/grid-system.md</code></p>
