@@ -46,6 +46,12 @@ jobs:
           PUBLIC_GISCUS_CATEGORY: ${{ vars.PUBLIC_GISCUS_CATEGORY }}
           PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.PUBLIC_GISCUS_CATEGORY_ID }}
 
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test:run
+
       - name: Deploy to Cloudflare Workers
         id: deploy
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
@@ -78,7 +84,7 @@ jobs:
             local want_header="${5:-}" want_value="${6:-}"
             local headers status
 
-            headers=$(curl -sS -o /dev/null -D - -X "${method}" "${DEPLOYMENT_URL}${path}" || true)
+            headers=$(curl --connect-timeout 10 --max-time 30 -sS -o /dev/null -D - -X "${method}" "${DEPLOYMENT_URL}${path}" || true)
             status=$(printf '%s' "${headers}" | head -1 | awk '{print $2}')
 
             if [ "${status}" != "${want_status}" ]; then
@@ -118,7 +124,7 @@ jobs:
           # run_worker_first = ["/api/*"] が効いている。
           # この設定が無いと navigation リクエストは Static Assets 側で処理され、
           # /api/* が 404 の HTML になる。上の POST では検知できない。
-          api_navigate_type=$(curl -sS -o /dev/null -D - \
+          api_navigate_type=$(curl --connect-timeout 10 --max-time 30 -sS -o /dev/null -D - \
             -H "Sec-Fetch-Mode: navigate" \
             "${DEPLOYMENT_URL}/api/pages/KJR020" \
             | grep -i "^content-type:" \
