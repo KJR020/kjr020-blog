@@ -5,13 +5,13 @@ export default getViteConfig({
   test: {
     environment: "jsdom",
     globals: true,
-    include: ["tests/src/**/*.test.{ts,tsx}", "tests/functions/**/*.test.ts"],
+    include: ["tests/src/**/*.test.{ts,tsx}", "tests/worker/**/*.test.ts"],
     setupFiles: ["./tests/setup.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "lcov"],
       include: [
-        "functions/**/*.ts",
+        "worker/**/*.ts",
         "src/lib/**/*.ts",
         "src/components/**/use*.ts",
         "src/components/scrapbox/queryClient.ts",

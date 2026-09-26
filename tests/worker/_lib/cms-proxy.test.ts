@@ -1,6 +1,6 @@
 /** @vitest-environment node */
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fetchPages, validateProject } from "../../../functions/_lib/cms-proxy";
+import { fetchPages, validateProject } from "../../../worker/_lib/cms-proxy";
 
 afterEach(() => vi.unstubAllGlobals());
 

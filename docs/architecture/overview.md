@@ -142,9 +142,9 @@ Pull Requestでは以下を独立したGitHub Actionsジョブとして実行す
 - [Astro設定](../../astro.config.mjs) - IntegrationとMarkdown処理
 - [Content Collections設定](../../src/content.config.ts) - 記事スキーマ
 - [ビルド前処理](../../scripts/prepare-public-build.ts) - 出力初期化、公開入力検査、共通OGP生成
-- [Cosense APIエンドポイント](../../functions/api/pages/%5Bproject%5D.ts) - Pages Functionsの入口
-- [Cosense Proxy](../../functions/_lib/cms-proxy.ts) - 外部API接続とレスポンス変換
-- [HTTPポリシー](../../functions/_lib/http.ts) - Cache-Controlとエラーレスポンス
+- [Cosense APIエンドポイント](../../worker/api/pages.ts) - Pages Functionsの入口
+- [Cosense Proxy](../../worker/_lib/cms-proxy.ts) - 外部API接続とレスポンス変換
+- [HTTPポリシー](../../worker/_lib/http.ts) - Cache-Controlとエラーレスポンス
 - [Cosense API Proxy仕様](cosense-api-proxy.md) - 入力、キャッシュ、エラー、セキュリティ仕様
 - [CI workflow](../../.github/workflows/ci.yml) - Pull Requestの品質検証
 - [Deploy workflow](../../.github/workflows/deploy.yml) - Cloudflare Pagesへのデプロイ

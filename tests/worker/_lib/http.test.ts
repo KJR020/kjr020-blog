@@ -1,6 +1,6 @@
 /** @vitest-environment node */
 import { describe, expect, it } from "vitest";
-import { jsonResponse } from "../../../functions/_lib/http";
+import { jsonResponse } from "../../../worker/_lib/http";
 
 describe("jsonResponse", () => {
   it("成功時はBrowserに300秒のキャッシュを許可する", () => {

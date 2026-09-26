@@ -18,7 +18,7 @@
     "format": "biome format --write src/ tests/",
     "format:check": "biome format src/ tests/",
     "check:links": "lychee --config lychee.toml README.md 'docs/**/*.md'",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.functions.json",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.worker.json",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",

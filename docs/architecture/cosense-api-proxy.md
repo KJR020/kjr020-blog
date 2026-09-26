@@ -59,7 +59,7 @@ GET /api/pages/KJR020?limit=100
 - Cosenseからの取得件数は100件に固定する
   - Browserから受け取るquery parameterはすべて無視する
   - 上流へ送る取得条件とキャッシュキーには、Pages Function側で固定した`limit=100`を使用する
-- 応答は公開用ページデータの配列とし、[PageData](../../functions/_lib/cms-proxy.ts)を型の正とする
+- 応答は公開用ページデータの配列とし、[PageData](../../worker/_lib/cms-proxy.ts)を型の正とする
   - `KJR020`から取得したページはすべて公開対象とし、`PageData`に定義した項目だけを返す
   - 0件なら空配列を返し、順序はCosense APIの取得順を維持する
   - 変換に必要な項目の型が不正なページが1件でもあれば、部分的な成功にはせず全体をエラーとする
@@ -148,9 +148,9 @@ https://<deployment-host>/api/pages/KJR020?limit=100
 ## 関連ファイル
 
 - [アーキテクチャ概要](overview.md) - ブログ全体の構成
-- [Cosense APIエンドポイント](../../functions/api/pages/%5Bproject%5D.ts) - Pages Functionの入口
-- [Cosense Proxy](../../functions/_lib/cms-proxy.ts) - Cosense API接続とレスポンス変換
-- [HTTPレスポンス](../../functions/_lib/http.ts) - Cache-Controlとエラーレスポンス
+- [Cosense APIエンドポイント](../../worker/api/pages.ts) - Pages Functionの入口
+- [Cosense Proxy](../../worker/_lib/cms-proxy.ts) - Cosense API接続とレスポンス変換
+- [HTTPレスポンス](../../worker/_lib/http.ts) - Cache-Controlとエラーレスポンス
 - [Cosenseデータ取得](../../src/components/scrapbox/useScrapboxData.ts) - BrowserからのAPI呼び出し
 - [React Query設定](../../src/components/scrapbox/queryClient.ts) - Browser内の再取得ポリシー
 

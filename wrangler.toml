@@ -1,3 +1,16 @@
 name = "kjr020-blog"
-pages_build_output_dir = "./dist"
+main = "./worker/index.ts"
 compatibility_date = "2025-03-01"
+# 2025-04-01 以降のデフォルト挙動を、compatibility_date を上げずに有効化する。
+# navigation リクエストでは Worker を実行せず Static Assets の 404.html を返す。
+compatibility_flags = ["assets_navigation_prefers_asset_serving"]
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+# Astro の build.format = "directory" に合わせ、/foo/ -> dist/foo/index.html を維持する。
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"
+# API のみ Worker を先に実行する。true にするとブログ閲覧のたびに Worker が起動し、
+# Workers の課金対象となるうえ Worker 障害が静的配信にも波及する。
+run_worker_first = ["/api/*"]
