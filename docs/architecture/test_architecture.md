@@ -31,7 +31,7 @@ Visual Regression Test（VRT）は同じfixtureページを使い、記事ペー
 テストコードは種別を問わず `tests/` へ集約する。アプリケーションの実装と検証用のコードを分け、
 テスト全体を一か所から確認できるようにするためである。
 
-`tests/src/` と `tests/functions/` は対象実装のディレクトリ構成とファイル名を引き継ぐ。
+`tests/src/` と `tests/worker/` は対象実装のディレクトリ構成とファイル名を引き継ぐ。
 テスト種別ごとの階層を増やさず、実装側のパスから対応するテストの配置先を判断できるようにする。
 
 ```
@@ -43,9 +43,9 @@ tests/
 │   └── components/
 │       └── toc/
 │           └── TOCList.test.tsx    # src/components/toc/TOCList.tsx のテスト
-├── functions/                      # functions/ を対象とするテスト
+├── worker/                         # worker/ を対象とするテスト
 │   └── _lib/
-│       └── http.test.ts            # functions/_lib/http.ts のテスト
+│       └── http.test.ts            # worker/_lib/http.ts のテスト
 └── e2e/                            # E2EとVRT（playwright.config.ts の testDir）
     ├── header.spec.ts
     ├── snapshot.spec.ts
@@ -54,7 +54,7 @@ tests/
         └── snapshot.ts
 ```
 
-`tests/src/` からは `@/` エイリアスで、`tests/functions/` からは相対パスで対象実装を参照する。
+`tests/src/` からは `@/` エイリアスで、`tests/worker/` からは相対パスで対象実装を参照する。
 
 テスト専用のヘルパーとセットアップも `tests/` 配下へ置く。複数種別で共有するセットアップは
 `tests/setup.ts`、E2E専用のヘルパーは `tests/e2e/helpers/` に置く。

@@ -1,1 +1,3 @@
+# ローカルの wrangler dev 用。実際の値を設定した .dev.vars はコミットしない。
+# 本番は別途 wrangler secret put SCRAPBOX_SID で登録する。
 SCRAPBOX_SID=your-connect-sid-here

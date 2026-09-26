@@ -21,13 +21,13 @@
 ├── content/
 │   └── posts/
 ├── docs/
-├── functions/
+├── worker/
 ├── public/
 ├── scripts/
 ├── src/
 └── tests/
     ├── src/
-    ├── functions/
+    ├── worker/
     └── e2e/
 ```
 
@@ -41,11 +41,11 @@
   - 公開記事と記事固有の素材
 - `public/`
   - ビルド時に加工せず公開する静的ファイル
-- `functions/`
-  - Cloudflare Pages FunctionsによるAPIと、関連するサーバー側ロジック
+- `worker/`
+  - Cloudflare WorkersによるAPIと、関連するサーバー側ロジック
 - `tests/`
-  - Unit、Component、Functions、E2E、Visual Regressionのテストコードと、テスト専用のセットアップ
-  - `tests/src/`は`src/`、`tests/functions/`は`functions/`のディレクトリ構成とファイル名を引き継ぐ
+  - Unit、Component、Cosense API Proxy・ルーター、E2E、Visual Regressionのテストコードと、テスト専用のセットアップ
+  - `tests/src/`は`src/`、`tests/worker/`は`worker/`のディレクトリ構成とファイル名を引き継ぐ
   - `tests/e2e/`はPlaywrightによるE2EとVisual Regressionテスト
 - `scripts/`
   - ビルド、検査、生成に使うプロジェクト固有のスクリプト
@@ -56,7 +56,7 @@
 
 - テストコードは種別を問わず`tests/`へ集約する
   - アプリケーションの実装と検証用のコードを分け、テスト全体を一か所から確認できるようにするため
-- `src/`を対象とするUnit／Componentテストは`tests/src/`、`functions/`を対象とするテストは`tests/functions/`に置く
+- `src/`を対象とするUnit／Componentテストは`tests/src/`、`worker/`を対象とするテストは`tests/worker/`に置く
   - 対象実装のディレクトリ構成とファイル名を引き継ぎ、実装側のパスから対応するテストの配置先を判断できるようにするため
   - テスト種別ごとに独自の階層を増やさない
 - E2EとVisual Regressionテストは`tests/e2e/`に置く
@@ -67,8 +67,8 @@
 
 ## プロジェクト境界と設定
 
-- リポジトリルートをAstroとCloudflare Pagesのプロジェクトルートとする
-  - Astroによる画面とCloudflare Pages FunctionsによるAPIを一つのアプリケーションとして管理し、ビルド・デプロイの単位とプロジェクト境界を合わせるため
+- リポジトリルートをAstroとCloudflare Workersのプロジェクトルートとする
+  - Astroによる画面とCloudflare WorkersによるAPIを一つのアプリケーションとして管理し、ビルド・デプロイの単位とプロジェクト境界を合わせるため
 - プロジェクト全体に作用する設定は、各ツールの標準的な配置に従う
   - 設定ファイルの数や見た目の整理よりも、ツールが想定する方法で設定を発見・利用できることを優先する
 - ビルド・デプロイや依存関係を独立して管理する必要が生じた場合に、プロジェクト境界とディレクトリ構成を見直す
