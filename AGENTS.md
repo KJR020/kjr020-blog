@@ -6,7 +6,7 @@
 
 ## Project
 
-- Astro + Reactで構築し、Cloudflare Pagesへデプロイする個人ブログ。
+- Astro + Reactで構築し、Cloudflare Workersへデプロイする個人ブログ。
 - パッケージマネージャーはpnpmを使用する。
 
 ## Project References
