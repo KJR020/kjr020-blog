@@ -14,3 +14,7 @@ not_found_handling = "404-page"
 # API のみ Worker を先に実行する。true にするとブログ閲覧のたびに Worker が起動し、
 # Workers の課金対象となるうえ Worker 障害が静的配信にも波及する。
 run_worker_first = ["/api/*"]
+
+[observability.logs]
+enabled = true
+invocation_logs = true
