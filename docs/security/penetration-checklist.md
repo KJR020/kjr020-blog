@@ -56,7 +56,16 @@ Cloudflare Workers で提供している Scrapbox API Proxy (`/api/pages/:projec
 |---|---|---|
 | 3-1 | `curl -s "$BASE_URL/api/pages/$PROJECT" \| grep -i 'connect\.sid\|SCRAPBOX_SID\|Set-Cookie'` | **何もヒットしない** |
 | 3-2 | `curl -sD - -o /dev/null "$BASE_URL/api/pages/$PROJECT" \| grep -i 'Set-Cookie'` | **何もヒットしない** (Proxy は Cookie を中継しない) |
-| 3-3 | Cloudflare Workers上の独立した検証用デプロイに無効な `SCRAPBOX_SID` を設定し（本番では実施しない）、 `curl -i "$BASE_URL/api/pages/$PROJECT"` を叩く | `5xx`、body は `{"error":"Internal server error"}` 等の**汎用メッセージ**のみ。内部スタックや SID 値が漏れていないこと |
+| 3-3 | 下記の準備を行い、`curl -i "$TEST_BASE_URL/api/pages/$PROJECT"` を叩く | `5xx`、body は `{"error":"Internal server error"}` 等の**汎用メッセージ**のみ。内部スタックや SID 値が漏れていないこと |
+
+#### 3-3 の準備
+
+1. Cloudflare Workers上に、本番とは独立した検証用デプロイを作成する。キャッシュキーが既存環境と重ならないよう、過去に使用していない新しいホスト名を使う。本番のカスタムドメインと本番の `workers.dev` URLは使用しない。
+2. 最初のAPIリクエストを送る前に、その検証用デプロイへ空文字ではない無効な `SCRAPBOX_SID` を設定する。有効なSecretでの疎通確認は先に行わない。
+3. `TEST_BASE_URL` に検証用デプロイのOriginを設定する。前提節の本番向け `BASE_URL` はこの項目では使わない。
+4. 3-3を実行する。200が返った場合は検証成功とせず、接続先・Secret・キャッシュの前提を確認する。
+
+キャッシュキーは `<Origin>/api/pages/KJR020?limit=100` に正規化される。新しいホスト名で成功レスポンスを一度も保存していない状態を用意することで、既存の正常キャッシュを返さず上流の認証エラー経路を検証する。クエリパラメータを変えてもキャッシュ回避にはならない。既存の検証環境を再利用する場合はこの前提を満たさないため、新しいホスト名でやり直す。
 
 ### 4. Cache-Control (K-10)
 
