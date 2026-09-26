@@ -13,7 +13,7 @@ Cloudflare Workers で提供している Scrapbox API Proxy (`/api/pages/:projec
 - 対象環境の URL を環境変数で切り替える:
   ```shell
   export BASE_URL="https://kjr020.dev"                # 本番 (カスタムドメイン)
-  # export BASE_URL="https://kjr020-blog.johnjiro1114.workers.dev"         # 本番Workerの既定URL
+  # export BASE_URL="https://kjr020-blog.johnjiro1114.workers.dev"         # Cloudflare Workersの本番デプロイの既定URL
   # export BASE_URL="http://localhost:8788"            # wrangler dev
   export PROJECT="KJR020"
   ```
@@ -56,7 +56,7 @@ Cloudflare Workers で提供している Scrapbox API Proxy (`/api/pages/:projec
 |---|---|---|
 | 3-1 | `curl -s "$BASE_URL/api/pages/$PROJECT" \| grep -i 'connect\.sid\|SCRAPBOX_SID\|Set-Cookie'` | **何もヒットしない** |
 | 3-2 | `curl -sD - -o /dev/null "$BASE_URL/api/pages/$PROJECT" \| grep -i 'Set-Cookie'` | **何もヒットしない** (Proxy は Cookie を中継しない) |
-| 3-3 | 独立した検証用Workerに無効な `SCRAPBOX_SID` を設定し（本番では実施しない）、 `curl -i "$BASE_URL/api/pages/$PROJECT"` を叩く | `5xx`、body は `{"error":"Internal server error"}` 等の**汎用メッセージ**のみ。内部スタックや SID 値が漏れていないこと |
+| 3-3 | Cloudflare Workers上の独立した検証用デプロイに無効な `SCRAPBOX_SID` を設定し（本番では実施しない）、 `curl -i "$BASE_URL/api/pages/$PROJECT"` を叩く | `5xx`、body は `{"error":"Internal server error"}` 等の**汎用メッセージ**のみ。内部スタックや SID 値が漏れていないこと |
 
 ### 4. Cache-Control (K-10)
 
@@ -69,7 +69,7 @@ Cloudflare Workers で提供している Scrapbox API Proxy (`/api/pages/:projec
 
 ### 5. HTTP メソッド
 
-実装: WorkerのルーターがGET以外に405と `Allow: GET` を返す。HEADはStatic Assetsに委譲して404を返す。
+実装: `worker/index.ts` のルーターがGET以外に405と `Allow: GET` を返す。HEADはStatic Assetsに委譲して404を返す。
 
 | # | コマンド | 期待レスポンス |
 |---|---|---|
@@ -79,7 +79,7 @@ Cloudflare Workers で提供している Scrapbox API Proxy (`/api/pages/:projec
 
 ## 実行タイミング
 
-- **リリース前**: `feature/*` → `main` のマージ前 検証用WorkerまたはローカルのWranglerに対して 1〜5 を全項目実行。
+- **リリース前**: `feature/*` → `main` のマージ前 Cloudflare Workers上の検証用デプロイまたはローカルのWranglerに対して 1〜5 を全項目実行。
 - **定期**: 四半期ごと、もしくは CORS / バリデーション周りの変更があった PR 時。
 - **結果の記録**: 異常があった場合のみ Issue として残す。正常結果は記録不要。
 

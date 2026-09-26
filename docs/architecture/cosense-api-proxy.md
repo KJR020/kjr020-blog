@@ -6,8 +6,8 @@ Cosenseの記事情報を、秘密情報をBrowserへ公開せずブログに提
 
 ブログはAstroで静的生成し、Cosenseの記事情報だけをBrowserから動的に取得する。
 
-- BrowserはCosense APIを直接呼び出さず、同一OriginのCloudflare Workerを介する
-- Workerは入力検証、認証付きの上流取得、公開用データへの変換、共有キャッシュを担当する
+- BrowserはCosense APIを直接呼び出さず、同一OriginのCosense API Proxy（Cloudflare Workers上で実行）を介する
+- Cosense API Proxyは入力検証、認証付きの上流取得、公開用データへの変換、共有キャッシュを担当する
   - ブログの再ビルドなしで記事情報を更新し、Cosense APIへの呼び出しと上流待ち時間を抑える
   - 更新の即時反映やデータセンター間でのキャッシュ同期は要求しない
 
@@ -17,7 +17,7 @@ Cosenseの記事情報を、秘密情報をBrowserへ公開せずブログに提
 sequenceDiagram
     autonumber
     participant Browser
-    participant Function as Worker
+    participant Function as Cosense API Proxy
     participant Cache as Cache API
     participant Cosense as Cosense API
 
@@ -42,7 +42,7 @@ sequenceDiagram
   - Browser内のデータ取得状態と再取得を管理する
 - Browser HTTP cache
   - 同じBrowserからの再取得を抑制する
-- Worker
+- Cosense API Proxy
   - 入力検証、上流取得、レスポンス変換、エラー制御を行う
 - Cloudflare Cache API
   - 変換済みレスポンスをデータセンター単位で共有する
@@ -58,7 +58,7 @@ GET /api/pages/KJR020?limit=100
 - Methodは`GET`、projectは`KJR020`のみを受け付ける
 - Cosenseからの取得件数は100件に固定する
   - Browserから受け取るquery parameterはすべて無視する
-  - 上流へ送る取得条件とキャッシュキーには、Worker側で固定した`limit=100`を使用する
+  - 上流へ送る取得条件とキャッシュキーには、Cosense API Proxy側で固定した`limit=100`を使用する
 - 応答は公開用ページデータの配列とし、[PageData](../../worker/_lib/cms-proxy.ts)を型の正とする
   - `KJR020`から取得したページはすべて公開対象とし、`PageData`に定義した項目だけを返す
   - 0件なら空配列を返し、順序はCosense APIの取得順を維持する
@@ -97,8 +97,8 @@ https://<deployment-host>/api/pages/KJR020?limit=100
   - 読み取りに失敗した場合はMISSとして上流取得へ進む
   - 保存に失敗しても、取得・変換済みの200レスポンスを返す
   - キャッシュ操作の失敗は秘密情報を含めずに記録する
-- Cache APIのHITでもWorkerは実行される
-  - 削減するのはCosenseへの通信と変換処理であり、Workerの呼び出し回数ではない
+- Cache APIのHITでもCosense API Proxyは実行される
+  - 削減するのはCosenseへの通信と変換処理であり、Cloudflare Workersへの呼び出し回数ではない
 - 更新は各キャッシュの状態とBrowserの再取得契機に応じて反映される
   - 更新反映までの厳密な上限時間は保証しない
 
@@ -133,22 +133,22 @@ https://<deployment-host>/api/pages/KJR020?limit=100
 - Production
   - 公開Origin：`https://kjr020.dev`
   - `SCRAPBOX_SID`：Cloudflare Workers secret
-  - 実行経路：Worker
+  - 実行経路：Cloudflare Workers上のCosense API Proxy
 - workers.dev
   - 公開Origin：`https://kjr020-blog.johnjiro1114.workers.dev`
-  - 本番と同じWorkerとSecretを使用する。PRごとの自動Previewデプロイは行っていない
+  - 本番と同じデプロイ先 `kjr020-blog` とSecretを使用する。PRごとの自動Previewデプロイは行っていない
 - Local
   - 公開Origin：`http://localhost:8788`
   - `SCRAPBOX_SID`：`.dev.vars`
   - `pnpm build` 後に `pnpm exec wrangler dev --port 8788` を実行する
-  - WranglerのOriginから開き、`/api/*` はWorker、それ以外はビルド済み `dist/` を配信する
+  - WranglerのOriginから開き、`/api/*` はCosense API Proxy、それ以外はビルド済み `dist/` を配信する
 
-設定方法は[Workers運用手順](../development/workers-operations.md)を参照する。
+設定方法は[Cloudflare Workers運用手順](../development/workers-operations.md)を参照する。
 
 ## 関連ファイル
 
 - [アーキテクチャ概要](overview.md) - ブログ全体の構成
-- [Cosense APIエンドポイント](../../worker/api/pages.ts) - Workerの入口
+- [Cosense APIエンドポイント](../../worker/api/pages.ts) - Cosense API Proxyのハンドラ
 - [Cosense Proxy](../../worker/_lib/cms-proxy.ts) - Cosense API接続とレスポンス変換
 - [HTTPレスポンス](../../worker/_lib/http.ts) - Cache-Controlとエラーレスポンス
 - [Cosenseデータ取得](../../src/components/scrapbox/useScrapboxData.ts) - BrowserからのAPI呼び出し

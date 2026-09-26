@@ -9,7 +9,7 @@ graph TB
     subgraph Repository["GitHubリポジトリ"]
         Content[Markdown記事]
         Source[Astro・React・CSS]
-        FunctionSource[Worker]
+        FunctionSource[Cosense API Proxy・ルーター]
     end
 
     subgraph Build["GitHub Actions / Astro Build"]
@@ -46,7 +46,7 @@ graph TB
     Islands --> Giscus[Giscus / GitHub Discussions]
 ```
 
-アプリケーションの中心は静的サイトである。Cloudflare Workersは、秘密情報をブラウザへ渡さずにCosense（旧Scrapbox）APIへ接続するための小さな境界としてのみ使用する。
+アプリケーションの中心は静的サイトである。Cloudflare Workers上のCosense API Proxyは、秘密情報をブラウザへ渡さずにCosense（旧Scrapbox）APIへ接続するための小さな境界としてのみ使用する。
 
 ## コンポーネントと責務
 
@@ -81,7 +81,7 @@ sequenceDiagram
     Astro->>PF: 生成済みHTMLを渡す
     PF-->>Astro: 全文検索インデックスを生成
     Astro-->>CI: distを出力
-    CI->>CF: wrangler deployでWorkerとdistをデプロイ
+    CI->>CF: wrangler deployでAPIコードとdistをデプロイ
 ```
 
 MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラグインがコールアウト、リンクカード、Mermaid、記事画像のfigure化を担当する。リンクカードは通常ビルド時に外部ページのメタデータを取得するため、テストでは `LINK_CARD_FETCH_MODE=offline` にして外部通信を切り離す。
@@ -95,9 +95,9 @@ MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラ�
 | 全文検索・コマンドパレット | ブラウザ | 配信済みPagefindインデックス |
 | モバイルメニュー・テーマ切替・目次 | ブラウザ | なし |
 | コメント | ブラウザ | Giscus / GitHub Discussions |
-| Cosenseカード | ブラウザ＋Worker | Cosense API |
+| Cosenseカード | ブラウザ＋Cosense API Proxy | Cosense API |
 
-Cosense（旧Scrapbox）連携では、ブラウザが同一Originの`/api/pages/:project`を呼び出す。Workerはプロジェクト名を検証し、Cloudflare側の`SCRAPBOX_SID`を使ってCosense APIへ接続する。レスポンスは表示に必要な項目だけへ変換し、Browserで300秒、Cloudflare Cache APIで600秒キャッシュする。エラーは保存しない。cross-originのBrowser JavaScriptからの読み取りは許可しない。詳細は[Cosense API Proxy](cosense-api-proxy.md)に定義する。
+Cosense（旧Scrapbox）連携では、ブラウザが同一Originの`/api/pages/:project`を呼び出す。Cosense API Proxyはプロジェクト名を検証し、Cloudflare側の`SCRAPBOX_SID`を使ってCosense APIへ接続する。レスポンスは表示に必要な項目だけへ変換し、Browserで300秒、Cloudflare Cache APIで600秒キャッシュする。エラーは保存しない。cross-originのBrowser JavaScriptからの読み取りは許可しない。詳細は[Cosense API Proxy](cosense-api-proxy.md)に定義する。
 
 ## 設計上の判断
 
@@ -109,11 +109,13 @@ Cosense（旧Scrapbox）連携では、ブラウザが同一Originの`/api/pages
 
 ページ全体をSPAにせず、検索、コメント、目次、テーマ切替などに `client:load` または `client:only` を指定する。記事本文と主要なナビゲーションはJavaScriptが実行される前から利用できる。
 
-### 秘密情報をWorkerへ隔離する
+### 秘密情報をCosense API Proxyへ隔離する
 
 Cosenseのセッション情報は公開バンドルへ含めない。Proxyは外部APIレスポンスをそのまま中継せず、フロントエンド向けの型へ変換する。
 
-### Static AssetsとWorkerのルーティング
+### Cloudflare Workersでのルーティング
+
+ここでWorkerとは、Cloudflare Workersにデプロイするリクエスト処理プログラム（`worker/index.ts`）を指す。
 
 `wrangler.toml` の `run_worker_first = ["/api/*"]` によりAPIだけをWorkerで先に処理する。通常の静的ページはStatic Assetsが配信し、Worker側へ届いた未一致リクエストは `env.ASSETS.fetch` へ委譲する。`true` にすると静的閲覧にもWorkerの実行コストと障害の影響が及ぶため使用しない。
 
@@ -125,7 +127,7 @@ Pull Requestでは以下を独立したGitHub Actionsジョブとして実行す
 
 - BiomeによるLintとフォーマット確認
 - TypeScriptの型検査
-- VitestによるUnit／Component／Workerテスト
+- VitestによるUnit／Component／Cosense API Proxy・ルーターテスト
 - 80%の閾値を持つカバレッジ計測
 - Astroの本番ビルド
 - PlaywrightによるE2EとVisual Regressionの検証
@@ -137,9 +139,9 @@ Pull Requestでは以下を独立したGitHub Actionsジョブとして実行す
 | 変数 | 用途 | 境界 |
 | --- | --- | --- |
 | `PUBLIC_GISCUS_*` | Giscusのリポジトリ・カテゴリ設定 | 公開されるビルド時設定 |
-| `SCRAPBOX_SID` | Cosense APIへの接続（変数名は旧名称を維持） | Workerのsecret／ローカルの`.dev.vars` |
+| `SCRAPBOX_SID` | Cosense APIへの接続（変数名は旧名称を維持） | Cloudflare Workersのsecret／ローカルの`.dev.vars` |
 | `LINK_CARD_FETCH_MODE` | リンクカードの外部取得を切り替える | ビルド・テストプロセス |
-| `CLOUDFLARE_API_TOKEN` | Workersへのデプロイ | GitHub Actions secret |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare Workersへのデプロイ | GitHub Actions secret |
 | `CLOUDFLARE_ACCOUNT_ID` | デプロイ先アカウントの指定 | GitHub Actions secret |
 | `TAKUMI_GUARD_TOKEN` | npm Proxyへの認証 | GitHub Actions／Dependabot secret |
 
@@ -148,7 +150,7 @@ Pull Requestでは以下を独立したGitHub Actionsジョブとして実行す
 - [Astro設定](../../astro.config.mjs) - IntegrationとMarkdown処理
 - [Content Collections設定](../../src/content.config.ts) - 記事スキーマ
 - [ビルド前処理](../../scripts/prepare-public-build.ts) - 出力初期化、公開入力検査、共通OGP生成
-- [Cosense APIエンドポイント](../../worker/api/pages.ts) - Workerの入口
+- [Cosense APIエンドポイント](../../worker/api/pages.ts) - Cosense API Proxyのハンドラ
 - [Cosense Proxy](../../worker/_lib/cms-proxy.ts) - 外部API接続とレスポンス変換
 - [HTTPポリシー](../../worker/_lib/http.ts) - Cache-Controlとエラーレスポンス
 - [Cosense API Proxy仕様](cosense-api-proxy.md) - 入力、キャッシュ、エラー、セキュリティ仕様

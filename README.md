@@ -27,23 +27,23 @@ Cloudflare Workersでホスティングし、記事や主要ページは静的�
 
 ブログとしての表示速度とシンプルな配信構成を重視し、基本的にはAstroによる静的生成を採用しています。
 
-クライアントサイドJavaScriptは検索やメニューなどインタラクションが必要な箇所に限定し、Reactコンポーネントとして実装しています。また、認証情報を扱う外部API通信はCloudflare Workersへ分離しています。
+クライアントサイドJavaScriptは検索やメニューなどインタラクションが必要な箇所に限定し、Reactコンポーネントとして実装しています。また、認証情報を扱う外部API通信はCloudflare Workers上のCosense API Proxyへ分離しています。
 
 機能追加時には、静的生成で完結できるか、ブラウザでの実行が必要か、サーバー側へ分離すべきかを基準に実装場所を決めています。
 
 ## アーキテクチャ
 
-記事と主要ページはビルド時に静的生成します。ブラウザで動くReactは検索、メニュー、目次、コメントなどに限定し、Cosense（旧Scrapbox）の認証情報が必要な通信だけをWorkerへ分離しています。
+記事と主要ページはビルド時に静的生成します。ブラウザで動くReactは検索、メニュー、目次、コメントなどに限定し、Cosense（旧Scrapbox）の認証情報が必要な通信だけをCosense API Proxyへ分離しています。
 
 ```mermaid
 graph LR
     M[Markdown記事] --> A[Astro Build]
     A --> D[静的サイト・OGP・RSS]
     A --> P[Pagefindインデックス]
-    D --> C[Workers Static Assets]
+    D --> C[Cloudflare Workers Static Assets]
     P --> C
     C --> B[ブラウザ]
-    B --> F[Worker]
+    B --> F[Cosense API Proxy]
     F --> S[Cosense API]
     B --> G[Giscus]
 ```
@@ -73,7 +73,7 @@ src/
 ├── lib/               ルーティング、構造化データ、OGP生成など
 ├── pages/             静的ページ、RSS、OGP画像のルート
 └── styles/            グローバル・記事向けスタイル
-worker/                Cloudflare Worker
+worker/                Cosense API Proxyとリクエストルーター
 scripts/               ビルド前処理とOGP生成
 tests/
 ├── src/               `src/` を対象とするUnit／Componentテスト
@@ -96,14 +96,14 @@ pnpm dev
 
 開発サーバーは通常 `http://localhost:4321` で起動します。
 
-Cosense（旧Scrapbox）API連携もローカルで動かす場合は、`.dev.vars.example` を参考に `.dev.vars` へ `SCRAPBOX_SID` を設定し、ビルド後にWorkerとStatic Assetsをまとめて起動します。
+Cosense（旧Scrapbox）API連携もローカルで動かす場合は、`.dev.vars.example` を参考に `.dev.vars` へ `SCRAPBOX_SID` を設定し、ビルド後にWranglerでAPIと静的ファイルの配信をまとめて起動します。
 
 ```shell
 pnpm build
 pnpm exec wrangler dev --port 8788
 ```
 
-`http://localhost:8788` から開くと、APIと静的ページを同一Originで確認できます。静的ページを変更した場合は再ビルドしてください。`pnpm dev` 単独ではWorker APIは動作しません。
+`http://localhost:8788` から開くと、APIと静的ページを同一Originで確認できます。静的ページを変更した場合は再ビルドしてください。`pnpm dev` 単独ではCosense API Proxyは動作しません。
 
 ### 主なコマンド
 
@@ -129,7 +129,7 @@ VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテク
 
 `main`へのpushを契機にGitHub Actionsがビルドし、Cloudflare Workersへデプロイします。Pull RequestではLint、フォーマット、型、Unit／Component、カバレッジ、ビルド、E2Eを検証します。
 
-Secret、CD用トークン、カスタムドメインの管理は[Workers運用手順](docs/development/workers-operations.md)を参照してください。
+Secret、CD用トークン、カスタムドメインの管理は[Cloudflare Workers運用手順](docs/development/workers-operations.md)を参照してください。
 
 ## ドキュメント
 

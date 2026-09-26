@@ -44,7 +44,7 @@
 - `worker/`
   - Cloudflare WorkersによるAPIと、関連するサーバー側ロジック
 - `tests/`
-  - Unit、Component、Worker、E2E、Visual Regressionのテストコードと、テスト専用のセットアップ
+  - Unit、Component、Cosense API Proxy・ルーター、E2E、Visual Regressionのテストコードと、テスト専用のセットアップ
   - `tests/src/`は`src/`、`tests/worker/`は`worker/`のディレクトリ構成とファイル名を引き継ぐ
   - `tests/e2e/`はPlaywrightによるE2EとVisual Regressionテスト
 - `scripts/`
