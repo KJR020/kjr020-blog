@@ -13,6 +13,7 @@
 
 - 構成や技術判断は[Architecture Documents](docs/architecture/README.md)を参照する。
 - Pull Requestは[Pull Request 作成ガイド](docs/development/pull-request-guidelines.md)に従う。
+- `docs/`配下の文書を書く場合は[ドキュメント執筆ガイドライン](docs/development/documentation-guidelines.md)に従う。
 - UI、レイアウト、スタイル、タイポグラフィ、モーション、UIライティング、アクセシビリティを変更する場合は、[デザイン仕様](docs/design/design-system.md)を参照する。
 - レイアウト変更では[Grid system](docs/design/grid-system.md)、文言変更では[UIライティングガイドライン](docs/design/ui-writing-guidelines.md)も参照する。
 
