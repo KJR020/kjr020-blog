@@ -131,6 +131,20 @@ VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテク
 
 Secret、CD用トークン、カスタムドメインの管理は[Cloudflare Workers運用手順](docs/development/workers-operations.md)を参照してください。
 
+### デプロイ後の確認
+
+1. [Deploy workflow](.github/workflows/deploy.yml)の成功と、反映されたコミットを確認する
+2. 公開サイトでホームと記事を開き、表示とリンク遷移を確認する
+3. APIやデプロイ設定を変更した場合は、デプロイ先で次のリクエストを実行し、正常な取得と入力の拒否を確認する
+
+```shell
+BASE_URL="https://kjr020.dev"
+curl -i "$BASE_URL/api/pages/KJR020"
+curl -i "$BASE_URL/api/pages/invalid-project"
+```
+
+正常系のJSON・ステータス・キャッシュヘッダー、不正な入力への400応答を[Cosense API Proxy仕様](docs/architecture/cosense-api-proxy.md#api仕様)と照合します。APIレスポンスに`Access-Control-Allow-Origin`が付かないことも確認します。失敗時はworkflowと実行環境のログ、接続先、`SCRAPBOX_SID`の設定を確認します。
+
 ## ドキュメント
 
 - [アーキテクチャ](docs/architecture/)

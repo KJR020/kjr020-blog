@@ -1,84 +1,49 @@
-# コメント機能: Giscus採用(意思決定ログ)
+# コメント機能
 
-## 概要
+記事ページに埋め込むGiscusの構成、設定、表示条件を定義する。採用時の判断は[コメント基盤へのGiscus採用](adr/0001-adopt-giscus.md)に記録する。
 
-Astro製技術ブログにコメント機能を導入するにあたり、GitHub Discussionsベースのコメントシステム「Giscus」を採用した。
+## 構成
 
-## 前提・制約
+記事ページはReactコンポーネントの`Comments`をブラウザで描画し、`@giscus/react`を通じてコメント欄を表示する。コメントはGitHub Discussionsに保存し、ブログ側にはコメント保存用のAPIやデータベースを持たない。
 
-- GitHub Pages + Astro(SSG)でホスティング、サーバー常設なし
-- 全記事にコメント欄を付ける
-- できればGitHub認証
-- 無料〜低コスト
-- 技術ブログなのでMarkdown / コード貼り付けが重要
+```mermaid
+flowchart LR
+    Article[記事ページ] --> Comments[Commentsコンポーネント]
+    Comments --> Giscus[Giscus]
+    Giscus --> Discussions[GitHub Discussions]
+```
 
-## 選択肢
+## 設定と表示条件
 
-| サービス | 種別 | 認証方式 |
-| --- | --- | --- |
-| **Giscus** | GitHub Discussions | GitHub |
-| Utterances | GitHub Issues | GitHub |
-| Disqus | SaaS | SNS/メール |
-| Cusdis | セルフホスト/SaaS | 匿名可 |
-| Remark42 | セルフホスト | 複数対応 |
-| Commento/Comentario | セルフホスト | 複数対応 |
-| Isso | セルフホスト | 匿名 |
-| Hyvor Talk | SaaS | 複数対応 |
+- 記事ページで`PUBLIC_GISCUS_*`の環境変数を読み取り、`Comments`へ渡す
+  - 接続先リポジトリとカテゴリの名前・IDを指定する。設定項目は[環境変数のサンプル](../../.env.example)を参照する
+- リポジトリ名、リポジトリID、カテゴリ名、カテゴリIDのいずれかが未設定の場合、コメント欄を表示しない
+  - ブラウザのコンソールに設定不足の警告を出力する
+- 記事ページの`client:only="react"`指定で、コメント欄をブラウザ側で描画する
+- Giscusの読み込みには遅延読み込みを指定する
 
-## 観点別の結論
+## 記事との対応とテーマ
 
-### 1. 運用コスト
+- 記事URLの`pathname`を使ってDiscussionを対応づける
+- サイトのライトモード・ダークモードにコメント欄のテーマを合わせる
+  - `MutationObserver`で`html`要素の`class`属性を監視し、`dark`クラスの有無からテーマを切り替える
 
-- **Giscus**: GitHub上(Discussions)に保存＝追加コストほぼ0、サーバー運用なし
-- 自前ホスト系(Remark42/Comentario/Isso)は運用・監視・アップデートが発生
-- SaaS(Disqus/Hyvor)は継続課金や広告/データ面のトレードオフ
+Giscusへ渡す設定値は[コメントコンポーネント](../../src/components/Comments.tsx)、依存パッケージのバージョンは[パッケージ定義](../../package.json)を参照する。
 
-### 2. GitHub Pages / Astro適合
+## 制約
 
-- **Giscus**: 埋め込みのみで完結(静的サイトで成立)
-- 自前ホスト系は別途ホスト先が必要(GitHub Pages単体では完結しない)
+- コメントの投稿にはGitHubアカウントが必要
+- コメントの閲覧・投稿はGiscusとGitHub Discussionsの稼働状況に依存する
+- 記事のパスを変更する場合、既存のDiscussionとの対応を確認する必要がある
+  - 対応づけに`pathname`を使用するため
+- 不適切な投稿への対応は運営者がGitHub上で行う
 
-### 3. コメントしやすさ(技術ブログ適性)
+## 関連ファイル
 
-- **Giscus**: GitHubログインで投稿、Markdown(コードブロック含む)前提で相性が良い
-- CusdisはMarkdown弱め/なしになりがちで技術ブログ用途とミスマッチ
+- [記事ページ](../../src/pages/posts/%5B...slug%5D.astro) - 環境変数の読み取りとコメント欄の配置
+- [コメントコンポーネント](../../src/components/Comments.tsx) - 表示条件、Giscusへの設定、テーマの連動
+- [コメント基盤へのGiscus採用](adr/0001-adopt-giscus.md) - 採用時の前提、比較、判断
 
-### 4. プライバシー・データ所有
+## 参考資料
 
-- **Giscus**: データは自分のGitHubリポジトリ(Discussions)に保存＝所有/移行の筋が良い
-- Disqusはトラッキング/広告等の懸念が大きい
-
-### 5. スパム耐性 / モデレーション
-
-- **Giscus**: GitHubアカウント必須でスパムが入りにくい。削除・ロック等もGitHub側で管理可能
-- 匿名投稿系(Cusdis/Isso等)はスパム対策を別途考える必要が出やすい
-
-### 6. カスタマイズ(ダークモード等)
-
-- **Giscus**: テーマ設定があり、ブログ側のダークモード連動もしやすい
-- Disqusは自由度や一体感の面で妥協が必要になりがち
-
-## 反証条件(Giscusをやめる条件)
-
-以下の条件に当てはまる場合、Giscus以外の選択肢を再検討する：
-
-1. 「GitHubアカウント必須」が読者層に合わず、コメント率が明確に下がる
-2. GitHub Discussions運用がリポジトリ管理上の負担になる
-3. 匿名コメントや他SNSログインが必須要件に変わる
-
-## 採用決定
-
-GitHub Pages + 技術ブログ + 低コスト + GitHub認証という要件に最も整合するため **Giscusを採用**。
-
-## 実装詳細
-
-- **パッケージ**: `@giscus/react` v3.1.0
-- **設定管理**: 環境変数(`.env`)で`PUBLIC_GISCUS_*`として管理
-- **テーマ連動**: MutationObserverでサイトのダークモード切り替えを検知し、Giscusテーマを動的に切り替え
-- **マッピング**: `pathname`方式で記事URLとDiscussionを紐づけ
-
-## 参考リンク
-
-- [Giscus公式](https://giscus.app)
-- [@giscus/react - npm](https://www.npmjs.com/package/@giscus/react)
-- [GitHub Discussions](https://docs.github.com/en/discussions)
+- [Giscus公式](https://giscus.app/ja) - コメントの仕組みと設定方法

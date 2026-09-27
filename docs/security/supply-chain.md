@@ -16,13 +16,7 @@ npmパッケージとGitHub Actionsのサプライチェーン侵害を前提に
 - `strictDepBuilds: true`と`allowBuilds`で、未審査のinstall script / postinstall scriptを失敗扱いにする
 - build scriptを許可するpackageは`pnpm-workspace.yaml`の`allowBuilds`に明示する
 
-現在の許可方針:
-
-| Package | Policy | Reason |
-| --- | --- | --- |
-| `esbuild` | allow | Astro / Vite系ツールチェーンで必要 |
-| `sharp` | allow | Astroの画像処理で利用 |
-| `workerd` | deny | 通常のlint / test / buildでは不要 |
+パッケージごとの許可・禁止は[pnpm設定](../../pnpm-workspace.yaml)の`allowBuilds`を正本とする。文書には一覧を複製せず、変更時は対象パッケージの必要性とinstall scriptの内容をレビューする。
 
 依存を追加・更新した後は、次を確認する:
 

@@ -209,7 +209,7 @@ Compactでは両方を1 columnへ戻す。Article内の9 tracksは、記事本�
 
 `ic`は使用フォントの「水」の送り幅を基準とする単位である。43icは全角文字を基準とした幅の目安であり、実際に収まる文字数を保証しない。これらは現時点の標準仕様であり、読みやすさの評価に応じて見直す。
 
-43icは17pxで約731pxとなり、Reading laneの上限(Article 836pxの8 / 9で約743px)をほぼ使い切る。40icでは680pxとなり、laneに対して余っていた。
+43icは1icを17pxとした場合に約731pxとなり、Reading laneの上限(Article 836pxの8 / 9で約743px)に収まる。
 
 ### 図・画像の挙動
 
@@ -243,7 +243,7 @@ Compactでは両方を1 columnへ戻す。Article内の9 tracksは、記事本�
 | Compact / Medium | マスコットを表示しない | 記事ヘッダーの直後に折りたたみ領域として置く |
 | Wide | タイトルとメタ情報を1〜12列、マスコットを14〜16列へ置く | 13〜16列に常時表示し、画面内に追従させながら現在位置を示す |
 
-Wideでは目次を隠さない。本文が約75px広がる効果に対し、状態の分岐、本文幅の特例、再表示操作、それらの検証を維持する必要があり、釣り合わない。
+Wideでは目次の開閉操作を設けず、本文と目次の幅を一定に保つ。
 
 ### タイトル
 
@@ -337,6 +337,7 @@ HoverとKeyboard focusでは、前景色6%の傾いた背景面を左から通�
 
 ## 関連ファイル
 
+- [記事の本文幅と目次表示の簡素化](../architecture/adr/0003-simplify-article-reading-layout.md) - 本文幅の変更とWideの目次開閉を廃止した判断
 - [Grid system](grid-system.md) - ページ骨格とレスポンシブ
 - [UIライティングガイドライン](ui-writing-guidelines.md) - UI文言の判断と表記
 - [globals.css](../../src/styles/globals.css) - グローバルトークンと記事表現

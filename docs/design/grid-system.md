@@ -57,7 +57,7 @@ CSS Gridを使うのは、複数の領域が同じ行で異なる列を占める
 - 長い見出し、URL、コード、表を含んでも、通常の本文を読むためにページ全体の横スクロールを必要としない。320px相当の狭い表示でも同じとする
 - 横幅が必要な内容は、対応する領域の内部で全体へ到達できる。`overflow: hidden`で切り取って解決しない
 - 読み順とフォーカス順が、情報の関係と操作の流れを保つ。視覚配置だけの変更で順序の意味を変えない
-  - 目次を開閉したあとも、再表示操作へキーボードで到達できる
+  - CompactとMediumでは、目次を閉じたあとも、開く操作へキーボードで到達できる
 - 隣接する独立した領域の間に、区切りとして機能する余白を保つ
 
 要件は変更後の判定基準とし、デザイン仕様の更新フローで確認する。以下の標準仕様は、要件を満たすために現在採用している値であり、変更管理の対象とする。
@@ -99,7 +99,7 @@ Tailwindの`md`と`lg`に合わせて3段階とする。判定はコンテンツ
 
 以前はHeader・Footer・記事一覧がTailwindの`container`、ホームと記事詳細が`max-w-6xl`を使っていた。1440pxの画面ではブログ名と本文の左端が60px、1536px以上では192pxずれ、ページを移動するたびに基準線が変わっていた。主要領域を持つページの上限は1152pxなので、共通の部品もこの幅へ揃える。
 
-記事ページは、目次の開閉によってシェルの種類を変更しない。
+記事ページは全モードで同じページシェルを使用する。CompactとMediumの目次開閉によってシェルの幅を変更しない。
 
 ### 左右余白を16pxとする理由
 
@@ -134,7 +134,7 @@ CompactとMediumでは1カラムへ戻す。記事詳細では目次を記事ヘ
 
 Wideでは記事ヘッダーも同じ16列に乗せ、タイトルとメタ情報を1〜12列、マスコットを14〜16列へ置く。マスコットはCompactとMediumでは表示しない。
 
-装飾のために主領域の幅を削らない。以前はヘッダー右に空の250px列を確保していたが、タイトルの幅を22%削るだけで、その列には何も入っていなかった。
+装飾のために主領域の幅を削らない。タイトルとメタ情報には本文と同じ12列を確保する。
 
 ## 揃える対象
 
@@ -157,18 +157,6 @@ Wideでは記事ヘッダーも同じ16列に乗せ、タイトルとメタ情�
 - 可変幅のtrackには`minmax(0, 1fr)`を使い、長いURLやコードが親を押し広げないようにする。ただしtrackを縮められることと、内容の折り返し・スクロールが成立することは別に確認する
 - DOM順を視覚順の基本とする。`grid-auto-flow: dense`やCSSの`order`で、操作できる要素の視覚順だけを変えない
 
-## 16列を選んだ理由
-
-シェル内容幅1120pxを16列へ分割すると、12列が836px、4列が268pxになる。導入前の記事詳細は可変幅の本文と固定250pxの目次で、この構成にほぼ一致する。既存のレイアウトを大きく崩さずに列へ移せることが決め手になった。
-
-12列だと1列が93pxと粗く、本文と補助領域の比率を細かく選べない。24列は分割が細かい一方で、このブログの領域数に対して使わない列が多くなる。
-
-## CSS Gridを常に使わない理由
-
-グリッドは配置を決めるための座標系であって、CSS APIではない。16列を定義したからといって、すべてのページで`display: grid`と16トラックを実体化する必要はない。
-
-単一の領域が連続した列を占めるだけのページでCSS Gridを使うと、配置要件とは無関係な複雑さが生じる。ホームのヒーローで一度16トラックのGridを作ったところ、Astro Islandの`display: contents`と衝突し、レイアウトへ参加させるためだけのラッパー要素が必要になった。同じ幅は`padding-inline-end`で作れるため、その構成は採用しない。
-
 ## 参考資料
 
 - [Grid — Atlassian Design System](https://atlassian.design/foundations/grid-beta/applying-grid/) - columns / gutters / marginsの考え方
@@ -177,10 +165,11 @@ Wideでは記事ヘッダーも同じ16列に乗せ、タイトルとメタ情�
 
 ## 関連ファイル
 
+- [16列のページレイアウト採用](../architecture/adr/0002-adopt-sixteen-column-layout.md) - 列数の比較と実装手段の選定経緯
 - [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
 - [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - 配置の視覚例(`pnpm dev`の`/design-system/foundations`)
 - [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - Page shell
-- [記事詳細](../../src/pages/posts/[...slug].astro) - 本文＋目次layoutと目次の開閉
+- [記事詳細](../../src/pages/posts/[...slug].astro) - 本文と目次の配置、CompactとMediumの目次開閉
 - [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - Grid外の検索UI
 - [PostsPage.astro](../../src/components/pages/PostsPage.astro) - 記事一覧layout
 - [HomePage.astro](../../src/components/pages/HomePage.astro) - ホームlayout
