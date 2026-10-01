@@ -51,18 +51,33 @@ test("日本時間0時に公開した記事を当日の日付で表示する", a
   await expect(page.locator("article time").first()).toHaveText("2026年1月15日");
 });
 
+test("Mermaidのコードブロックをビルド時にSVGの図へ変換する", async ({ page }) => {
+  await page.goto(articlePath);
+
+  const content = page.locator(".article-reading-content");
+  const diagram = content.locator(":scope > .mermaid");
+
+  await expect(diagram.locator(".beoe-light svg")).toBeVisible();
+  await expect(diagram.locator(".beoe-dark svg")).toBeHidden();
+  await expect(content.locator('[data-language="mermaid"]')).toHaveCount(0);
+});
+
+test("ダークテーマではダーク用のMermaid図を表示する", async ({ page }) => {
+  await page.goto(articlePath);
+  await page.evaluate(() => document.documentElement.classList.add("dark"));
+
+  const diagram = page.locator(".article-reading-content > .mermaid");
+
+  await expect(diagram.locator(".beoe-dark svg")).toBeVisible();
+  await expect(diagram.locator(".beoe-light svg")).toBeHidden();
+});
+
 test("Mermaid図を本文と同じReading laneへ揃える", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium");
   await page.goto(articlePath);
 
   const content = page.locator(".article-reading-content");
   const paragraph = content.locator(":scope > p").first();
-  await content.evaluate((element) => {
-    const diagram = document.createElement("div");
-    diagram.className = "mermaid";
-    diagram.textContent = "Types → Config → Repo → Service → Runtime → UI";
-    element.append(diagram);
-  });
 
   const [paragraphBox, diagramBox] = await Promise.all([
     paragraph.boundingBox(),

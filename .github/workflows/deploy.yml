@@ -38,6 +38,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Playwright browsers
+        # Mermaid図をビルド時にChromiumで描画する（@beoe/rehype-mermaid）。
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Build
         run: pnpm build
         env:

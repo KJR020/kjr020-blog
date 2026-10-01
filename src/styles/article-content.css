@@ -31,6 +31,27 @@
   margin-block: var(--phi-1);
 }
 
+/* @beoe/rehype-mermaid はライト・ダーク用のSVGを両方出力するため、テーマで出し分ける。 */
+.article-reading-content > .mermaid {
+  margin-block: var(--phi-1);
+  overflow-x: auto;
+}
+
+.article-reading-content > .mermaid svg {
+  max-inline-size: 100%;
+  block-size: auto;
+  margin-inline: auto;
+}
+
+.article-reading-content .beoe-dark,
+.dark .article-reading-content .beoe-light {
+  display: none;
+}
+
+.dark .article-reading-content .beoe-dark {
+  display: block;
+}
+
 .article-image-trigger {
   display: block;
   overflow: hidden;
