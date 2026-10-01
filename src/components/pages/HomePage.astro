@@ -41,8 +41,7 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
               class="hero-copy text-base text-muted-foreground max-w-lg"
               style="line-height: var(--lh-body);"
             >
-              {homeDescriptionLead}<br class="hidden sm:inline" />
-              {homeDescriptionDetail}
+              {homeDescriptionLead}<br class="hidden sm:inline" />{homeDescriptionDetail}
             </p>
           </div>
         </div>
@@ -53,8 +52,7 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
           class="home-main animate-fade-in-up"
         style="animation-delay: 80ms"
       >
-        <div class="flex items-end justify-between mb-phi-md">
-          <div class="border-l-2 border-link pl-3">
+        <div class="section-heading mb-phi-md">
             <h2
               class="font-bold font-heading tracking-tight"
               style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
@@ -62,12 +60,11 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
               Posts
             </h2>
             <p class="section-lead text-sm text-muted-foreground">ブログ記事</p>
-          </div>
           {
             posts.length > 3 && (
               <a
                 href="/posts"
-                class="flex items-center gap-1 text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                class="section-more-link"
               >
                 すべて見る
                 <svg
@@ -80,6 +77,7 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
+                  aria-hidden="true"
                 >
                   <path d="m9 18 6-6-6-6" />
                 </svg>
@@ -96,8 +94,7 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
           class="home-aside animate-fade-in-up"
         style="animation-delay: 210ms"
       >
-        <div class="flex items-end justify-between mb-phi-md">
-          <div class="border-l-2 border-link pl-3">
+        <div class="section-heading mb-phi-md">
             <h2
               class="font-bold font-heading tracking-tight"
               style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
@@ -105,12 +102,11 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
               Notes
             </h2>
             <p class="section-lead text-sm text-muted-foreground">Cosenseのメモ書き</p>
-          </div>
           <a
             href="https://scrapbox.io/KJR020"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-1 text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+            class="section-more-link"
           >
             すべて見る
             <svg
@@ -123,6 +119,7 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              aria-hidden="true"
             >
               <path d="M15 3h6v6"></path>
               <path d="M10 14 21 3"></path>
@@ -195,12 +192,73 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
     display: none;
   }
 
-  .index-wrapper :global([data-slot="card"]:hover) {
-    background: hsl(var(--accent) / 0.5);
-  }
-
   .hero-title {
     text-wrap: balance;
+  }
+
+  /*
+   * セクション見出し。導線を見出しと同じ行へ置き、説明文には全幅を与える。
+   * 補助領域（4列）でも説明文と導線が同じ行で押し合って折り返さないようにする。
+   */
+  .section-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--spacing-phi-md);
+    align-items: baseline;
+    padding-inline-start: 0.75rem;
+    border-inline-start: 2px solid var(--link);
+  }
+
+  .section-heading .section-lead {
+    grid-column: 1 / -1;
+  }
+
+  .section-heading .section-more-link {
+    grid-row: 1;
+    grid-column: 2;
+    white-space: nowrap;
+  }
+
+  /*
+   * 一覧全体への導線。見出しより弱く、本文の補助情報（muted）と同じ強さにする。
+   * 透明度で薄めるとコントラストが4.5:1を下回るため使わない。
+   */
+  .section-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-phi-3xs);
+    min-block-size: 1.5rem;
+    border-radius: calc(var(--radius) - 4px);
+    color: var(--muted-foreground);
+    font-size: var(--font-size-small);
+    transition: color 150ms ease-out;
+  }
+
+  .section-more-link:hover {
+    color: var(--link);
+  }
+
+  .section-more-link:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .section-more-link svg {
+    transition: transform 150ms ease-out;
+  }
+
+  .section-more-link:hover svg {
+    transform: translateX(2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-more-link svg {
+      transition: none;
+    }
+
+    .section-more-link:hover svg {
+      transform: none;
+    }
   }
 
   .hero-image-frame {

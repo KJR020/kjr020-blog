@@ -181,7 +181,7 @@ export function CommandPalette() {
       ref={dialogRef}
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
-      className="command-palette-dialog mx-auto mt-[15vh] mb-auto w-[calc(100%-2rem)] max-w-lg rounded-lg border border-border bg-background p-0 text-foreground shadow-lg"
+      className="command-palette-dialog mx-auto mt-[15vh] mb-auto w-[calc(100%-2rem)] max-w-lg rounded-lg border border-border bg-popover p-0 text-popover-foreground shadow-(--shadow-overlay)"
     >
       <div className="flex flex-col">
         <div className="flex items-center border-b border-border px-4">

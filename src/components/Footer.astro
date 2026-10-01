@@ -25,19 +25,19 @@ const socialLinks = [
 ---
 
 <footer class="border-t border-border bg-background">
-  <div class="container mx-auto px-4 py-phi-xl">
+  <div class="container mx-auto max-w-6xl px-4 py-phi-xl">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-phi-md">
-      <div class="flex flex-col sm:flex-row items-center gap-phi-md text-xs text-muted-foreground/70">
+      <div class="flex flex-col sm:flex-row items-center gap-phi-md text-xs text-muted-foreground">
         <p>© {currentYear} KJR020</p>
-        <p>当サイトではGoogle Analyticsを使用しています。詳しくは<a href="/privacy" class="underline hover:text-foreground transition-colors">プライバシーポリシー</a>をご覧ください。</p>
+        <p>当サイトではGoogle Analyticsを使用しています。詳しくは<a href="/privacy" class="underline underline-offset-2 hover:text-foreground transition-colors">プライバシーポリシー</a>をご覧ください。</p>
       </div>
-      <div class="flex items-center gap-phi-md">
+      <div class="-me-2 flex items-center gap-phi-3xs">
         {socialLinks.map((link) => (
           <a
             href={link.href}
             target={link.external ? "_blank" : undefined}
             rel={link.external ? "noopener noreferrer" : undefined}
-            class="text-muted-foreground transition-colors hover:text-foreground"
+            class="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={link.label}
           >
             {link.icon === "rss" ? (

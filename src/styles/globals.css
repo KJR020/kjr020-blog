@@ -67,6 +67,24 @@
 
   /* Callout Colors - Danger (rose) */
   --callout-danger: hsl(350 89% 60%);
+
+  /*
+   * Calloutの見出し文字色。境界線と同じ彩度の色は白背景で2〜3:1しかないため、
+   * 文字には同じ色相の暗い段階を使い、4.5:1以上を確保する。
+   */
+  --callout-note-foreground: hsl(200 98% 33%);
+  --callout-tip-foreground: hsl(163 94% 24%);
+  --callout-warning-foreground: hsl(26 90% 37%);
+  --callout-danger-foreground: hsl(345 83% 41%);
+
+  /* Elevation: 面の重なりを示す影。Cardは境界の補助、Overlayは前面に浮く面 */
+  --shadow-card: 0 1px 2px hsl(240 10% 3.9% / 0.06);
+  --shadow-overlay:
+    0 1px 2px hsl(240 10% 3.9% / 0.06),
+    0 12px 32px -8px hsl(240 10% 3.9% / 0.18);
+
+  /* 検索結果などで一致箇所を示す面。リンク色を薄めて本文の色と区別する */
+  --highlight: hsl(230 70% 50% / 0.14);
 }
 
 .dark {
@@ -76,7 +94,8 @@
   --link: hsl(225 75% 65%);
   --link-hover: hsl(225 75% 75%);
   --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(240 10% 3.9%);
+  /* 前面に浮く面は背景・Cardより明るくし、暗い背景でも重なりを示す */
+  --popover: hsl(225 10% 12%);
   --popover-foreground: hsl(0 0% 98%);
   --primary: hsl(0 0% 98%);
   --primary-foreground: hsl(240 5.9% 10%);
@@ -103,6 +122,19 @@
 
   /* Callout Colors - Danger (rose) */
   --callout-danger: hsl(350 89% 60%);
+
+  --callout-note-foreground: hsl(198 93% 60%);
+  --callout-tip-foreground: hsl(158 64% 52%);
+  --callout-warning-foreground: hsl(43 96% 56%);
+  --callout-danger-foreground: hsl(351 95% 71%);
+
+  /* 暗い背景では影が見えにくいため、濃さを上げて面の境界を補う */
+  --shadow-card: 0 1px 2px hsl(0 0% 0% / 0.3);
+  --shadow-overlay:
+    0 1px 2px hsl(0 0% 0% / 0.4),
+    0 16px 40px -8px hsl(0 0% 0% / 0.6);
+
+  --highlight: hsl(225 75% 65% / 0.24);
 }
 
 @theme inline {
@@ -153,6 +185,14 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-content);
+  }
+
+  /*
+   * 見出しやカードタイトルの行頭に「『」などの約物が来ると、全角の空きで
+   * 左端が字下げされたように見える。行頭の空きを詰めて、本文の左端と揃える。
+   */
+  :where(h1, h2, h3, h4, [data-slot="card-title"]) {
+    text-spacing-trim: trim-start;
   }
 }
 
@@ -362,6 +402,10 @@
   font-size: 0.875rem;
 }
 
+[data-callout-body] > *:first-child {
+  margin-top: 0;
+}
+
 [data-callout-body] > *:last-child {
   margin-bottom: 0;
 }
@@ -382,35 +426,35 @@
 
 /* Type-specific Styles - Minimal with transparency */
 [data-callout-type="note"] {
-  border-left-color: hsl(199 89% 48% / 0.6);
+  border-left-color: color-mix(in srgb, var(--callout-note) 60%, transparent);
 }
 
 [data-callout-type="note"] [data-callout-title] {
-  color: hsl(199 89% 48% / 0.9);
+  color: var(--callout-note-foreground);
 }
 
 [data-callout-type="tip"] {
-  border-left-color: hsl(160 84% 39% / 0.6);
+  border-left-color: color-mix(in srgb, var(--callout-tip) 60%, transparent);
 }
 
 [data-callout-type="tip"] [data-callout-title] {
-  color: hsl(160 84% 39% / 0.9);
+  color: var(--callout-tip-foreground);
 }
 
 [data-callout-type="warning"] {
-  border-left-color: hsl(38 92% 50% / 0.6);
+  border-left-color: color-mix(in srgb, var(--callout-warning) 60%, transparent);
 }
 
 [data-callout-type="warning"] [data-callout-title] {
-  color: hsl(38 92% 50% / 0.9);
+  color: var(--callout-warning-foreground);
 }
 
 [data-callout-type="danger"] {
-  border-left-color: hsl(350 89% 60% / 0.6);
+  border-left-color: color-mix(in srgb, var(--callout-danger) 60%, transparent);
 }
 
 [data-callout-type="danger"] [data-callout-title] {
-  color: hsl(350 89% 60% / 0.9);
+  color: var(--callout-danger-foreground);
 }
 
 /* Page-load animation */
@@ -458,6 +502,13 @@
 
 /* CommandPalette dialog backdrop */
 .command-palette-dialog::backdrop {
-  background-color: hsl(0 0% 0% / 0.5);
-  backdrop-filter: blur(4px);
+  background-color: hsl(240 10% 3.9% / 0.4);
+  backdrop-filter: blur(2px);
+}
+
+/* 検索結果の一致箇所。既定の黄色は配色と無関係に強く目立つため、トークンへ揃える */
+mark {
+  border-radius: 0.125rem;
+  background-color: var(--highlight);
+  color: inherit;
 }

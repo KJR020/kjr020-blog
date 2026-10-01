@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { queryClient } from "@/components/scrapbox/queryClient";
-import { ScrapboxCardList } from "@/components/scrapbox/ScrapboxCardList";
+import { cleanScrapboxDescription, ScrapboxCardList } from "@/components/scrapbox/ScrapboxCardList";
 import type { ScrapboxPageData } from "@/components/scrapbox/types";
 
 function page(id: string, overrides?: Partial<ScrapboxPageData>): ScrapboxPageData {
@@ -77,5 +77,30 @@ describe("ScrapboxCardList", () => {
 
     expect(screen.getByText("プロジェクト名を指定してください")).toBeInTheDocument();
     expect(fetch).not.toHaveBeenCalled();
+  });
+});
+
+describe("cleanScrapboxDescription", () => {
+  // Cosenseの記法を、一覧で読める平文へ変換する
+  it.each([
+    ["内部リンクは括弧を外して語を残す", "[ONNX]のモデル", "ONNXのモデル"],
+    ["装飾記法は記号を外して語を残す", "[* 職業] Webエンジニア", "職業 Webエンジニア"],
+    ["複数記号の装飾記法も語を残す", "[*/ 強調] 本文", "強調 本文"],
+    [
+      "ラベル付き外部リンクはラベルを残す",
+      "[https://example.com/x 記事タイトル] 参照",
+      "記事タイトル 参照",
+    ],
+    [
+      "ラベルが先の外部リンクもラベルを残す",
+      "[記事タイトル https://example.com/x] 参照",
+      "記事タイトル 参照",
+    ],
+    ["画像だけの括弧は取り除く", "[https://scrapbox.io/files/a.png] 本文", "本文"],
+    ["アイコン記法は取り除く", "推論を実行する [KJR020.icon]", "推論を実行する"],
+    ["裸のURLは取り除く", "参照 https://example.com/x 終わり", "参照 終わり"],
+    ["連続する空白を1つにまとめる", "a   b\n c", "a b c"],
+  ])("%s", (_case, input, expected) => {
+    expect(cleanScrapboxDescription(input)).toBe(expected);
   });
 });

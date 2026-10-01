@@ -31,7 +31,7 @@ const sortedPosts = posts.sort(
 
 <BaseLayout title={`${tag} - KJR020's Blog`} description={`${tag}タグの記事一覧`}>
   <PageHero title={`Tag: ${tag}`} description={`${sortedPosts.length}件の記事`} />
-  <div class="container mx-auto px-4 pb-phi-2xl">
+  <div class="container mx-auto max-w-6xl px-4 pb-phi-2xl">
     <div class="grid gap-phi-xs">
       {sortedPosts.map((post) => <PostCard post={post} />)}
     </div>

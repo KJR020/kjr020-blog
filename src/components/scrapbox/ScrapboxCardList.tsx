@@ -14,19 +14,25 @@ interface ScrapboxCardListProps {
   pages?: ScrapboxPageData[];
 }
 
+/** 記事メタ情報（PostMeta）と同じ表記にする */
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString("ja-JP", {
     year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
+    month: "long",
+    day: "numeric",
   });
 }
 
-function cleanScrapboxDescription(text: string): string {
+const URL_PATTERN = /https?:\/\/\S+/g;
+
+/** Cosenseの記法（リンク、装飾、アイコン、URL）を、一覧で読める平文へ変換する */
+export function cleanScrapboxDescription(text: string): string {
   return text
-    .replace(/\[([^\]]*)\]/g, "$1")
-    .replace(/https?:\/\/\S+/g, "")
+    .replace(/\[[^\]]*\.icon(?:\*\d+)?\]/g, "")
+    .replace(/\[[*/\-_!#%]+\s+([^\]]*)\]/g, "$1")
+    .replace(/\[([^\]]*)\]/g, (_match, inner: string) => inner.replace(URL_PATTERN, ""))
+    .replace(URL_PATTERN, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -77,28 +83,34 @@ function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCar
 
   return (
     <ul className={cn("flex flex-col", className)}>
-      {data.map((page) => (
-        <li key={page.id} className="border-b border-border/60 last:border-b-0">
-          <a
-            href={page.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group/note block py-phi-sm transition-colors hover:text-link"
-          >
-            <span className="block text-base leading-snug text-foreground line-clamp-2 group-hover/note:text-link">
-              {page.title}
-            </span>
-            {page.description && (
-              <span className="mt-phi-2xs block text-sm leading-normal text-muted-foreground/70 line-clamp-2">
-                {cleanScrapboxDescription(page.description)}
+      {data.map((page) => {
+        const description = cleanScrapboxDescription(page.description);
+        return (
+          <li key={page.id} className="border-b border-border last:border-b-0">
+            <a
+              href={page.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/note block rounded-sm py-phi-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <span className="line-clamp-2 text-base leading-snug text-foreground transition-colors group-hover/note:text-link">
+                {page.title}
               </span>
-            )}
-            <span className="mt-phi-2xs block text-sm text-muted-foreground/60">
-              {formatDate(page.updatedAt)}
-            </span>
-          </a>
-        </li>
-      ))}
+              {description && (
+                <span className="mt-phi-3xs line-clamp-2 text-sm leading-normal text-muted-foreground">
+                  {description}
+                </span>
+              )}
+              <time
+                dateTime={page.updatedAt}
+                className="mt-phi-2xs block text-xs text-muted-foreground tabular-nums"
+              >
+                {formatDate(page.updatedAt)}
+              </time>
+            </a>
+          </li>
+        );
+      })}
     </ul>
   );
 }

@@ -126,6 +126,8 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
   .post-title {
     font-size: var(--font-size-title1);
     line-height: var(--lh-tight);
+    /* 最終行に1〜2文字だけ残る改行を避ける */
+    text-wrap: balance;
   }
 
   .prose {
@@ -146,6 +148,7 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     letter-spacing: -0.01em;
     border-bottom: 1px solid var(--border);
     padding-bottom: 0.618rem; /* 1/φ */
+    text-wrap: balance;
   }
 
   .prose h3 {
@@ -153,9 +156,15 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     margin-bottom: var(--phi-neg1);
     font-size: var(--font-size-title3); /* √φ = 1.272rem */
     line-height: var(--lh-tight); /* √φ = 1.272 */
-    font-weight: 500;
+    font-weight: 600;
     font-family: var(--font-heading);
     letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+
+  /* 見出しと直後の内容を、段落どうしより近づけて1つのまとまりに見せる */
+  .prose.article-reading-content :is(h2, h3) + :is(p, ul, ol) {
+    margin-top: 0;
   }
 
   .prose p {

@@ -79,6 +79,33 @@ describe("MobileMenu", () => {
     });
   });
 
+  describe("現在地", () => {
+    it.each([
+      ["/", "Home"],
+      ["/posts", "Posts"],
+      ["/posts/astro/example", "Posts"],
+    ])("%s では%sをaria-current=pageで示す", (currentPath, currentLabel) => {
+      render(<MobileMenu navItems={mockNavItems} currentPath={currentPath} />);
+      fireEvent.click(screen.getByRole("button", { name: /メニューを開く/ }));
+
+      for (const label of ["Home", "Posts"]) {
+        const link = screen.getByRole("link", { name: label });
+        if (label === currentLabel) {
+          expect(link).toHaveAttribute("aria-current", "page");
+        } else {
+          expect(link).not.toHaveAttribute("aria-current");
+        }
+      }
+    });
+
+    it("currentPathがなければどの項目も現在地にしない", () => {
+      render(<MobileMenu navItems={mockNavItems} />);
+      fireEvent.click(screen.getByRole("button", { name: /メニューを開く/ }));
+
+      expect(screen.getByRole("link", { name: "Home" })).not.toHaveAttribute("aria-current");
+    });
+  });
+
   describe("メニュー自動閉じ", () => {
     it("リンクをクリックするとメニューが閉じる", () => {
       render(<MobileMenu navItems={mockNavItems} />);

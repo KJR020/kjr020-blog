@@ -21,7 +21,7 @@ const years = Object.keys(postsByYear)
 
 <BaseLayout title="Posts - KJR020's Blog" description="すべての記事一覧">
   <div class="archive-page">
-    <div class="archive-header container mx-auto px-4 pt-phi-2xl pb-phi-md">
+    <div class="archive-header container mx-auto max-w-6xl px-4 pt-phi-2xl pb-phi-md">
       <h1
         class="font-bold font-heading tracking-tight mb-phi-2xs"
         style="font-size: var(--font-size-title1); line-height: var(--lh-tight);"
@@ -33,7 +33,7 @@ const years = Object.keys(postsByYear)
 
     <div class="archive-body">
       <div class="archive-scroll">
-        <div class="container mx-auto px-4 pb-4">
+        <div class="container mx-auto max-w-6xl px-4 pb-phi-2xl">
           {
             years.map((year) => (
               <section class="year-section">
@@ -72,18 +72,18 @@ const years = Object.keys(postsByYear)
   .year-text {
     font-size: var(--font-size-title3);
     font-weight: 700;
-    color: hsl(var(--muted-foreground));
+    color: var(--muted-foreground);
     border-left: 2px solid var(--link);
     padding-left: 0.75rem;
+  }
+
+  .year-section:last-child {
+    margin-bottom: 0;
   }
 
   .year-cards {
     display: grid;
     gap: 0.618rem;
-  }
-
-  :global([data-slot="card"]:hover) {
-    background: hsl(var(--accent) / 0.5);
   }
 
   @media (max-width: 768px) {

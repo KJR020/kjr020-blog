@@ -72,7 +72,8 @@ const {
     background-size: contain;
     opacity: 0.15;
     pointer-events: none;
-    z-index: 10;
+    /* 一覧のカードより背面に置き、カードの文字と重ならないようにする */
+    z-index: 0;
   }
 
   :global(.dark) .kuri-watermark {
