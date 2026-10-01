@@ -1,49 +1,90 @@
 @import "tailwindcss";
 
+/*
+ * Art direction: 紙とインクのフィールドノート
+ * - 暖かい紙色の面に、墨色の文字と従来の青のアクセントを1色だけ置く
+ * - 欧文の大見出しと数字はInstrument Serif、本文はNoto Sans JP、メタ情報はJetBrains Mono
+ * - 枠や影より、罫線と余白で情報をまとめる
+ */
+
 :root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(240 10% 3.9%);
-  --link: hsl(230 70% 50%);
-  --link-hover: hsl(230 70% 40%);
+  color-scheme: light;
+
+  /* ---------- Palette (raw) ---------- */
+  --paper: oklch(98.4% 0.006 85);
+  --paper-raised: oklch(99.6% 0.003 85);
+  --paper-sunken: oklch(95.9% 0.008 80);
+  --paper-deep: oklch(92.6% 0.011 78);
+  --ink: oklch(21% 0.014 60);
+  --ink-soft: oklch(36% 0.013 60);
+  --ink-muted: oklch(49% 0.012 60);
+  --line: oklch(89.5% 0.01 75);
+  --line-strong: oklch(79% 0.013 70);
+  /* アクセントは従来の青を引き継ぐ */
+  --accent-blue: hsl(230 70% 50%);
+  --accent-blue-strong: hsl(230 70% 40%);
+  --accent-blue-wash: hsl(230 70% 50% / 0.08);
+
+  /* ---------- Semantic tokens ---------- */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --foreground-soft: var(--ink-soft);
+  --brand: var(--accent-blue);
+  --brand-strong: var(--accent-blue-strong);
+  --brand-wash: var(--accent-blue-wash);
+  --link: var(--accent-blue);
+  --link-hover: var(--accent-blue-strong);
+  --card: var(--paper-raised);
+  --card-foreground: var(--ink);
+  --popover: var(--paper-raised);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-sunken);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-sunken);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--paper-sunken);
+  --accent-foreground: var(--ink);
+  --destructive: oklch(54% 0.19 27);
+  --destructive-foreground: var(--paper);
+  --border: var(--line);
+  --border-strong: var(--line-strong);
+  --input: var(--line-strong);
+  --ring: var(--accent-blue);
+  --code-surface: var(--paper-sunken);
+  --selection: hsl(230 70% 50% / 0.18);
+
+  --shadow-card: 0 1px 0 oklch(21% 0.014 60 / 0.04), 0 12px 32px -12px oklch(21% 0.014 60 / 0.18);
+  --shadow-overlay: 0 1px 0 oklch(21% 0.014 60 / 0.04), 0 32px 64px -24px oklch(21% 0.014 60 / 0.35);
+
+  /* ---------- Type families ---------- */
   --font-content: var(--font-noto-sans-jp);
   --font-heading: var(--font-content);
   --font-mono: var(--font-jetbrains-mono);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(240 10% 3.9%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(240 10% 3.9%);
-  --primary: hsl(240 5.9% 10%);
-  --primary-foreground: hsl(0 0% 98%);
-  --secondary: hsl(240 4.8% 95.9%);
-  --secondary-foreground: hsl(240 5.9% 10%);
-  --muted: hsl(240 4.8% 95.9%);
-  --muted-foreground: hsl(240 3.8% 46.1%);
-  --accent: hsl(240 4.8% 95.9%);
-  --accent-foreground: hsl(240 5.9% 10%);
-  --destructive: hsl(0 84.2% 60.2%);
-  --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(240 5.9% 90%);
-  --input: hsl(240 5.9% 90%);
-  --ring: hsl(240 5.9% 10%);
+  /* Headerなどのナビゲーションはシステムのsans-serifで組む（従来の指定を引き継ぐ） */
+  --font-ui: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
+
   --radius: 0.618rem; /* 1/φ (golden ratio) */
 
   /* Golden Ratio Design Tokens (φ = 1.618033...) */
   --phi: 1.618;
 
   /* φ Power Scale (rem) */
-  --phi-neg3: 0.236rem;  /* φ⁻³ */
-  --phi-neg2: 0.382rem;  /* φ⁻² */
-  --phi-neg1: 0.618rem;  /* φ⁻¹ */
-  --phi-0: 1rem;         /* φ⁰ */
-  --phi-1: 1.618rem;     /* φ¹ */
-  --phi-2: 2.618rem;     /* φ² */
-  --phi-3: 4.236rem;     /* φ³ */
-  --phi-4: 6.854rem;     /* φ⁴ */
-  --phi-5: 11.09rem;     /* φ⁵ */
-  --phi-6: 17.94rem;     /* φ⁶ */
-  --phi-7: 29.03rem;     /* φ⁷ */
+  --phi-neg3: 0.236rem; /* φ⁻³ */
+  --phi-neg2: 0.382rem; /* φ⁻² */
+  --phi-neg1: 0.618rem; /* φ⁻¹ */
+  --phi-0: 1rem; /* φ⁰ */
+  --phi-1: 1.618rem; /* φ¹ */
+  --phi-2: 2.618rem; /* φ² */
+  --phi-3: 4.236rem; /* φ³ */
+  --phi-4: 6.854rem; /* φ⁴ */
+  --phi-5: 11.09rem; /* φ⁵ */
+  --phi-6: 17.94rem; /* φ⁶ */
+  --phi-7: 29.03rem; /* φ⁷ */
 
-  /* Typography Scale */
+  /* Typography Scale (固定段) */
   --font-size-display: 2.618rem; /* φ² */
   --font-size-title1: 2.058rem; /* φ×√φ */
   --font-size-title2: 1.618rem; /* φ */
@@ -52,89 +93,104 @@
   --font-size-small: 0.886rem; /* 1/⁴√φ */
   --font-size-caption: 0.786rem; /* 1/√φ */
 
+  /*
+   * Fluid scale: φの段の間を画面幅で補間する。
+   * 下限と上限はどちらもφスケール上の値とし、中間だけを連続させる。
+   */
+  --text-page-title: clamp(2.618rem, 1.6rem + 4vw, 4.236rem); /* φ² → φ³ */
+  --text-article-title: clamp(1.618rem, 1.15rem + 1.9vw, 2.618rem); /* φ → φ² */
+  --text-feature-title: clamp(1.272rem, 1rem + 1.1vw, 2.058rem); /* √φ → φ√φ */
+  --text-wordmark: clamp(3.33rem, 0.8rem + 8.6vw, 8.5rem); /* φ²√φ → φ⁴√φ⁻¹ */
+
   /* Line Heights */
   --lh-tight: 1.272; /* √φ — headings */
+  --lh-snug: 1.45;
   --lh-body: 1.618; /* φ — body text */
 
-  /* Callout Colors - Note (sky) */
-  --callout-note: hsl(199 89% 48%);
-
-  /* Callout Colors - Tip (emerald) */
-  --callout-tip: hsl(160 84% 39%);
-
-  /* Callout Colors - Warning (amber) */
-  --callout-warning: hsl(38 92% 50%);
-
-  /* Callout Colors - Danger (rose) */
-  --callout-danger: hsl(350 89% 60%);
+  /* ---------- Layout ---------- */
+  --shell-max: 80rem;
+  --shell-pad: clamp(1rem, 0.4rem + 2.6vw, 2.5rem);
+  --grid-gutter: clamp(1rem, 0.6rem + 1vw, 1.5rem);
+  --header-height: 4rem;
+  --section-gap: clamp(4.236rem, 2.5rem + 6vw, 6.854rem); /* φ³ → φ⁴ */
 
   /*
-   * Calloutの見出し文字色。境界線と同じ彩度の色は白背景で2〜3:1しかないため、
-   * 文字には同じ色相の暗い段階を使い、4.5:1以上を確保する。
+   * ---------- Motion ----------
+   * UIの動きは短く規則的に、表現的な動きはヒーローとくりに限る。
+   *   quick: ポインターへの即時反応 / fast: Hover・下線・矢印 /
+   *   base: 部品の状態変化 / slow: 内容の入場 / hero: ヒーローとテーマ
+   * 入場はease-enterで減速し、退場はease-exitで加速して短く消す。
    */
-  --callout-note-foreground: hsl(200 98% 33%);
-  --callout-tip-foreground: hsl(163 94% 24%);
-  --callout-warning-foreground: hsl(26 90% 37%);
-  --callout-danger-foreground: hsl(345 83% 41%);
+  --duration-quick: 90ms;
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --duration-slow: 360ms;
+  --duration-hero: 800ms;
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-move: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: var(--ease-emphasis);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
-  /* Elevation: 面の重なりを示す影。Cardは境界の補助、Overlayは前面に浮く面 */
-  --shadow-card: 0 1px 2px hsl(240 10% 3.9% / 0.06);
-  --shadow-overlay:
-    0 1px 2px hsl(240 10% 3.9% / 0.06),
-    0 12px 32px -8px hsl(240 10% 3.9% / 0.18);
+  /*
+   * ---------- Character motion（くり） ----------
+   * UIの動きとは分け、重さ・接地・間を表す値として管理する。
+   * Kuri.astroはこの値を実行時に読み込んで使う。
+   */
+  --ease-anticipate: cubic-bezier(0.45, 0, 0.55, 1); /* 予備動作で沈む */
+  --ease-push: cubic-bezier(0.6, 0, 0.92, 0.5); /* 押し出し。離陸の瞬間の速度を空中の初速へつなぐ */
+  --ease-fall: cubic-bezier(0.55, 0, 1, 0.45); /* 落下。加速したまま接地する */
+  --ease-impact: cubic-bezier(0.16, 1, 0.3, 1); /* 着地の反動。すぐに止まる */
+  --ease-settle: cubic-bezier(0.4, 0, 0.6, 1); /* 反動から静止へ */
+  --ease-blink-close: cubic-bezier(0.4, 0, 1, 1); /* まぶたは速く閉じる */
+  --ease-blink-open: cubic-bezier(0, 0, 0.2, 1); /* ゆっくり開く */
+  --duration-kuri-enter: 540ms;
+  --duration-kuri-jump: 620ms;
+  --duration-blink-close: 65ms;
+  --duration-blink-hold: 25ms;
+  --duration-blink-open: 140ms;
+  --duration-kuri-wake: 160ms;
+  --duration-kuri-doze: 1700ms;
+  --duration-kuri-breathe: 4.8s;
+  /* 視線のばね。ほぼ臨界減衰（減衰比≈0.93）で、約300msで止まる */
+  --spring-gaze-stiffness: 260;
+  --spring-gaze-damping: 30;
 
-  /* 検索結果などで一致箇所を示す面。リンク色を薄めて本文の色と区別する */
-  --highlight: hsl(230 70% 50% / 0.14);
+  /* Callout colors */
+  --callout-note: oklch(52% 0.12 245);
+  --callout-tip: oklch(52% 0.11 155);
+  --callout-warning: oklch(53% 0.11 70);
+  --callout-danger: oklch(53% 0.17 25);
 }
 
 .dark {
-  --background: hsl(225 12% 7%);
-  --foreground: hsl(0 0% 98%);
-  --card: hsl(225 10% 10%);
-  --link: hsl(225 75% 65%);
-  --link-hover: hsl(225 75% 75%);
-  --card-foreground: hsl(0 0% 98%);
-  /* 前面に浮く面は背景・Cardより明るくし、暗い背景でも重なりを示す */
-  --popover: hsl(225 10% 12%);
-  --popover-foreground: hsl(0 0% 98%);
-  --primary: hsl(0 0% 98%);
-  --primary-foreground: hsl(240 5.9% 10%);
-  --secondary: hsl(240 3.7% 15.9%);
-  --secondary-foreground: hsl(0 0% 98%);
-  --muted: hsl(240 3.7% 15.9%);
-  --muted-foreground: hsl(240 5% 64.9%);
-  --accent: hsl(240 3.7% 15.9%);
-  --accent-foreground: hsl(0 0% 98%);
-  --destructive: hsl(0 62.8% 30.6%);
-  --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(240 3.7% 15.9%);
-  --input: hsl(240 3.7% 15.9%);
-  --ring: hsl(240 4.9% 83.9%);
+  color-scheme: dark;
 
-  /* Callout Colors - Note (sky) */
-  --callout-note: hsl(199 89% 48%);
+  --paper: oklch(16.8% 0.008 60);
+  --paper-raised: oklch(20.4% 0.009 60);
+  --paper-sunken: oklch(20.4% 0.009 60);
+  --paper-deep: oklch(24.5% 0.01 60);
+  --ink: oklch(94% 0.008 85);
+  --ink-soft: oklch(83% 0.01 80);
+  --ink-muted: oklch(70% 0.012 75);
+  --line: oklch(28.5% 0.01 60);
+  --line-strong: oklch(39% 0.012 60);
+  --accent-blue: hsl(225 75% 65%);
+  --accent-blue-strong: hsl(225 75% 75%);
+  --accent-blue-wash: hsl(225 75% 65% / 0.14);
 
-  /* Callout Colors - Tip (emerald) */
-  --callout-tip: hsl(160 84% 39%);
+  --destructive: oklch(68% 0.17 25);
+  --code-surface: oklch(13.5% 0.007 60);
+  --selection: hsl(225 75% 65% / 0.3);
 
-  /* Callout Colors - Warning (amber) */
-  --callout-warning: hsl(38 92% 50%);
+  --shadow-card: 0 1px 0 oklch(100% 0 0 / 0.04) inset, 0 16px 40px -16px oklch(0% 0 0 / 0.6);
+  --shadow-overlay: 0 1px 0 oklch(100% 0 0 / 0.05) inset, 0 40px 80px -24px oklch(0% 0 0 / 0.7);
 
-  /* Callout Colors - Danger (rose) */
-  --callout-danger: hsl(350 89% 60%);
-
-  --callout-note-foreground: hsl(198 93% 60%);
-  --callout-tip-foreground: hsl(158 64% 52%);
-  --callout-warning-foreground: hsl(43 96% 56%);
-  --callout-danger-foreground: hsl(351 95% 71%);
-
-  /* 暗い背景では影が見えにくいため、濃さを上げて面の境界を補う */
-  --shadow-card: 0 1px 2px hsl(0 0% 0% / 0.3);
-  --shadow-overlay:
-    0 1px 2px hsl(0 0% 0% / 0.4),
-    0 16px 40px -8px hsl(0 0% 0% / 0.6);
-
-  --highlight: hsl(225 75% 65% / 0.24);
+  --callout-note: oklch(76% 0.1 240);
+  --callout-tip: oklch(78% 0.12 155);
+  --callout-warning: oklch(82% 0.12 80);
+  --callout-danger: oklch(74% 0.14 25);
 }
 
 @theme inline {
@@ -168,6 +224,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-brand: var(--brand);
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -181,10 +238,25 @@
   * {
     border-color: var(--border);
   }
+
+  html {
+    background-color: var(--background);
+    accent-color: var(--brand);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-height) + var(--phi-1));
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-content);
+    font-feature-settings: normal;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--selection);
   }
 
   /*
@@ -194,21 +266,157 @@
   :where(h1, h2, h3, h4, [data-slot="card-title"]) {
     text-spacing-trim: trim-start;
   }
+
+  /* 検索結果の一致箇所。既定の黄色は配色と無関係に強く目立つため、トークンへ揃える */
+  mark {
+    border-radius: 0.125rem;
+    background-color: var(--brand-wash);
+    color: inherit;
+  }
+
+  /* 紙の質感。ごく弱いノイズを全面に重ねる。操作は透過させる */
+  body::before {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    content: "";
+    mix-blend-mode: multiply;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+
+  .dark body::before {
+    mix-blend-mode: screen;
+    opacity: 0.035;
+    filter: invert(1);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
 }
 
-/* Shiki dual themes support (defaultColor: false) */
-/* ライトモード */
+/* ========================================
+   Layout primitives
+   ======================================== */
+
+/* すべてのページで共通のシェル。最大幅とページ端の余白をここだけで決める */
+.shell {
+  inline-size: 100%;
+  max-inline-size: var(--shell-max);
+  margin-inline: auto;
+  padding-inline: var(--shell-pad);
+}
+
+/* Wideで16列に乗せる領域。単一領域のページでは使わない */
+@media (min-width: 64rem) {
+  .grid-16 {
+    display: grid;
+    grid-template-columns: repeat(16, minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
+  }
+}
+
+/* ========================================
+   Typographic primitives
+   ======================================== */
+
+/* 日本語の見出しはプロポーショナル字詰めで締める。本文には適用しない */
+.type-heading {
+  font-family: var(--font-heading);
+  font-feature-settings: "palt";
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+  /* 日本語の文節の途中で改行しない（対応ブラウザのみ） */
+  word-break: auto-phrase;
+}
+
+/* 欧文・数字の大見出し。字間を詰め、太いウェイトで面として見せる */
+.type-display {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.type-meta {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+/* セクション見出しの欧文ラベルと、日本語の補足を1組で示す */
+.section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--phi-neg2) var(--phi-0);
+}
+
+.section-heading__title {
+  font-size: var(--font-size-title1);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.section-heading__sub {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-small);
+}
+
+/* 矢印付きの小さなテキストリンク。下線は常に表示し、Hoverで矢印を進める */
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  color: var(--foreground);
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.35em;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    text-decoration-color var(--duration-fast) var(--ease-out);
+}
+
+.arrow-link svg {
+  flex: none;
+  transition: transform var(--duration-fast) var(--ease-move);
+}
+
+.arrow-link:hover {
+  color: var(--link);
+  text-decoration-color: currentColor;
+}
+
+.arrow-link:hover svg {
+  transform: translateX(3px);
+}
+
+.arrow-link[data-external]:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* ========================================
+   Code surface (Shiki dual themes, defaultColor: false)
+   ======================================== */
+
 .astro-code {
-  background-color: #f6f8fa !important; /* GitHub風のグレー背景 */
+  background-color: var(--code-surface) !important;
 }
 
 .astro-code span {
   color: var(--shiki-light) !important;
 }
 
-/* ダークモード */
 .dark .astro-code {
-  background-color: var(--shiki-dark-bg, #24292e) !important;
+  background-color: var(--code-surface) !important;
 }
 
 .dark .astro-code span {
@@ -220,20 +428,24 @@
    ======================================== */
 
 .rlc-container {
-  --padding-x: 1rem;
-  --padding-y: 0.7rem;
+  --padding-x: 1.272rem;
+  --padding-y: 0.886rem;
   --border-radius: calc(var(--radius) - 1px);
 
-  border: 1px solid var(--border);
-  border-radius: calc(var(--border-radius) + 1px);
-  text-decoration: none !important;
-  color: inherit !important;
-  transition: background-color 150ms;
-  width: 100%;
-  margin-bottom: 1.25em;
   display: grid;
   grid-template-columns: 1fr 116px;
   gap: 1rem;
+  width: 100%;
+  margin-bottom: 1.25em;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--border-radius) + 1px);
+  background: var(--card);
+  color: inherit !important;
+  text-decoration: none !important;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
 }
 
 @media (min-width: 60ch) {
@@ -243,49 +455,47 @@
 }
 
 .rlc-container:hover {
+  border-color: var(--border-strong);
   background-color: var(--secondary);
 }
 
 /* .prose a との競合を避ける */
 .prose .rlc-container,
 .rlc-container:visited {
-  text-decoration: none !important;
   color: inherit !important;
+  text-decoration: none !important;
 }
 
-/* テキスト情報エリア */
 .rlc-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-weight: normal;
   grid-column: 1;
-  padding: var(--padding-y) 0 var(--padding-y) var(--padding-x);
-  max-width: 100%;
   min-width: 0;
-  border-radius: var(--border-radius) 0 0 var(--border-radius);
+  max-width: 100%;
+  padding: var(--padding-y) 0 var(--padding-y) var(--padding-x);
+  font-weight: normal;
 }
 
 .rlc-title {
-  font-size: 1rem;
-  font-weight: bold;
-  line-height: 1.3;
-  color: var(--card-foreground);
-  overflow: hidden;
   display: -webkit-box;
+  overflow: hidden;
+  color: var(--card-foreground);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.45;
   text-overflow: ellipsis;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
 .rlc-description {
-  font-size: 0.8rem;
-  color: var(--muted-foreground);
-  margin-bottom: 0.5em;
+  margin-block: 0.3em 0.6em;
   overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
   text-overflow: ellipsis;
   white-space: nowrap;
-  -webkit-line-clamp: 1;
 }
 
 .rlc-url-container {
@@ -295,22 +505,20 @@
 }
 
 .rlc-favicon {
-  margin-top: 0.15rem;
+  width: 14px;
+  height: 14px;
+  margin-top: 0;
   margin-bottom: 0;
-  width: 16px;
-  height: 16px;
 }
 
 .rlc-url {
-  font-size: 0.8rem;
-  color: var(--muted-foreground);
   overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
   text-overflow: ellipsis;
   white-space: nowrap;
-  -webkit-line-clamp: 1;
 }
 
-/* OG画像エリア */
 .rlc-image-container {
   grid-column: 2;
   aspect-ratio: 1 / 1;
@@ -323,24 +531,25 @@
 }
 
 .rlc-image {
-  object-fit: cover;
-  height: 100%;
   width: 100%;
+  height: 100%;
   margin: 0;
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  object-fit: cover;
 }
 
 /* OG画像なし時のフォールバック: ドメインアイコン表示 */
-.rlc-container:not(:has(.rlc-image-container))::after {
-  content: "";
+.rlc-container:not(:has(.rlc-image-container))::after,
+.rlc-image-container:has(.rlc-image[src=""]) {
   grid-column: 2;
   background-color: var(--muted);
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20'/%3E%3Cpath d='M2 12h20'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238a8178' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20'/%3E%3Cpath d='M2 12h20'/%3E%3C/svg%3E");
   background-position: center;
-  background-size: 2rem;
-  opacity: 0.5;
+  background-repeat: no-repeat;
+  background-size: 1.75rem;
+}
+
+.rlc-container:not(:has(.rlc-image-container))::after {
+  content: "";
 }
 
 /* OG画像エラー時: 壊れた画像をフォールバックに置換 */
@@ -348,58 +557,33 @@
   display: none;
 }
 
-.rlc-image-container:has(.rlc-image[src=""]) {
-  background-color: var(--muted);
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20'/%3E%3Cpath d='M2 12h20'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 2rem;
-  opacity: 0.5;
-}
-
-/* ダークモード対応 */
-.dark .rlc-container:hover {
-  background-color: var(--secondary);
-}
-
-.dark .rlc-title {
-  color: var(--card-foreground);
-}
-
-.dark .rlc-description,
-.dark .rlc-url {
-  color: var(--muted-foreground);
-}
-
-.dark .rlc-container:not(:has(.rlc-image-container))::after,
-.dark .rlc-image-container:has(.rlc-image[src=""]) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20'/%3E%3Cpath d='M2 12h20'/%3E%3C/svg%3E");
-}
-
 /* ========================================
    remark-callout スタイル
    ======================================== */
 
-/* Base Callout Styles */
 [data-callout] {
-  margin: 1.5em 0;
-  padding: 1rem 1.25rem;
-  border-left: 2px solid var(--border);
+  --callout-color: var(--callout-note);
+
+  margin: 1.75em 0;
+  padding: 1rem 1.272rem;
+  border-inline-start: 2px solid var(--callout-color);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: color-mix(in oklch, var(--callout-color) 6%, transparent);
 }
 
 [data-callout-title] {
-  font-weight: 500;
-  font-size: 0.875rem;
-  margin-bottom: 0.25rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  color: var(--callout-color);
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 
 [data-callout-body] {
-  color: var(--muted-foreground);
-  font-size: 0.875rem;
+  color: var(--foreground-soft);
+  font-size: 0.9375rem;
 }
 
 [data-callout-body] > *:first-child {
@@ -410,7 +594,6 @@
   margin-bottom: 0;
 }
 
-/* Callout内のリストスタイル調整 */
 [data-callout-body] ul,
 [data-callout-body] ol {
   margin-top: 0.5rem;
@@ -418,44 +601,26 @@
   padding-left: 1.5rem;
 }
 
-/* Callout内のコードブロック調整 */
 [data-callout-body] pre {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
 }
 
-/* Type-specific Styles - Minimal with transparency */
-[data-callout-type="note"] {
-  border-left-color: color-mix(in srgb, var(--callout-note) 60%, transparent);
-}
-
-[data-callout-type="note"] [data-callout-title] {
-  color: var(--callout-note-foreground);
-}
-
 [data-callout-type="tip"] {
-  border-left-color: color-mix(in srgb, var(--callout-tip) 60%, transparent);
-}
-
-[data-callout-type="tip"] [data-callout-title] {
-  color: var(--callout-tip-foreground);
+  --callout-color: var(--callout-tip);
 }
 
 [data-callout-type="warning"] {
-  border-left-color: color-mix(in srgb, var(--callout-warning) 60%, transparent);
-}
-
-[data-callout-type="warning"] [data-callout-title] {
-  color: var(--callout-warning-foreground);
+  --callout-color: var(--callout-warning);
 }
 
 [data-callout-type="danger"] {
-  border-left-color: color-mix(in srgb, var(--callout-danger) 60%, transparent);
+  --callout-color: var(--callout-danger);
 }
 
-[data-callout-type="danger"] [data-callout-title] {
-  color: var(--callout-danger-foreground);
-}
+/* ========================================
+   Motion
+   ======================================== */
 
 /* Page-load animation */
 @keyframes fade-in-up {
@@ -470,45 +635,110 @@
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.4s ease-out both;
+  animation: fade-in-up var(--duration-slow) var(--ease-enter) both;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-fade-in-up {
-    animation: none;
+/* 見出しの行を下から送り出す。親に overflow: clip を置いて使う */
+@keyframes rise-in {
+  from {
+    transform: translateY(105%);
   }
-}
-
-/* Tag bubble float animation */
-@keyframes float {
-  0%,
-  100% {
+  to {
     transform: translateY(0);
   }
-  50% {
-    transform: translateY(-6px);
-  }
 }
 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
+.animate-rise-in {
+  display: inline-block;
+  animation: rise-in var(--duration-hero) var(--ease-emphasis) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-float {
+  .animate-fade-in-up,
+  .animate-rise-in {
     animation: none;
+  }
+}
+
+/*
+ * ページ間遷移。同一オリジンのナビゲーションだけで有効になり、
+ * 非対応ブラウザでは通常の遷移になる
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  /* ページ全体を短くフェードするだけにする。文字の変形を伴うモーフは使わない */
+  ::view-transition-old(root) {
+    animation: 150ms var(--ease-exit) both vt-fade-out;
+  }
+
+  ::view-transition-new(root) {
+    animation: 150ms var(--ease-enter) both vt-fade-in;
+  }
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
   }
 }
 
 /* CommandPalette dialog backdrop */
 .command-palette-dialog::backdrop {
-  background-color: hsl(240 10% 3.9% / 0.4);
-  backdrop-filter: blur(2px);
+  background-color: oklch(16.8% 0.008 60 / 0.42);
+  backdrop-filter: blur(6px);
 }
 
-/* 検索結果の一致箇所。既定の黄色は配色と無関係に強く目立つため、トークンへ揃える */
-mark {
-  border-radius: 0.125rem;
-  background-color: var(--highlight);
-  color: inherit;
+/* Mobile menu: 項目を上から順に送り出す */
+@keyframes menu-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.mobile-menu-item {
+  animation: menu-item-in var(--duration-slow) var(--ease-enter) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-item {
+    animation: none;
+  }
+}
+
+/* CommandPalette: 開くときに少し下から浮かび上がらせる */
+.command-palette-dialog[open] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+@starting-style {
+  .command-palette-dialog[open] {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+.command-palette-excerpt mark {
+  background: var(--brand-wash);
+  color: var(--brand);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-palette-dialog[open] {
+    transition: none;
+  }
 }

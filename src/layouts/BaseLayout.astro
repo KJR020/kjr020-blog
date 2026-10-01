@@ -9,7 +9,6 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
-  hideKuri?: boolean;
   ogType?: "website" | "article";
   articleHeadline?: string;
   articlePublishedTime?: Date | string;
@@ -21,7 +20,6 @@ const {
   title,
   description,
   image,
-  hideKuri = false,
   ogType,
   articleHeadline,
   articlePublishedTime,
@@ -31,7 +29,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="ja" class="scroll-smooth overflow-x-clip">
+<html lang="ja" class="overflow-x-clip">
   <head>
     <BaseHead
       title={title}
@@ -45,9 +43,9 @@ const {
     />
   </head>
   <body class="flex min-h-screen flex-col bg-background text-foreground antialiased overflow-x-clip">
+    <a href="#main" class="skip-link">本文へ移動</a>
     <Header />
-    <main class="flex-1 relative">
-      {!hideKuri && <div class="kuri-watermark" aria-hidden="true" />}
+    <main id="main" class="relative flex-1">
       <slot />
     </main>
     <Footer />
@@ -56,35 +54,23 @@ const {
 </html>
 
 <style>
-  .kuri-watermark {
-    position: absolute;
-    /*
-     * kuri.svgのviewBoxを描画領域へ詰めたため、負のオフセットは余白ではなく
-     * 栗本体を削る。全体が見える位置へ置く。
-     */
-    top: var(--phi-0);
-    right: var(--phi-0);
-    width: var(--phi-5);
-    height: var(--phi-5);
-    background-image: url("/images/kuri.svg");
-    background-repeat: no-repeat;
-    background-position: right center;
-    background-size: contain;
-    opacity: 0.15;
-    pointer-events: none;
-    /* 一覧のカードより背面に置き、カードの文字と重ならないようにする */
-    z-index: 0;
+  .skip-link {
+    position: fixed;
+    inset-block-start: 0.618rem;
+    inset-inline-start: 0.618rem;
+    z-index: 100;
+    padding: 0.618rem 1rem;
+    border-radius: 999px;
+    background: var(--foreground);
+    color: var(--background);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform var(--duration-fast) var(--ease-out);
   }
 
-  :global(.dark) .kuri-watermark {
-    background-image: url("/images/kuri-dark.svg");
-  }
-
-  @media (max-width: 768px) {
-    .kuri-watermark {
-      width: var(--phi-4);
-      height: var(--phi-4);
-      opacity: 0.12;
-    }
+  .skip-link:focus-visible {
+    transform: translateY(0);
   }
 </style>
