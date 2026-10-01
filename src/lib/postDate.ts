@@ -13,6 +13,12 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
   timeZone: POST_TIME_ZONE,
 });
 
+const monthDayFormatter = new Intl.DateTimeFormat("ja-JP", {
+  month: "long",
+  day: "numeric",
+  timeZone: POST_TIME_ZONE,
+});
+
 const yearFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   timeZone: POST_TIME_ZONE,
@@ -21,6 +27,11 @@ const yearFormatter = new Intl.DateTimeFormat("en-US", {
 /** 記事の公開日を「2026年9月15日」の形式で返す。 */
 export function formatPostDate(date: Date): string {
   return dateFormatter.format(date);
+}
+
+/** 年見出しの下に並べる記事の日付を「9月15日」の形式で返す。 */
+export function formatPostMonthDay(date: Date): string {
+  return monthDayFormatter.format(date);
 }
 
 /** 記事一覧の年見出しに使う、日本時間での年を返す。 */
