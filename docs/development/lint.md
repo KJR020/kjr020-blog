@@ -16,13 +16,13 @@
 | `pnpm typecheck` | TypeScriptの型検査 | `tsconfig.json`の対象 | `tsconfig.json` | `typecheck` |
 | `pnpm check:links` | ドキュメントのリポジトリ内リンク検査 | `README.md`、`docs/**/*.md` | `lychee.toml` | `links` |
 
-いずれも`.github/workflows/ci.yml`が各Pull Requestで実行し、失敗するとCIが落ちる。
+いずれも`.github/workflows/ci.yml`が各Pull Requestで実行し、検査に失敗すると該当するCIジョブが失敗する。
 
 ## Biomeによるリント
 
 [Biome](https://biomejs.dev/)でリントと整形を行う。リンターと整形の設定はどちらも`biome.json`にまとめている。
 
-```bash
+```shell
 pnpm lint      # 検査のみ
 pnpm lint:fix  # 自動修正できるものを修正する
 ```
@@ -36,9 +36,9 @@ pnpm lint:fix  # 自動修正できるものを修正する
 
 ## Biomeによる整形
 
-```bash
+```shell
 pnpm format        # 整形する
-pnpm format:check  # 整形済みかを検査する（CIはこちらを実行する）
+pnpm format:check  # 整形済みかを検査する(CIはこちらを実行する)
 ```
 
 整形規則は次のとおり。
@@ -50,13 +50,13 @@ pnpm format:check  # 整形済みかを検査する（CIはこちらを実行す
 
 ## 型検査
 
-```bash
+```shell
 pnpm typecheck
 ```
 
 `tsc --noEmit`を実行する。Astroが生成する型定義に依存するため、型定義が古い場合は先に同期する。
 
-```bash
+```shell
 pnpm astro sync
 ```
 
@@ -70,25 +70,25 @@ CIの`typecheck`ジョブも`pnpm astro sync`のあとに型検査を実行し�
 
 - `README.md`と`docs/**/*.md`に記載されたリンク
 - リンク先は`docs/`配下に限定せず、リポジトリ内のファイル、ディレクトリ、画像、実装ファイル、設定ファイルを対象とする
-- 同一Markdownファイル・別のMarkdownファイルの見出しアンカー（`#見出し`）
+- 同一Markdownファイル・別のMarkdownファイルの見出しアンカー(`#見出し`)
 - 相対パスはリンク元の文書を基準に解決する
 
 対象外は次のとおり。
 
 - 外部URLの疎通確認 - 外部サービスの状態で検査結果が変わらないようにするため
-- 公開ブログ（ビルド後のサイト）のリンク - リポジトリの変更で生じる参照切れの検出に絞るため
+- 公開ブログ(ビルド後のサイト)のリンク - リポジトリの変更で生じる参照切れの検出に絞るため
 
 ### 実行
 
 lycheeを導入する。
 
-```bash
+```shell
 brew install lychee
 ```
 
 検査を実行する。
 
-```bash
+```shell
 pnpm check:links
 ```
 

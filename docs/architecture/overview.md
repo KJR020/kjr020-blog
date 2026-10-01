@@ -46,7 +46,7 @@ graph TB
     Islands --> Giscus[Giscus / GitHub Discussions]
 ```
 
-アプリケーションの中心は静的サイトである。Cloudflare Workers上のCosense API Proxyは、秘密情報をブラウザへ渡さずにCosense（旧Scrapbox）APIへ接続するための小さな境界としてのみ使用する。
+アプリケーションの中心は静的サイトである。Cloudflare Workers上のCosense API Proxyは、秘密情報をブラウザへ渡さずにCosense(旧Scrapbox)APIへ接続するための小さな境界としてのみ使用する。
 
 ## コンポーネントと責務
 
@@ -84,7 +84,7 @@ sequenceDiagram
     CI->>CF: wrangler deployでAPIコードとdistをデプロイ
 ```
 
-MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラグインがコールアウト、リンクカード、Mermaid、記事画像のfigure化を担当する。リンクカードは通常ビルド時に外部ページのメタデータを取得するため、テストでは `LINK_CARD_FETCH_MODE=offline` にして外部通信を切り離す。
+MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラグインがコールアウト、リンクカード、Mermaid、記事画像のfigure化を担当する。リンクカードは通常ビルド時に外部ページのメタデータを取得するため、テストでは`LINK_CARD_FETCH_MODE=offline`にして外部通信を切り離す。
 
 ## ブラウザ実行と外部サービス
 
@@ -97,7 +97,7 @@ MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラ�
 | コメント | ブラウザ | Giscus / GitHub Discussions |
 | Cosenseカード | ブラウザ＋Cosense API Proxy | Cosense API |
 
-Cosense（旧Scrapbox）連携では、ブラウザが同一Originの`/api/pages/:project`を呼び出す。Cosense API Proxyはプロジェクト名を検証し、Cloudflare側の`SCRAPBOX_SID`を使ってCosense APIへ接続する。レスポンスは表示に必要な項目だけへ変換し、Browserで300秒、Cloudflare Cache APIで600秒キャッシュする。エラーは保存しない。cross-originのBrowser JavaScriptからの読み取りは許可しない。詳細は[Cosense API Proxy](cosense-api-proxy.md)に定義する。
+Cosense(旧Scrapbox)連携では、ブラウザが同一Originの`/api/pages/:project`を呼び出す。Cosense API Proxyはプロジェクト名を検証し、Cloudflare側の`SCRAPBOX_SID`を使ってCosense APIへ接続する。レスポンスは表示に必要な項目だけへ変換し、Browserで300秒、Cloudflare Cache APIで600秒キャッシュする。エラーは保存しない。cross-originのBrowser JavaScriptからの読み取りは許可しない。詳細は[Cosense API Proxy](cosense-api-proxy.md)に定義する。
 
 ## 設計上の判断
 
@@ -107,7 +107,7 @@ Cosense（旧Scrapbox）連携では、ブラウザが同一Originの`/api/pages
 
 ### Reactを操作のある箇所に限定する
 
-ページ全体をSPAにせず、検索、コメント、目次、テーマ切替などに `client:load` または `client:only` を指定する。記事本文と主要なナビゲーションはJavaScriptが実行される前から利用できる。
+ページ全体をSPAにせず、検索、コメント、目次、テーマ切替などに`client:load`または`client:only`を指定する。記事本文と主要なナビゲーションはJavaScriptが実行される前から利用できる。
 
 ### 秘密情報をCosense API Proxyへ隔離する
 
@@ -115,11 +115,11 @@ Cosenseのセッション情報は公開バンドルへ含めない。Proxyは�
 
 ### Cloudflare Workersでのルーティング
 
-ここでWorkerとは、Cloudflare Workersにデプロイするリクエスト処理プログラム（`worker/index.ts`）を指す。
+ここでWorkerとは、Cloudflare Workersにデプロイするリクエスト処理プログラム(`worker/index.ts`)を指す。
 
-`wrangler.toml` の `run_worker_first = ["/api/*"]` によりAPIだけをWorkerで先に処理する。通常の静的ページはStatic Assetsが配信し、Worker側へ届いた未一致リクエストは `env.ASSETS.fetch` へ委譲する。`true` にすると静的閲覧にもWorkerの実行コストと障害の影響が及ぶため使用しない。
+`wrangler.toml`の`run_worker_first = ["/api/*"]`によりAPIだけをWorkerで先に処理する。通常の静的ページはStatic Assetsが配信し、Worker側へ届いた未一致リクエストは`env.ASSETS.fetch`へ委譲する。`true`にすると静的閲覧にもWorkerの実行コストと障害の影響が及ぶため使用しない。
 
-`compatibility_date` は移行前と同じ `2025-03-01` を維持し、ランタイムの挙動変更と配信基盤の移行を分離する。navigationリクエストの静的404配信は `assets_navigation_prefers_asset_serving` フラグで有効化する。
+`compatibility_date`は移行前と同じ`2025-03-01`を維持し、ランタイムの挙動変更と配信基盤の移行を分離する。navigationリクエストの静的404配信は`assets_navigation_prefers_asset_serving`フラグで有効化する。
 
 ## CI/CDと品質境界
 
@@ -139,7 +139,7 @@ Pull Requestでは以下を独立したGitHub Actionsジョブとして実行す
 | 変数 | 用途 | 境界 |
 | --- | --- | --- |
 | `PUBLIC_GISCUS_*` | Giscusのリポジトリ・カテゴリ設定 | 公開されるビルド時設定 |
-| `SCRAPBOX_SID` | Cosense APIへの接続（変数名は旧名称を維持） | Cloudflare Workersのsecret／ローカルの`.dev.vars` |
+| `SCRAPBOX_SID` | Cosense APIへの接続(変数名は旧名称を維持) | Cloudflare Workersのsecret／ローカルの`.dev.vars` |
 | `LINK_CARD_FETCH_MODE` | リンクカードの外部取得を切り替える | ビルド・テストプロセス |
 | `CLOUDFLARE_API_TOKEN` | Cloudflare Workersへのデプロイ | GitHub Actions secret |
 | `CLOUDFLARE_ACCOUNT_ID` | デプロイ先アカウントの指定 | GitHub Actions secret |
