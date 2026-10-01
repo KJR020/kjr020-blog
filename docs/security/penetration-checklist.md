@@ -58,7 +58,7 @@ Cloudflare Workersで提供しているScrapbox API Proxy(`/api/pages/:project`)
 | 3-2 | `curl -sD - -o /dev/null "$BASE_URL/api/pages/$PROJECT" \| grep -i 'Set-Cookie'` | **何もヒットしない**(ProxyはCookieを中継しない) |
 | 3-3 | 下記の準備を行い、`curl -i "$TEST_BASE_URL/api/pages/$PROJECT"`を叩く | `5xx`、bodyは`{"error":"Internal server error"}`等の**汎用メッセージ**のみ。内部スタックやSID値が漏れていないこと |
 
-#### 3-3の準備
+3-3の準備は次のとおり。
 
 1. Cloudflare Workers上に、本番とは独立した検証用デプロイを作成する。キャッシュキーが既存環境と重ならないよう、過去に使用していない新しいホスト名を使う。本番のカスタムドメインと本番の`workers.dev` URLは使用しない。
 2. 最初のAPIリクエストを送る前に、その検証用デプロイへ空文字ではない無効な`SCRAPBOX_SID`を設定する。有効なSecretでの疎通確認は先に行わない。
