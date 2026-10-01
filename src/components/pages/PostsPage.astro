@@ -2,6 +2,7 @@
 import PostCard from "@/components/PostCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getPostYear } from "@/lib/postDate";
+import { SITE_NAME } from "@/lib/siteCopy";
 import type { PostSummary } from "./types";
 
 interface Props {
@@ -20,7 +21,7 @@ const years = Object.keys(postsByYear)
   .sort((a, b) => b - a);
 ---
 
-<BaseLayout title="Posts - KJR020's Blog" description="すべての記事一覧">
+<BaseLayout title={`Posts - ${SITE_NAME}`} description="すべての記事一覧">
   <div class="archive-page">
     <div class="archive-header container mx-auto max-w-6xl px-4 pt-phi-2xl pb-phi-md">
       <h1

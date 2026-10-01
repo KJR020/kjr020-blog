@@ -1,3 +1,4 @@
+export { resolveOgImageAssetPaths } from "./assets";
 export { type GenerateOgImageOptions, generateOgImage } from "./generate";
 export {
   createArticleTitleLayout,

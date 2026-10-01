@@ -1,3 +1,5 @@
+import { SITE_DESCRIPTION, SITE_NAME } from "./siteCopy";
+
 type JsonLdValue = JsonLdPrimitive | JsonLdObject | JsonLdValue[];
 type JsonLdPrimitive = string | number | boolean | null;
 type JsonLdObject = { [key: string]: JsonLdValue | undefined };
@@ -26,8 +28,6 @@ export interface PageStructuredData {
   "@graph": JsonLdObject[];
 }
 
-const DEFAULT_SITE_NAME = "KJR020's Blog";
-const DEFAULT_SITE_DESCRIPTION = "KJR020の技術ブログ";
 const DEFAULT_AUTHOR_NAME = "KJR020";
 const DEFAULT_AUTHOR_IMAGE = "/images/kuri_photo.png";
 const DEFAULT_ARTICLE_IMAGE = "/og-image.png";
@@ -67,11 +67,17 @@ function removeUndefined(value: JsonLdValue | undefined): JsonLdValue | undefine
   return value;
 }
 
+/**
+ * ページのJSON-LDを組み立てる。
+ *
+ * サイト（WebSite）と著者（Person）は全ページに含め、記事ページではBlogPostingを加える。
+ * ノードどうしは`@id`で参照し、同じ情報を重複して持たせない。
+ */
 export function buildPageStructuredData({
   pageUrl,
   siteUrl,
-  siteName = DEFAULT_SITE_NAME,
-  siteDescription = DEFAULT_SITE_DESCRIPTION,
+  siteName = SITE_NAME,
+  siteDescription = SITE_DESCRIPTION,
   authorName = DEFAULT_AUTHOR_NAME,
   authorImage = DEFAULT_AUTHOR_IMAGE,
   article,
@@ -126,6 +132,12 @@ export function buildPageStructuredData({
   };
 }
 
+/**
+ * JSON-LDを`<script>`要素へ埋め込める文字列にする。
+ *
+ * 記事タイトルなどに`</script>`が含まれてもscript要素が閉じられないよう、HTMLとして
+ * 解釈されうる文字をUnicodeエスケープへ置き換える。JSONとしての値は変わらない。
+ */
 export function serializeJsonLd(value: JsonLdValue) {
   return JSON.stringify(removeUndefined(value))
     .replace(/</g, "\\u003C")

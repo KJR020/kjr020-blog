@@ -7,6 +7,7 @@ import type { HeadingItem } from "@/components/toc";
 import { hasTableOfContents, TableOfContents } from "@/components/toc";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { assertPostsRendered, createPublishedPostStaticPaths } from "@/lib/postRoutes";
+import { SITE_NAME } from "@/lib/siteCopy";
 import "@/styles/article-code.css";
 import "@/styles/article-content.css";
 import "@/styles/article-footnotes.css";
@@ -22,7 +23,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings: rawHeadings } = await render(post);
 
-// h2, h3のみを抽出して型変換
+// 目次に載せるのはh2とh3だけにする
 const headings: HeadingItem[] = rawHeadings
   .filter((h) => h.depth === 2 || h.depth === 3)
   .map((h) => ({
@@ -32,7 +33,7 @@ const headings: HeadingItem[] = rawHeadings
   }));
 const showsTableOfContents = hasTableOfContents(headings);
 
-// Giscus configuration from environment variables
+// Giscusの接続先は公開してよい設定値なので、ビルド時の環境変数から埋め込む
 const giscusRepo = import.meta.env.PUBLIC_GISCUS_REPO as `${string}/${string}`;
 const giscusRepoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
 const giscusCategory = import.meta.env.PUBLIC_GISCUS_CATEGORY;
@@ -40,7 +41,7 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
 ---
 
 <BaseLayout
-  title={`${post.data.title} - KJR020's Blog`}
+  title={`${post.data.title} - ${SITE_NAME}`}
   description={post.data.description}
   image={`/og/posts/${post.id}.png`}
   ogType="article"
@@ -115,13 +116,13 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
   }
 
   // DOMContentLoadedで確実に実行
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializePostContent);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializePostContent);
   } else {
     initializePostContent();
   }
   // View Transitions対応
-  document.addEventListener('astro:page-load', initializePostContent);
+  document.addEventListener("astro:page-load", initializePostContent);
 </script>
 
 <style is:global>

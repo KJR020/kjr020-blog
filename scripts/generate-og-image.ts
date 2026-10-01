@@ -2,12 +2,10 @@
 
 import path from "node:path";
 
-import { generateOgImage } from "../src/lib/og-image";
+import { generateOgImage, resolveOgImageAssetPaths } from "../src/lib/og-image";
 
-const projectRoot = process.cwd();
-
+// サイト共通のOGP画像を生成する。記事別のOGP画像はAstroのビルド時に生成する。
 await generateOgImage({
-  photoPath: path.join(projectRoot, "src", "assets", "og", "kuri-cutout.png"),
-  sansBoldFontPath: path.join(projectRoot, "src", "assets", "og", "NotoSansJP-Bold.otf"),
-  outputPath: path.join(projectRoot, "public", "og-image.png"),
+  ...resolveOgImageAssetPaths(),
+  outputPath: path.join(process.cwd(), "public", "og-image.png"),
 });

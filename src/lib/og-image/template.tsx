@@ -4,7 +4,7 @@ import satori, { type Font } from "satori";
 import sharp from "sharp";
 
 import { formatPostDate } from "../postDate";
-import { HOME_DESCRIPTION_LINES } from "../siteCopy";
+import { HOME_DESCRIPTION_LINES, SITE_NAME } from "../siteCopy";
 import {
   BASE_FONT_SIZE,
   createArticleTitleLayout,
@@ -19,7 +19,7 @@ import {
 } from "./layout";
 
 export const OG_IMAGE_COPY = {
-  title: "KJR020's Blog",
+  title: SITE_NAME,
   description: HOME_DESCRIPTION_LINES[0],
   url: "kjr020.dev",
 } as const;

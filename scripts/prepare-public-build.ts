@@ -1,13 +1,14 @@
 #!/usr/bin/env tsx
 
+// `pnpm build` の前処理。前回の出力を消し、公開してはいけないファイルが公開入力に
+// 混ざっていないかを検査してから、サイト共通のOGP画像を生成する。
+
 import { readdirSync, rmSync, statSync } from "node:fs";
 import path from "node:path";
-import { generateOgImage } from "../src/lib/og-image";
-import { preparePublicBuild } from "../src/lib/publicBuildInputs";
+import { generateOgImage, resolveOgImageAssetPaths } from "../src/lib/og-image";
+import { PUBLIC_BUILD_INPUT_DIRS, preparePublicBuild } from "../src/lib/publicBuildInputs";
 
-const publicInputDirs = ["src/pages", "public"];
 const outputDir = "dist";
-const projectRoot = process.cwd();
 
 function listFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
@@ -18,7 +19,7 @@ function listFiles(directory: string): string[] {
 }
 
 const forbiddenFiles = preparePublicBuild({
-  publicInputDirs,
+  publicInputDirs: PUBLIC_BUILD_INPUT_DIRS,
   outputDir,
   listFiles,
   removeOutputDir: (directory) => {
@@ -35,7 +36,6 @@ if (forbiddenFiles.length > 0) {
 }
 
 await generateOgImage({
-  photoPath: path.join(projectRoot, "src", "assets", "og", "kuri-cutout.png"),
-  sansBoldFontPath: path.join(projectRoot, "src", "assets", "og", "NotoSansJP-Bold.otf"),
-  outputPath: path.join(projectRoot, "public", "og-image.png"),
+  ...resolveOgImageAssetPaths(),
+  outputPath: path.join(process.cwd(), "public", "og-image.png"),
 });

@@ -1,9 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import PostsPage from "@/components/pages/PostsPage.astro";
+import { isPublishedPost, sortPostsByNewest } from "@/lib/posts";
 
-const posts = await getCollection("posts", ({ data }) => !data.draft);
-const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = sortPostsByNewest(await getCollection("posts", isPublishedPost));
 ---
 
-<PostsPage posts={sortedPosts} />
+<PostsPage posts={posts} />
