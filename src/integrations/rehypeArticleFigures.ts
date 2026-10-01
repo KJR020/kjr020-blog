@@ -16,6 +16,10 @@ function asText(value: unknown): string {
   return typeof value === "string" ? value : "";
 }
 
+/**
+ * 画像だけ、または画像と強調（`*キャプション*`）だけの段落をfigureへ変換する。
+ * ほかの内容を含む段落は対象外としてnullを返す。
+ */
 function createFigure(paragraph: HastNode): HastNode | null {
   const children = paragraph.children?.filter((child) => !isWhitespace(child)) ?? [];
   const [image, caption] = children;
@@ -77,6 +81,11 @@ function transformChildren(node: HastNode): void {
   });
 }
 
+/**
+ * 記事内の画像を、拡大表示のリンクとキャプションを持つfigureへ変換するrehypeプラグイン。
+ *
+ * Markdownでは画像の直後に強調を書くだけでキャプションを付けられるようにする。
+ */
 export function rehypeArticleFigures() {
   return (tree: HastNode): void => {
     transformChildren(tree);

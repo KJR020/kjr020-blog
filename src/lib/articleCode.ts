@@ -102,6 +102,11 @@ function enhanceCodeBlock(pre: HTMLPreElement): void {
   bindCopyAction(copyButton, pre, status);
 }
 
+/**
+ * 記事内のコードブロックへ、言語ラベルとコピーボタンを追加する。
+ *
+ * 処理済みのブロックには印を付けるため、同じ要素に対して繰り返し呼んでも二重には追加しない。
+ */
 export function enhanceArticleCodeBlocks(root: ParentNode = document): void {
   root.querySelectorAll<HTMLPreElement>("pre[data-language]").forEach((pre) => {
     enhanceCodeBlock(pre);

@@ -53,13 +53,3 @@ export interface MobileTOCProps {
   activeId: string | null;
   onItemClick?: (id: string) => void;
 }
-
-/** TOCAvatarのprops */
-export interface TOCAvatarProps {
-  /** アバター画像のパス（public/からの相対パス） */
-  src: string;
-  /** 代替テキスト */
-  alt?: string;
-  /** アバターのサイズ（px） */
-  size?: number;
-}
