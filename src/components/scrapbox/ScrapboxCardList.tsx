@@ -14,7 +14,7 @@ interface ScrapboxCardListProps {
   pages?: ScrapboxPageData[];
 }
 
-/** 記事メタ情報（PostMeta）と同じ表記にする */
+/** 記事の日付（formatPostDate）と同じ表記にする */
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString("ja-JP", {
