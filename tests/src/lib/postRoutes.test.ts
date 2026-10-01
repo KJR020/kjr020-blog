@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createPublishedPostStaticPaths } from "@/lib/postRoutes";
+import { assertPostsRendered, createPublishedPostStaticPaths } from "@/lib/postRoutes";
 
 describe("createPublishedPostStaticPaths", () => {
   it("draft posts are excluded from generated static paths", () => {
@@ -33,5 +33,28 @@ describe("createPublishedPostStaticPaths", () => {
         props: { post: posts[0] },
       },
     ]);
+  });
+});
+
+describe("assertPostsRendered", () => {
+  it("すべての記事が変換済みなら何もしない", () => {
+    const posts = [
+      { id: "a/post", rendered: { html: "<p>A</p>" } },
+      { id: "b/post", rendered: { html: "" } },
+    ];
+
+    expect(() => assertPostsRendered(posts)).not.toThrow();
+  });
+
+  it("変換に失敗した記事があれば、そのIDを示してビルドを止める", () => {
+    const posts = [
+      { id: "ok/post", rendered: { html: "<p>OK</p>" } },
+      { id: "broken/first", rendered: undefined },
+      { id: "broken/second" },
+    ];
+
+    expect(() => assertPostsRendered(posts)).toThrow(
+      "Markdownの変換に失敗した記事があります: broken/first, broken/second",
+    );
   });
 });

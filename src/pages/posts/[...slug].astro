@@ -6,7 +6,7 @@ import PostMeta from "@/components/PostMeta.astro";
 import type { HeadingItem } from "@/components/toc";
 import { hasTableOfContents, TableOfContents } from "@/components/toc";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { createPublishedPostStaticPaths } from "@/lib/postRoutes";
+import { assertPostsRendered, createPublishedPostStaticPaths } from "@/lib/postRoutes";
 import "@/styles/article-code.css";
 import "@/styles/article-content.css";
 import "@/styles/article-footnotes.css";
@@ -14,7 +14,9 @@ import "@/styles/article-footnotes.css";
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
   const fixturePostIds = process.env.TEST_FIXTURES === "true" ? ["__test/article"] : [];
-  return createPublishedPostStaticPaths(posts, fixturePostIds);
+  const paths = createPublishedPostStaticPaths(posts, fixturePostIds);
+  assertPostsRendered(paths.map(({ props }) => props.post));
+  return paths;
 }
 
 const { post } = Astro.props;
