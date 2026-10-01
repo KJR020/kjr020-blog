@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import PageHero from "@/components/PageHero.astro";
 import PostCard from "@/components/PostCard.astro";
 import PostMeta from "@/components/PostMeta.astro";
-import { ScrapboxCard } from "@/components/scrapbox";
+import { ScrapboxCardList } from "@/components/scrapbox";
 import { CommandPalette } from "@/components/search/CommandPalette";
 import { ThemeToggleAnimated } from "@/components/theme/ThemeToggleAnimated";
 import { TableOfContents } from "@/components/toc";
@@ -233,11 +233,11 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
 
   <div class="spec-item" id="scrapbox-card-list">
     <h3>6-4. Scrapbox Card List</h3>
-    <p class="src">横スクロールカードとして並べる。hover時に左右操作と端のfadeを表示し、外部リンクで開く。画像は表示領域へ近づいてから読み込む。</p>
+    <p class="src">Cosenseのメモを、タイトル・説明・更新日の一覧として縦に並べる。各項目は外部リンクで開く。0件のときは、親が領域ごと畳めるよう印だけを出す。</p>
     <div class="demo scrapbox-specimen">
-      {scrapboxPages.map((page) => <ScrapboxCard page={page} client:visible />)}
+      <ScrapboxCardList project="KJR020" pages={scrapboxPages} client:visible />
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/scrapbox/ScrapboxCardList.tsx</code><code>src/components/scrapbox/ScrapboxCard.tsx</code></p>
+    <p class="source-row"><strong>Source</strong><code>src/components/scrapbox/ScrapboxCardList.tsx</code></p>
   </div>
 
 </section>
