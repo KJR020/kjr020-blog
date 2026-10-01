@@ -1,0 +1,100 @@
+---
+/**
+ * 記事の分類リンク。記事へのリンクとは別の操作対象として、常に輪郭を表示する。
+ * 記事行の中でも独立してクリックできるよう、行全体のリンクより前面に置く。
+ */
+interface Props {
+  tags: string[];
+  size?: "sm" | "md";
+  label?: string;
+}
+
+const { tags, size = "sm", label = "タグ" } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <ul class:list={["tag-list", `tag-list--${size}`]} aria-label={label}>
+      {tags.map((tag) => (
+        <li>
+          <a href={`/tags/${tag}`} class="tag-link">
+            <span class="tag-link__hash" aria-hidden="true">#</span>
+            {tag}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .tag-list {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--phi-neg2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tag-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.1em;
+    min-block-size: 1.618rem;
+    padding: 0 0.618rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--foreground-soft);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .tag-list--md .tag-link {
+    min-block-size: 2rem;
+    padding: 0 0.786rem;
+    font-size: 0.8125rem;
+  }
+
+  .tag-link__hash {
+    color: var(--muted-foreground);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .tag-link:is(:hover, :focus-visible) {
+    border-color: var(--brand);
+    background-color: var(--brand-wash);
+    color: var(--brand);
+  }
+
+  .tag-link:is(:hover, :focus-visible) .tag-link__hash {
+    color: inherit;
+  }
+
+  .tag-link:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* タッチ操作で押しやすい高さにする。見た目の高さは変えず、操作領域だけを広げる */
+  @media (pointer: coarse) {
+    .tag-link {
+      position: relative;
+    }
+
+    .tag-link::after {
+      position: absolute;
+      inset: -6px -2px;
+      content: "";
+    }
+  }
+</style>

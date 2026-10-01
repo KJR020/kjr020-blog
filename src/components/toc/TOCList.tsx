@@ -58,20 +58,28 @@ export function TOCList({
   };
 
   return (
-    <ul className="space-y-1 text-sm">
+    <ul className="border-l border-border text-[0.8125rem] leading-snug">
       {headings.map((heading) => {
         const isActive = activeId === heading.id;
         const isH3 = heading.level === 3;
 
         return (
           <li key={heading.id} ref={isActive ? activeRef : undefined} className="relative">
+            {/* 現在位置は左の線を太くして示す */}
+            <span
+              aria-hidden="true"
+              className={cn(
+                "absolute -left-px top-1 bottom-1 w-0.5 rounded-full bg-brand transition-opacity duration-300",
+                isActive ? "opacity-100" : "opacity-0",
+              )}
+            />
             {/* アバターアイコン（デスクトップのみ、アクティブ時） */}
             {avatarSrc && isActive && (
               <img
                 src={avatarSrc}
                 alt={avatarAlt}
                 className={cn(
-                  "absolute -left-6 top-1/2 -translate-y-1/2",
+                  "absolute -left-7 top-1/2 -translate-y-1/2",
                   "w-5 h-5 rounded-full",
                   "transition-all duration-300 ease-in-out",
                 )}
@@ -83,9 +91,9 @@ export function TOCList({
               onKeyDown={(e) => handleKeyDown(e, heading.id)}
               aria-current={isActive ? "location" : undefined}
               className={cn(
-                "block py-1 transition-colors duration-200",
-                "hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 rounded",
-                isH3 && "pl-4",
+                "block rounded-sm py-1.5 pl-4 transition-colors duration-200",
+                "hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring",
+                isH3 && "pl-7",
                 isActive ? "text-foreground font-medium" : "text-muted-foreground",
               )}
             >

@@ -70,6 +70,13 @@ export function CommandPalette() {
 
     document.addEventListener("click", handleTriggerClick);
 
+    // 読み込み直後で、このコンポーネントの準備前に押されたSearchも開く
+    const pending = window as Window & { __commandPaletteRequested?: boolean };
+    if (pending.__commandPaletteRequested) {
+      pending.__commandPaletteRequested = false;
+      openDialog();
+    }
+
     if (new URLSearchParams(window.location.search).get("search") === "open") {
       openDialog();
     }
@@ -181,10 +188,10 @@ export function CommandPalette() {
       ref={dialogRef}
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
-      className="command-palette-dialog mx-auto mt-[15vh] mb-auto w-[calc(100%-2rem)] max-w-lg rounded-lg border border-border bg-popover p-0 text-popover-foreground shadow-(--shadow-overlay)"
+      className="command-palette-dialog mx-auto mt-[12vh] mb-auto w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-2xl border border-border bg-popover p-0 text-foreground shadow-[var(--shadow-overlay)]"
     >
       <div className="flex flex-col">
-        <div className="flex items-center border-b border-border px-4">
+        <div className="flex items-center border-b border-border px-5">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -195,7 +202,7 @@ export function CommandPalette() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="mr-2 shrink-0 text-muted-foreground"
+            className="mr-3 shrink-0 text-muted-foreground"
             aria-hidden="true"
           >
             <circle cx="11" cy="11" r="8" />
@@ -215,9 +222,9 @@ export function CommandPalette() {
             placeholder="記事を検索..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 bg-transparent py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            className="flex-1 bg-transparent py-4 text-base text-foreground outline-none placeholder:text-muted-foreground"
           />
-          <kbd className="ml-2 shrink-0 rounded border border-border px-1.5 py-0.5 text-xs text-muted-foreground">
+          <kbd className="ml-2 shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[0.6875rem] text-muted-foreground">
             Esc
           </kbd>
         </div>
@@ -225,7 +232,7 @@ export function CommandPalette() {
         <div
           id="command-palette-results"
           role="listbox"
-          className="max-h-[50vh] overflow-y-auto p-2"
+          className="max-h-[56vh] overflow-y-auto p-2"
         >
           {pagefindError && (
             <div className="px-3 py-6 text-center text-sm text-muted-foreground">
@@ -250,8 +257,10 @@ export function CommandPalette() {
                 tabIndex={-1}
                 aria-selected={index === activeIndex}
                 className={cn(
-                  "cursor-pointer rounded-md px-3 py-2 text-sm",
-                  index === activeIndex ? "bg-accent text-accent-foreground" : "text-foreground",
+                  "relative cursor-pointer rounded-xl px-4 py-3 text-sm transition-colors",
+                  index === activeIndex
+                    ? "bg-secondary text-foreground before:absolute before:inset-y-3 before:left-1.5 before:w-0.5 before:rounded-full before:bg-brand"
+                    : "text-foreground",
                 )}
                 onClick={() => {
                   window.location.href = result.url;
@@ -261,9 +270,9 @@ export function CommandPalette() {
                 }}
                 onMouseEnter={() => setActiveIndex(index)}
               >
-                <div className="font-medium">{result.title}</div>
+                <div className="font-bold leading-snug">{result.title}</div>
                 <div
-                  className="mt-0.5 line-clamp-1 text-xs text-muted-foreground"
+                  className="command-palette-excerpt mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground"
                   // biome-ignore lint/security/noDangerouslySetInnerHtml: Pagefind excerpts contain <mark> tags for search highlighting
                   dangerouslySetInnerHTML={{ __html: result.excerpt }}
                 />

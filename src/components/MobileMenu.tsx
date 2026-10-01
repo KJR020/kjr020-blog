@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface LinkNavItem {
@@ -20,18 +19,17 @@ type NavItem = LinkNavItem | ActionNavItem;
 
 interface MobileMenuProps {
   navItems: NavItem[];
-  /** 現在のパス。Headerと同じ規則で現在地を示す */
   currentPath?: string;
 }
 
-const itemClassName =
-  "flex min-h-11 items-center rounded-md px-3 text-left text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring";
-
-function isCurrent(href: string, currentPath: string | undefined): boolean {
-  if (currentPath === undefined) return false;
+function isCurrent(href: string, currentPath?: string) {
+  if (!currentPath) return false;
   if (href === "/") return currentPath === "/";
   return currentPath.startsWith(href);
 }
+
+const itemClassName =
+  "group flex w-full items-baseline gap-4 border-b border-border py-4 text-left text-foreground transition-colors hover:text-link focus-visible:text-link";
 
 export function MobileMenu({ navItems, currentPath }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,8 +47,11 @@ export function MobileMenu({ navItems, currentPath }: MobileMenuProps) {
   useEffect(() => {
     if (!isOpen) return;
 
+    // 背景の幕はメニューの外側として扱う
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const isBackdrop = target instanceof Element && target.closest(".mobile-menu-backdrop");
+      if (isBackdrop || (menuRef.current && !menuRef.current.contains(target))) {
         closeMenu();
       }
     };
@@ -71,94 +72,98 @@ export function MobileMenu({ navItems, currentPath }: MobileMenuProps) {
   }, [isOpen, closeMenu]);
 
   return (
-    <div ref={menuRef} className="relative md:hidden">
-      <Button
-        variant="ghost"
-        size="icon"
+    <div ref={menuRef} className="md:hidden">
+      <button
+        type="button"
         onClick={toggleMenu}
         aria-label={isOpen ? "メニューを閉じる" : "メニューを開く"}
         aria-expanded={isOpen}
+        className="relative z-10 inline-flex size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-secondary"
       >
-        {/* ハンバーガーアイコン */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          {isOpen ? (
-            <>
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </>
-          ) : (
-            <>
-              <line x1="4" y1="12" x2="20" y2="12" />
-              <line x1="4" y1="6" x2="20" y2="6" />
-              <line x1="4" y1="18" x2="20" y2="18" />
-            </>
-          )}
-        </svg>
-      </Button>
-
-      {/* ナビゲーションメニュー - コンパクトなドロップダウン */}
-      {isOpen && (
-        <nav className="fixed inset-x-4 top-[calc(var(--spacing-phi-2xl)+var(--spacing-phi-2xs))] z-50 rounded-lg border border-border bg-popover text-popover-foreground shadow-(--shadow-overlay)">
-          <div className="flex flex-col gap-px p-phi-2xs">
-            {navItems.map((item) =>
-              item.action === "search" ? (
-                <button
-                  key={item.action}
-                  type="button"
-                  data-command-palette-trigger
-                  onClick={closeMenu}
-                  className={itemClassName}
-                >
-                  {item.label}
-                </button>
-              ) : (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  target={item.external ? "_blank" : undefined}
-                  rel={item.external ? "noopener noreferrer" : undefined}
-                  onClick={closeMenu}
-                  aria-current={isCurrent(item.href, currentPath) ? "page" : undefined}
-                  className={cn(
-                    itemClassName,
-                    "aria-[current=page]:font-semibold aria-[current=page]:text-link",
-                  )}
-                >
-                  {item.label}
-                  {item.external && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="ml-1 text-muted-foreground"
-                      aria-hidden="true"
-                    >
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                      <polyline points="15 3 21 3 21 9" />
-                      <line x1="10" x2="21" y1="14" y2="3" />
-                    </svg>
-                  )}
-                </a>
-              ),
+        <span aria-hidden="true" className="relative block h-3 w-5">
+          <span
+            className={cn(
+              "absolute left-0 block h-[1.5px] w-5 rounded-full bg-current transition-transform duration-300 ease-[var(--ease-out)]",
+              isOpen ? "top-[5px] rotate-45" : "top-0",
             )}
-          </div>
+          />
+          <span
+            className={cn(
+              "absolute left-0 block h-[1.5px] w-5 rounded-full bg-current transition-transform duration-300 ease-[var(--ease-out)]",
+              isOpen ? "top-[5px] -rotate-45" : "top-[10px]",
+            )}
+          />
+        </span>
+      </button>
+
+      {isOpen && (
+        <div
+          aria-hidden="true"
+          className="mobile-menu-backdrop fixed inset-x-0 bottom-0 top-[var(--header-height)] z-40 bg-foreground/20 backdrop-blur-[2px]"
+        />
+      )}
+      {isOpen && (
+        <nav
+          aria-label="サイト"
+          className="mobile-menu-panel fixed inset-x-0 top-[var(--header-height)] z-50 max-h-[calc(100dvh-var(--header-height))] overflow-y-auto border-y border-border bg-background px-[var(--shell-pad)] pb-6"
+        >
+          <ul className="flex flex-col">
+            {navItems.map((item, index) => {
+              return (
+                <li
+                  key={item.href ?? item.action}
+                  className="mobile-menu-item"
+                  style={{ animationDelay: `${60 + index * 50}ms` }}
+                >
+                  {item.action === "search" ? (
+                    <button
+                      type="button"
+                      data-command-palette-trigger
+                      onClick={closeMenu}
+                      className={itemClassName}
+                    >
+                      <span className="text-3xl font-extrabold leading-none tracking-tight">
+                        {item.label}
+                      </span>
+                    </button>
+                  ) : (
+                    <a
+                      href={item.href}
+                      target={item.external ? "_blank" : undefined}
+                      rel={item.external ? "noopener noreferrer" : undefined}
+                      aria-current={
+                        !item.external && isCurrent(item.href, currentPath) ? "page" : undefined
+                      }
+                      onClick={closeMenu}
+                      className={cn(itemClassName, "aria-[current=page]:text-link")}
+                    >
+                      <span className="text-3xl font-extrabold leading-none tracking-tight">
+                        {item.label}
+                      </span>
+                      {item.external && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.75"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="self-center text-muted-foreground"
+                          aria-hidden="true"
+                        >
+                          <path d="M7 17 17 7" />
+                          <path d="M8 7h9v9" />
+                        </svg>
+                      )}
+                    </a>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </nav>
       )}
     </div>

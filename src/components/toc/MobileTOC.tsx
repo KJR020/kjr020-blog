@@ -28,11 +28,11 @@ export function MobileTOC({ headings, activeId, onItemClick }: MobileTOCProps) {
     <Collapsible.Root
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="border-y border-border py-phi-xs lg:hidden"
+      className="rounded-[var(--radius)] border border-border bg-card px-4 py-1 lg:hidden"
     >
       <Collapsible.Trigger
         className={cn(
-          "inline-flex min-h-11 items-center gap-2 px-1 py-2",
+          "flex min-h-11 w-full items-center gap-2 py-2",
           "rounded text-sm font-medium text-foreground",
           "hover:text-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           "transition-colors",
@@ -43,7 +43,10 @@ export function MobileTOC({ headings, activeId, onItemClick }: MobileTOCProps) {
         <List className="w-4 h-4" aria-hidden="true" />
         <span>目次</span>
         <ChevronDown
-          className={cn("w-4 h-4 transition-transform duration-200", isOpen && "rotate-180")}
+          className={cn(
+            "ml-auto w-4 h-4 transition-transform duration-200",
+            isOpen && "rotate-180",
+          )}
           aria-hidden="true"
         />
       </Collapsible.Trigger>
@@ -54,7 +57,7 @@ export function MobileTOC({ headings, activeId, onItemClick }: MobileTOCProps) {
           "data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp",
         )}
       >
-        <nav className="mt-1 border-l border-border pl-4" aria-label="目次">
+        <nav className="mb-3 mt-1 border-l border-border pl-4" aria-label="目次">
           <ul className="space-y-1 text-sm">
             {headings.map((heading) => {
               const isActive = activeId === heading.id;
