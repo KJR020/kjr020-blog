@@ -50,6 +50,18 @@ graph LR
 
 ビルド時と実行時のデータフロー、コンポーネント境界、設計判断は[アーキテクチャ概要](docs/architecture/overview.md)にまとめています。
 
+## コードの読みどころ
+
+はじめて読む方に向けて、関心ごとの入口をまとめています。
+
+| 関心 | 入口 | 内容 |
+| --- | --- | --- |
+| サーバー側の処理 | [worker/index.ts](worker/index.ts) → [worker/api/pages.ts](worker/api/pages.ts) → [worker/_lib/cms-proxy.ts](worker/_lib/cms-proxy.ts) | ルーティング、入力検証、上流APIのタイムアウト、公開用データへの変換、共有キャッシュ。仕様は[Cosense API Proxy](docs/architecture/cosense-api-proxy.md) |
+| ビルド時の処理 | [astro.config.mjs](astro.config.mjs)、[src/integrations/](src/integrations/)、[src/lib/](src/lib/) | Markdownの変換、記事別OGP画像、構造化データ、公開入力の検査 |
+| ブラウザで動くUI | [src/components/search/CommandPalette.tsx](src/components/search/CommandPalette.tsx)、[src/components/toc/](src/components/toc/) | 全文検索のコマンドパレット、スクロールに追従する目次 |
+| テスト | [tests/worker/](tests/worker/)、[tests/e2e/](tests/e2e/) | Proxyの異常系とセキュリティ境界の検証、固定fixtureによるE2EとVisual Regression。方針は[テストアーキテクチャ](docs/architecture/test-architecture.md) |
+| 設計判断の記録 | [docs/architecture/](docs/architecture/)、[意思決定ログ](docs/architecture/adr/) | 静的生成を既定にした理由、Workerを先に実行する範囲、コメント基盤の選定など |
+
 ## 技術スタック
 
 | カテゴリ | 技術 |
@@ -123,7 +135,7 @@ pnpm exec wrangler dev --port 8788
 
 Dockerを起動した状態で `pnpm test:e2e:update-snapshots` を実行すると、CIと同じPlaywright Linuxコンテナで基準画像を更新します。Playwright用のCompose構成は開発サーバーを含まず、E2EとVRTだけを対象にします。更新された `*-linux.png` を確認してコミットします。GitHub Actionsの `CI` workflowを `update_snapshots=true` で手動実行して更新することもできます。
 
-VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテクチャ](docs/architecture/test_architecture.md)で定義しています。
+VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテクチャ](docs/architecture/test-architecture.md)で定義しています。
 
 ## デプロイ
 

@@ -1,4 +1,4 @@
-# Test Architecture
+# テストアーキテクチャ
 
 このドキュメントは、プロジェクトのテスト戦略と方針を定義する。
 具体的なコマンドと設定値は、各設定ファイルと`package.json`をSource of Truthとする。

@@ -1,6 +1,6 @@
 # コメント基盤へのGiscus採用
 
-Astro製技術ブログのコメント基盤にGiscusを採用した判断を記録する。現在の構成と設定は[コメント機能](../comment_architecture.md)を参照する。
+Astro製技術ブログのコメント基盤にGiscusを採用した判断を記録する。現在の構成と設定は[コメント機能](../comment-architecture.md)を参照する。
 
 ## 決定
 
@@ -55,7 +55,7 @@ Astro製技術ブログのコメント基盤にGiscusを採用した判断を記
 
 ## 関連ファイル
 
-- [コメント機能](../comment_architecture.md) - 現在の構成、設定、表示条件
+- [コメント機能](../comment-architecture.md) - 現在の構成、設定、表示条件
 
 ## 参考資料
 

@@ -4,7 +4,7 @@
 
 ## 目的
 
-Homeの主役をLatest PostsとScrapboxに絞りながら、過去記事を探したい読者には全文検索を残す。Tag一覧はHomeへ常設せず、記事カードと記事詳細の分類リンクとして扱う。
+Homeの主役をPosts(最新記事)とNotes(Cosenseのメモ)に絞りながら、過去記事を探したい読者には全文検索を残す。Tag一覧はHomeへ常設せず、記事カードと記事詳細の分類リンクとして扱う。
 
 ## ユースケース
 
@@ -29,7 +29,7 @@ Homeの主役をLatest PostsとScrapboxに絞りながら、過去記事を探�
 
 ```text
 [Header]
-  Home  Posts  [Search ⌘K]  Scrapbox
+  Home  Posts  [Search ⌘K]  Cosense
                     │
                     ▼
        ┌──────────────────────────┐
@@ -48,8 +48,8 @@ Command PaletteはページGridの外へ浮くnative dialogとする。Desktop�
 ```text
 Home
 ├── Profile
-├── Latest Posts
-└── Scrapbox
+├── Posts
+└── Notes
 
 Global utility
 └── Search(Header / ⌘K / Ctrl K)
