@@ -86,7 +86,7 @@ src/
 ├── pages/             静的ページ、RSS、OGP画像のルート
 └── styles/            グローバル・記事向けスタイル
 worker/                Cosense API Proxyとリクエストルーター
-scripts/               ビルド前処理とOGP生成
+scripts/               ビルド前処理、OGP生成、マスコットの動きのレビュー
 tests/
 ├── src/               `src/` を対象とするUnit／Componentテスト
 ├── worker/            `worker/` を対象とするテスト
