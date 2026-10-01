@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface LinkNavItem {
   href: string;
@@ -19,9 +20,20 @@ type NavItem = LinkNavItem | ActionNavItem;
 
 interface MobileMenuProps {
   navItems: NavItem[];
+  /** 現在のパス。Headerと同じ規則で現在地を示す */
+  currentPath?: string;
 }
 
-export function MobileMenu({ navItems }: MobileMenuProps) {
+const itemClassName =
+  "flex min-h-11 items-center rounded-md px-3 text-left text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring";
+
+function isCurrent(href: string, currentPath: string | undefined): boolean {
+  if (currentPath === undefined) return false;
+  if (href === "/") return currentPath === "/";
+  return currentPath.startsWith(href);
+}
+
+export function MobileMenu({ navItems, currentPath }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -97,8 +109,8 @@ export function MobileMenu({ navItems }: MobileMenuProps) {
 
       {/* ナビゲーションメニュー - コンパクトなドロップダウン */}
       {isOpen && (
-        <nav className="fixed right-[1%] top-16 z-50 w-[98vw] rounded-lg border border-border bg-background shadow-lg">
-          <div className="flex flex-col py-2">
+        <nav className="fixed inset-x-4 top-[calc(var(--spacing-phi-2xl)+var(--spacing-phi-2xs))] z-50 rounded-lg border border-border bg-popover text-popover-foreground shadow-(--shadow-overlay)">
+          <div className="flex flex-col gap-px p-phi-2xs">
             {navItems.map((item) =>
               item.action === "search" ? (
                 <button
@@ -106,7 +118,7 @@ export function MobileMenu({ navItems }: MobileMenuProps) {
                   type="button"
                   data-command-palette-trigger
                   onClick={closeMenu}
-                  className="flex items-center px-4 py-3 text-left text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                  className={itemClassName}
                 >
                   {item.label}
                 </button>
@@ -117,7 +129,11 @@ export function MobileMenu({ navItems }: MobileMenuProps) {
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noopener noreferrer" : undefined}
                   onClick={closeMenu}
-                  className="flex items-center px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                  aria-current={isCurrent(item.href, currentPath) ? "page" : undefined}
+                  className={cn(
+                    itemClassName,
+                    "aria-[current=page]:font-semibold aria-[current=page]:text-link",
+                  )}
                 >
                   {item.label}
                   {item.external && (
@@ -131,7 +147,7 @@ export function MobileMenu({ navItems }: MobileMenuProps) {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="ml-1"
+                      className="ml-1 text-muted-foreground"
                       aria-hidden="true"
                     >
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />

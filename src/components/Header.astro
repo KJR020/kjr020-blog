@@ -16,9 +16,13 @@ const isActive = (href: string) => {
 };
 ---
 
-<header class="sticky top-0 z-50 w-full border-b border-border bg-background/95 font-sans backdrop-blur supports-backdrop-filter:bg-background/60">
-  <div class="container mx-auto flex h-phi-2xl items-center justify-between px-4">
-    <a href="/" class="flex items-center gap-2 font-bold" style="font-size: var(--font-size-title3);">
+<header class="sticky top-0 z-50 w-full border-b border-border bg-background/95 font-sans backdrop-blur supports-backdrop-filter:bg-background/80">
+  <div class="container mx-auto flex h-phi-2xl max-w-6xl items-center justify-between px-4">
+    <a
+      href="/"
+      class="flex items-center gap-2 rounded-md font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      style="font-size: var(--font-size-title3);"
+    >
       <img
         src="/images/kjr020-eyes.svg"
         alt=""
@@ -36,17 +40,18 @@ const isActive = (href: string) => {
             <button
               type="button"
               data-command-palette-trigger
-              class="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              class="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Search
-              <kbd class="ml-1.5 hidden rounded border border-border px-1 py-0.5 text-xs leading-none text-muted-foreground md:inline-flex">⌘K</kbd>
+              <kbd class="ml-2 hidden rounded border border-border bg-muted/60 px-1.5 py-0.5 font-sans text-[0.6875rem] leading-none text-muted-foreground md:inline-flex">⌘K</kbd>
             </button>
           ) : (
             <a
               href={item.href}
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noopener noreferrer" : undefined}
-              class={`inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${isActive(item.href) ? "text-link font-semibold" : ""}`}
+              aria-current={isActive(item.href) ? "page" : undefined}
+              class="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[current=page]:font-semibold aria-[current=page]:text-link"
             >
               {item.label}
               {item.external && (
@@ -60,7 +65,8 @@ const isActive = (href: string) => {
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="ml-1"
+                  class="ml-1 text-muted-foreground"
+                  aria-hidden="true"
                 >
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                   <polyline points="15 3 21 3 21 9" />
@@ -72,8 +78,9 @@ const isActive = (href: string) => {
         ))}
       </nav>
       {/* モバイルメニュー */}
-      <MobileMenu navItems={navItems} client:load />
+      <MobileMenu navItems={navItems} currentPath={currentPath} client:load />
       <ThemeToggleAnimated client:load />
     </div>
   </div>
 </header>
+
