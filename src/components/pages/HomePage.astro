@@ -1,8 +1,11 @@
 ---
-import PostCard from "@/components/PostCard.astro";
+import Kuri from "@/components/Kuri.astro";
+import PostListItem from "@/components/PostListItem.astro";
 import { ScrapboxCardList } from "@/components/scrapbox";
 import type { ScrapboxPageData } from "@/components/scrapbox/types";
+import TagList from "@/components/TagList.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { formatPostDate } from "@/lib/postDate";
 import { HOME_DESCRIPTION_LINES } from "@/lib/siteCopy";
 import type { PostSummary } from "./types";
 
@@ -11,179 +14,227 @@ interface Props {
   scrapboxPages?: ScrapboxPageData[];
 }
 
+const LATEST_POST_COUNT = 6;
+
 const { posts, scrapboxPages } = Astro.props;
-const latestPosts = posts.slice(0, 3);
+const [featuredPost, ...recentPosts] = posts.slice(0, LATEST_POST_COUNT);
 const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
 ---
 
-<BaseLayout title="KJR020's Blog" description="KJR020の技術ブログ" hideKuri>
-  <div class="index-wrapper">
-    <div class="container mx-auto px-4 pb-phi-2xl max-w-6xl">
-      <section class="py-phi-xl animate-fade-in-up">
-        <div class="flex items-start gap-phi-md">
-          <div class="hero-image-frame">
-            <img
-              src="/images/kuri_photo.png"
-              alt="KJR020"
-              width="500"
-              height="500"
-              class="h-full w-full rounded-full object-cover ring-2 ring-border"
-            />
-          </div>
-          <div class="max-w-2xl">
-            <h1
-              class="hero-title font-bold font-heading tracking-tight mb-phi-2xs"
-              style="font-size: var(--font-size-title1); line-height: var(--lh-tight);"
-            >
-              KJR020's Blog
-            </h1>
-            <p
-              class="hero-copy text-base text-muted-foreground max-w-lg"
-              style="line-height: var(--lh-body);"
-            >
-              {homeDescriptionLead}<br class="hidden sm:inline" />{homeDescriptionDetail}
-            </p>
-          </div>
+<BaseLayout title="KJR020's Blog" description="KJR020の技術ブログ">
+  <section class="home-hero shell" aria-labelledby="home-title">
+    <h1 id="home-title" class="home-hero__wordmark type-display">
+      <span class="home-hero__line"><span class="animate-rise-in">KJR020's</span></span>
+      <span class="home-hero__line"><span class="animate-rise-in" style="animation-delay: 80ms">Blog</span></span>
+    </h1>
+
+    <div class="home-hero__base">
+      <div class="home-hero__kuri">
+        <Kuri size="clamp(4.5rem, 3rem + 4vw, 7rem)" />
+      </div>
+      <div class="home-hero__intro animate-fade-in-up" style="animation-delay: 200ms">
+        <p class="home-hero__copy">
+          {homeDescriptionLead}<br />
+          {homeDescriptionDetail}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="home-content shell grid-16">
+    <section id="latest-posts" class="home-main" aria-labelledby="latest-posts-title">
+      <div class="home-section-head">
+        <div class="section-heading">
+          <h2 id="latest-posts-title" class="section-heading__title">Posts</h2>
+          <p class="section-heading__sub">新しい記事</p>
         </div>
-      </section>
-      <div class="home-content py-phi-xl">
-        <section
-          id="latest-posts"
-          class="home-main animate-fade-in-up"
-        style="animation-delay: 80ms"
-      >
-        <div class="section-heading mb-phi-md">
-            <h2
-              class="font-bold font-heading tracking-tight"
-              style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-            >
-              Posts
-            </h2>
-            <p class="section-lead text-sm text-muted-foreground">ブログ記事</p>
-          {
-            posts.length > 3 && (
-              <a
-                href="/posts"
-                class="section-more-link"
+        {
+          posts.length > LATEST_POST_COUNT && (
+            <a href="/posts" class="arrow-link">
+              すべての記事
+              <svg
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                すべて見る
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="m9 18 6-6-6-6" />
-                </svg>
-              </a>
-            )
-          }
-        </div>
-        <div class="grid gap-phi-xs">
-          {latestPosts.map((post) => <PostCard post={post} />)}
-        </div>
-        </section>
-        <aside
-          id="scrapbox"
-          class="home-aside animate-fade-in-up"
-        style="animation-delay: 210ms"
-      >
-        <div class="section-heading mb-phi-md">
-            <h2
-              class="font-bold font-heading tracking-tight"
-              style="font-size: var(--font-size-title3); line-height: var(--lh-tight);"
-            >
-              Notes
-            </h2>
-            <p class="section-lead text-sm text-muted-foreground">Cosenseのメモ書き</p>
-          <a
-            href="https://scrapbox.io/KJR020"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="section-more-link"
-          >
-            すべて見る
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M15 3h6v6"></path>
-              <path d="M10 14 21 3"></path>
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            </svg>
-          </a>
-        </div>
-        <ScrapboxCardList
-            project="KJR020"
-            pages={scrapboxPages}
-            limit={4}
-            client:load
-          />
-        </aside>
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" />
+              </svg>
+            </a>
+          )
+        }
       </div>
 
-    </div>
+      {
+        featuredPost && (
+          <article class="feature">
+            <p class="feature__meta type-meta">
+              <span class="feature__badge">Latest</span>
+              <time datetime={featuredPost.data.date.toISOString()}>
+                {formatPostDate(featuredPost.data.date)}
+              </time>
+            </p>
+            <h3 class="feature__title type-heading">
+              <a
+                href={`/posts/${featuredPost.id}`}
+                class="feature__link"
+              >
+                <span class="feature__title-text">{featuredPost.data.title}</span>
+              </a>
+            </h3>
+            {featuredPost.excerpt && <p class="feature__excerpt">{featuredPost.excerpt}</p>}
+            <TagList tags={featuredPost.data.tags ?? []} size="md" />
+          </article>
+        )
+      }
+
+      {
+        recentPosts.length > 0 && (
+          <div class="home-list">
+            {recentPosts.map((post) => (
+              <PostListItem post={post} />
+            ))}
+          </div>
+        )
+      }
+    </section>
+
+    <aside id="scrapbox" class="home-aside" aria-labelledby="notes-title">
+      <div class="home-section-head">
+        <div class="section-heading">
+          <h2 id="notes-title" class="section-heading__title">Notes</h2>
+          <p class="section-heading__sub">Cosenseのメモ書き</p>
+        </div>
+      </div>
+      <ScrapboxCardList project="KJR020" pages={scrapboxPages} limit={5} client:load />
+      <a
+        href="https://scrapbox.io/KJR020"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="arrow-link home-aside__more"
+        data-external
+      >
+        すべて見る
+        <svg
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M7 17 17 7" />
+          <path d="M8 7h9v9" />
+        </svg>
+      </a>
+    </aside>
   </div>
 </BaseLayout>
 
 <style>
-  .index-wrapper {
-    /* 主領域と補助領域の内容どうしを離すための内側余白 */
-    --home-column-inset: var(--phi-1);
-
-    position: relative;
+  /* ---------- Hero ---------- */
+  .home-hero {
+    padding-block: clamp(2.618rem, 1rem + 5vw, 6.854rem) var(--phi-2);
   }
 
-  .index-wrapper > .container {
-    position: relative;
+  .home-hero__wordmark {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.22em;
+    margin: 0;
+    margin-inline-start: -0.04em;
+    font-size: var(--text-wordmark);
+    line-height: 1;
   }
 
-  .index-wrapper > .container > section + section,
-  .index-wrapper > .container > section + .home-content {
-    border-top: 1px solid var(--border);
-    padding-top: 1.618rem;
+  .home-hero__line {
+    display: block;
+    overflow: clip;
+    overflow-clip-margin: 0.1em;
+    padding-block-end: 0.08em;
   }
 
   /*
-   * 主領域と補助領域を同じ行へ並べるためGridを使う。
-   * 単一領域しかないHeroはpaddingで幅を決めており、Gridにしていない。
+   * 狭い画面では2行に組み、2行目の「Blog」の右側をくりの立ち位置として空ける。
+   * 1行に収めるより文字を大きくできる
    */
-  @media (min-width: 64rem) {
-    .home-content {
-      display: grid;
-      grid-template-columns: repeat(16, minmax(0, 1fr));
-      column-gap: 1rem;
-      align-items: start;
+  @media (max-width: 47.999rem) {
+    .home-hero__wordmark {
+      font-size: min(17vw, 6.854rem);
     }
 
-    .home-main {
-      grid-column: 1 / span 12;
-      padding-inline-end: var(--home-column-inset);
+    .home-hero__line {
+      flex-basis: 100%;
     }
+  }
 
-    .home-aside {
-      grid-column: 13 / span 4;
-      padding-inline-start: var(--home-column-inset);
+  .home-hero__base {
+    position: relative;
+    display: grid;
+    gap: var(--phi-1);
+    margin-block-start: var(--phi-2);
+    padding-block-start: var(--phi-1);
+    border-block-start: 1px solid var(--foreground);
+  }
+
+  @media (min-width: 48rem) {
+    .home-hero__base {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
     }
+  }
+
+  /* 区切り線を地面に見立て、くりの足先を線へ乗せる */
+  .home-hero__kuri {
+    position: absolute;
+    inset-block-end: calc(100% + 1px);
+    inset-inline-end: 0;
+  }
+
+  .home-hero__intro {
+    display: flex;
+    align-items: center;
+    gap: var(--phi-0);
+  }
+
+  .home-hero__copy {
+    margin: 0;
+    color: var(--foreground-soft);
+    font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+    line-height: var(--lh-body);
+    text-wrap: pretty;
+  }
+
+  /* ---------- Sections ---------- */
+  .home-content {
+    row-gap: var(--section-gap);
+    padding-block-start: clamp(1.618rem, 0.5rem + 4vw, 4.236rem);
+  }
+
+  .home-main {
+    grid-column: 1 / span 11;
+    min-inline-size: 0;
+  }
+
+  .home-aside {
+    grid-column: 13 / span 4;
+    min-inline-size: 0;
   }
 
   @media (max-width: 63.999rem) {
     .home-aside {
-      margin-block-start: var(--phi-2);
+      margin-block-start: var(--section-gap);
     }
   }
 
@@ -192,113 +243,117 @@ const [homeDescriptionLead, homeDescriptionDetail] = HOME_DESCRIPTION_LINES;
     display: none;
   }
 
-  .hero-title {
-    text-wrap: balance;
-  }
-
-  /*
-   * セクション見出し。導線を見出しと同じ行へ置き、説明文には全幅を与える。
-   * 補助領域（4列）でも説明文と導線が同じ行で押し合って折り返さないようにする。
-   */
-  .section-heading {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    column-gap: var(--spacing-phi-md);
+  .home-section-head {
+    display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
-    padding-inline-start: 0.75rem;
-    border-inline-start: 2px solid var(--link);
+    justify-content: space-between;
+    gap: var(--phi-neg1) var(--phi-1);
+    margin-block-end: var(--phi-1);
   }
 
-  .section-heading .section-lead {
-    grid-column: 1 / -1;
+  /* 主領域と補助領域で見出しの高さを揃え、下の罫線を同じ高さに引く */
+  .home-section-head .section-heading {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .section-heading .section-more-link {
-    grid-row: 1;
-    grid-column: 2;
-    white-space: nowrap;
+  .home-section-head {
+    align-items: flex-end;
   }
 
-  /*
-   * 一覧全体への導線。見出しより弱く、本文の補助情報（muted）と同じ強さにする。
-   * 透明度で薄めるとコントラストが4.5:1を下回るため使わない。
-   */
-  .section-more-link {
-    display: inline-flex;
+  .home-aside__more {
+    margin-block-start: var(--phi-1);
+  }
+
+  /* ---------- Featured post ---------- */
+  .feature {
+    position: relative;
+    display: grid;
+    gap: var(--phi-0);
+    padding-block: var(--phi-2);
+    border-block-start: 1px solid var(--foreground);
+  }
+
+  .feature__meta {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: var(--spacing-phi-3xs);
-    min-block-size: 1.5rem;
-    border-radius: calc(var(--radius) - 4px);
-    color: var(--muted-foreground);
-    font-size: var(--font-size-small);
-    transition: color 150ms ease-out;
+    gap: var(--phi-neg1);
+    margin: 0;
   }
 
-  .section-more-link:hover {
+  .feature__meta > :not(:first-child)::before {
+    margin-inline-end: var(--phi-neg1);
+    color: var(--border-strong);
+    content: "/";
+  }
+
+  /* 面で囲まず、墨の文字だけで示す。日付と同じ行に並ぶ索引の見出しとして扱う */
+  .feature__badge {
+    color: var(--foreground);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .feature__title {
+    margin: 0;
+    font-size: var(--text-feature-title);
+    line-height: var(--lh-tight);
+  }
+
+  .feature__link {
+    color: var(--foreground);
+    text-decoration: none;
+  }
+
+  .feature__link::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+  }
+
+  .feature__link:focus-visible {
+    outline: none;
+  }
+
+  .feature__link:focus-visible::after {
+    outline: 2px solid var(--ring);
+    outline-offset: 4px;
+    border-radius: var(--radius);
+  }
+
+  .feature__title-text {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 2px;
+    transition:
+      background-size var(--duration-base) var(--ease-move),
+      color var(--duration-fast) var(--ease-move);
+  }
+
+  .feature:not(:has(.tag-list:hover)):hover .feature__title-text,
+  .feature__link:focus-visible .feature__title-text {
+    background-size: 100% 2px;
     color: var(--link);
   }
 
-  .section-more-link:focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
-  }
-
-  .section-more-link svg {
-    transition: transform 150ms ease-out;
-  }
-
-  .section-more-link:hover svg {
-    transform: translateX(2px);
+  .feature__excerpt {
+    display: -webkit-box;
+    max-inline-size: 40rem;
+    margin: 0;
+    overflow: hidden;
+    color: var(--muted-foreground);
+    line-height: 1.85;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .section-more-link svg {
-      transition: none;
-    }
-
-    .section-more-link:hover svg {
-      transform: none;
-    }
-  }
-
-  .hero-image-frame {
-    --hero-lockup-size: calc(
-      var(--phi-2) + var(--phi-1) + var(--phi-1) + var(--phi-neg2)
-    );
-
-    block-size: var(--hero-lockup-size);
-    flex: none;
-    inline-size: var(--hero-lockup-size);
-    position: relative;
-  }
-
-  .hero-image-frame img {
-    inset: 0;
-    position: absolute;
-  }
-
-  @media (max-width: 40rem) {
-    .hero-image-frame {
-      --hero-lockup-size: var(--phi-3);
-    }
-  }
-
-  .hero-copy {
-    text-wrap: pretty;
-  }
-
-  /*
-   * Wideでは内容を16列グリッドの1〜11列ぶんに収め、残りは余白として残す。
-   * 区切り線はsectionのボーダーなので全幅のまま。
-   */
-  @media (min-width: 64rem) {
-    .index-wrapper > .container > section {
-      /*
-       * 16列グリッドでn列ぶんに収めるとき、空ける量は (1 - n/16) × (100% + gutter)。
-       * n=12、gutter 1rem なので 0.25 × (100% + 1rem)。
-       * さらに主領域と同じ内側余白を足し、右端を揃える。
-       */
-      padding-inline-end: calc(25% + 0.25rem + var(--home-column-inset));
+    .feature__title-text {
+      transition-duration: 0s;
     }
   }
 </style>

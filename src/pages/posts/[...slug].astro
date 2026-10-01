@@ -2,12 +2,14 @@
 import { getCollection, render } from "astro:content";
 import ImageLightbox from "@/components/article/ImageLightbox.astro";
 import { Comments } from "@/components/Comments";
-import PostMeta from "@/components/PostMeta.astro";
+import TagList from "@/components/TagList.astro";
 import type { HeadingItem } from "@/components/toc";
 import { hasTableOfContents, TableOfContents } from "@/components/toc";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { formatPostDate } from "@/lib/postDate";
 import { assertPostsRendered, createPublishedPostStaticPaths } from "@/lib/postRoutes";
-import { SITE_NAME } from "@/lib/siteCopy";
+import { isPublishedPost, sortPostsByNewest } from "@/lib/posts";
+import { HOME_DESCRIPTION_LINES, SITE_NAME } from "@/lib/siteCopy";
 import "@/styles/article-code.css";
 import "@/styles/article-content.css";
 import "@/styles/article-footnotes.css";
@@ -33,6 +35,21 @@ const headings: HeadingItem[] = rawHeadings
   }));
 const showsTableOfContents = hasTableOfContents(headings);
 
+const formattedDate = formatPostDate(post.data.date);
+
+// 前後の記事。公開日の新しい順に並べたときの隣を使う。
+// 下書きのプレビューでも位置を決められるよう、表示中の記事は常に含める
+const publishedPosts = sortPostsByNewest(
+  await getCollection("posts", (entry) => isPublishedPost(entry) || entry.id === post.id),
+);
+const currentIndex = publishedPosts.findIndex((entry) => entry.id === post.id);
+const newerPost = currentIndex > 0 ? publishedPosts[currentIndex - 1] : undefined;
+const olderPost = currentIndex >= 0 ? publishedPosts[currentIndex + 1] : undefined;
+const adjacentPosts = [
+  olderPost && { label: "前の記事", post: olderPost, direction: "older" as const },
+  newerPost && { label: "次の記事", post: newerPost, direction: "newer" as const },
+].filter((item) => item !== undefined);
+
 // Giscusの接続先は公開してよい設定値なので、ビルド時の環境変数から埋め込む
 const giscusRepo = import.meta.env.PUBLIC_GISCUS_REPO as `${string}/${string}`;
 const giscusRepoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
@@ -49,18 +66,26 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
   articlePublishedTime={post.data.date}
   articleTags={post.data.tags}
 >
-  <div class="post-page container mx-auto px-4 py-phi-2xl max-w-6xl">
+  <div class="reading-progress" aria-hidden="true"></div>
+  <div class="post-page shell">
     <article class="min-w-0" data-pagefind-body>
-      <header class="post-article-header mb-phi-2xl">
+      <header class="post-article-header grid-16">
         <div class="post-header-content min-w-0">
-          <h1 class="post-title font-bold font-heading tracking-tight mb-phi-md">{post.data.title}</h1>
-          <PostMeta date={post.data.date} tags={post.data.tags} />
+          <p class="post-header-meta type-meta">
+            <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+          </p>
+          <h1
+            class="post-title type-heading"
+          >
+            {post.data.title}
+          </h1>
+          {post.data.description && <p class="post-lead">{post.data.description}</p>}
+          <TagList tags={post.data.tags ?? []} size="md" />
         </div>
-        <div class="post-header-mascot" aria-hidden="true"></div>
       </header>
 
       {showsTableOfContents && (
-        <div class="post-mobile-toc mb-phi-2xl lg:hidden">
+        <div class="post-mobile-toc lg:hidden">
           <TableOfContents headings={headings} variant="mobile" client:load />
         </div>
       )}
@@ -78,14 +103,6 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
           </div>
 
           <ImageLightbox />
-
-          <Comments
-            repo={giscusRepo}
-            repoId={giscusRepoId}
-            category={giscusCategory}
-            categoryId={giscusCategoryId}
-            client:only="react"
-          />
         </div>
 
         {/* デスクトップ用目次（右側サイドバー） */}
@@ -95,13 +112,48 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
               headings={headings}
               variant="desktop"
               avatarSrc="/images/kuri_photo.png"
-              avatarAlt="KJR020"
+              avatarAlt=""
               client:load
             />
           </aside>
         )}
       </div>
     </article>
+
+    <footer class="post-end grid-16" data-pagefind-ignore>
+      <div class="post-end__main">
+        <section class="post-author" aria-labelledby="post-author-title">
+          <img src="/images/kuri_photo.png" alt="" width="500" height="500" class="post-author__photo" />
+          <div>
+            <h2 id="post-author-title" class="post-author__name">KJR020</h2>
+            <p class="post-author__bio">{HOME_DESCRIPTION_LINES.join("")}</p>
+          </div>
+        </section>
+
+        {adjacentPosts.length > 0 && (
+          <nav class="post-pager" aria-label="前後の記事">
+            {adjacentPosts.map((item) => (
+              <a
+                href={`/posts/${item.post.id}`}
+                class:list={["post-pager__link", `post-pager__link--${item.direction}`]}
+                rel={item.direction === "older" ? "prev" : "next"}
+              >
+                <span class="post-pager__label type-meta">{item.label}</span>
+                <span class="post-pager__title type-heading">{item.post.data.title}</span>
+              </a>
+            ))}
+          </nav>
+        )}
+
+        <Comments
+          repo={giscusRepo}
+          repoId={giscusRepoId}
+          category={giscusCategory}
+          categoryId={giscusCategoryId}
+          client:only="react"
+        />
+      </div>
+    </footer>
   </div>
 </BaseLayout>
 
@@ -126,19 +178,101 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
 </script>
 
 <style is:global>
-  .post-title {
-    font-size: var(--font-size-title1);
-    line-height: var(--lh-tight);
-    /* 最終行に1〜2文字だけ残る改行を避ける */
-    text-wrap: balance;
+  /* ---------- Reading progress ---------- */
+  .reading-progress {
+    display: none;
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      .reading-progress {
+        position: fixed;
+        inset-block-start: 0;
+        inset-inline: 0;
+        z-index: 60;
+        display: block;
+        block-size: 2px;
+        background: var(--brand);
+        transform-origin: 0 50%;
+        animation: reading-progress linear both;
+        animation-timeline: scroll(root block);
+      }
+    }
+  }
+
+  @keyframes reading-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  /* ---------- Article header ---------- */
+  .post-page {
+    padding-block-start: clamp(2.618rem, 1.5rem + 4vw, 4.236rem);
+  }
+
+  .post-article-header {
+    padding-block-end: var(--phi-2);
+    margin-block-end: var(--phi-2);
+    border-block-end: 1px solid var(--foreground);
+  }
+
+  .post-header-content {
+    display: grid;
+    gap: var(--phi-1);
+  }
+
+  @media (min-width: 64rem) {
+    .post-header-content {
+      grid-column: 1 / span 12;
+    }
+  }
+
+  .post-header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--phi-neg1);
+    margin: 0;
+  }
+
+  .post-header-meta > :not(:first-child)::before {
+    margin-inline-end: var(--phi-neg1);
+    color: var(--border-strong);
+    content: "/";
+  }
+
+  .post-title {
+    margin: 0;
+    font-size: var(--text-article-title);
+    line-height: var(--lh-tight);
+  }
+
+  .post-lead {
+    max-inline-size: 40rem;
+    margin: 0;
+    color: var(--foreground-soft);
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    line-height: 1.9;
+  }
+
+  .post-mobile-toc {
+    margin-block-end: var(--phi-2);
+  }
+
+  /* ---------- Prose ---------- */
   .prose {
     --tw-prose-body: var(--foreground);
     --tw-prose-headings: var(--foreground);
     --tw-prose-links: var(--link);
     --tw-prose-bold: var(--foreground);
     --tw-prose-code: var(--foreground);
+  }
+
+  .article-reading-content {
+    counter-reset: article-section;
   }
 
   .prose h2 {
@@ -148,10 +282,28 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     line-height: var(--lh-tight); /* √φ = 1.272 */
     font-weight: 700;
     font-family: var(--font-heading);
-    letter-spacing: -0.01em;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.618rem; /* 1/φ */
+    font-feature-settings: "palt";
+    letter-spacing: 0.01em;
     text-wrap: balance;
+  }
+
+  /* 本文の大見出しに通し番号を振る。脚注の見出しは対象外 */
+  .article-reading-content > h2 {
+    counter-increment: article-section;
+    padding-block-start: var(--phi-1);
+    border-block-start: 1px solid var(--border);
+  }
+
+  .article-reading-content > h2::before {
+    display: block;
+    margin-block-end: var(--phi-neg2);
+    color: var(--brand);
+    font-size: var(--font-size-small);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    content: counter(article-section, decimal-leading-zero);
   }
 
   .prose h3 {
@@ -159,10 +311,17 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     margin-bottom: var(--phi-neg1);
     font-size: var(--font-size-title3); /* √φ = 1.272rem */
     line-height: var(--lh-tight); /* √φ = 1.272 */
-    font-weight: 600;
+    font-weight: 700;
     font-family: var(--font-heading);
-    letter-spacing: -0.005em;
-    text-wrap: balance;
+    font-feature-settings: "palt";
+    letter-spacing: 0.01em;
+  }
+
+  .prose h4 {
+    margin-top: var(--phi-1);
+    margin-bottom: var(--phi-neg2);
+    font-size: 1.0625rem;
+    font-weight: 700;
   }
 
   /* 見出しと直後の内容を、段落どうしより近づけて1つのまとまりに見せる */
@@ -182,7 +341,6 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     padding-left: 1.618rem; /* φ */
   }
 
-  /* リストマーカースタイル */
   .prose ul {
     list-style-type: disc;
   }
@@ -191,7 +349,6 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     list-style-type: decimal;
   }
 
-  /* ネストリストの階層別マーカー */
   .prose ul ul {
     list-style-type: circle;
   }
@@ -205,24 +362,38 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     margin-bottom: 0.25rem;
   }
 
+  .prose li::marker {
+    color: var(--muted-foreground);
+  }
+
+  .prose strong {
+    font-weight: 700;
+    background: linear-gradient(transparent 62%, var(--brand-wash) 62%);
+  }
+
   /* インラインコード */
   .prose :not(pre) > code {
-    background-color: var(--muted);
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    font-size: 0.875em;
-    font-family: var(--font-mono);
+    padding: 0.15em 0.4em;
+    border: 1px solid var(--border);
+    border-radius: 0.3rem;
+    background-color: var(--secondary);
+    font-size: 0.85em;
   }
 
   .prose a {
     color: var(--link);
     text-decoration: underline;
-    text-underline-offset: 2px;
-    transition: color 150ms;
+    text-decoration-color: color-mix(in oklch, var(--link) 40%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition:
+      color var(--duration-fast) var(--ease-out),
+      text-decoration-color var(--duration-fast) var(--ease-out);
   }
 
   .prose a:hover {
     color: var(--link-hover);
+    text-decoration-color: currentColor;
   }
 
   .prose img {
@@ -232,84 +403,53 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
   }
 
   .prose blockquote {
-    border-left: 4px solid var(--border);
-    padding-left: 1rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    font-style: italic;
-    color: var(--muted-foreground);
+    margin-top: var(--phi-1);
+    margin-bottom: var(--phi-1);
+    padding: 0.25rem 0 0.25rem var(--phi-1);
+    border-left: 2px solid var(--foreground);
+    color: var(--foreground-soft);
+    font-style: normal;
+  }
+
+  .prose hr {
+    margin-block: var(--phi-3);
+    border: 0;
+    border-top: 1px solid var(--border);
   }
 
   /* 表スタイル */
   .prose table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: var(--phi-1);
+    margin-bottom: var(--phi-1);
     display: block;
     overflow-x: auto;
+    font-size: 0.9375rem;
+    line-height: 1.7;
   }
 
   .prose th,
   .prose td {
-    border: 1px solid var(--border);
-    padding: 0.382rem 0.618rem; /* φ⁻² × φ⁻¹ */
+    padding: 0.618rem 1rem 0.618rem 0;
+    border-bottom: 1px solid var(--border);
     text-align: left;
+    vertical-align: top;
   }
 
   .prose th {
-    background-color: var(--muted);
-    font-weight: 600;
+    border-bottom-color: var(--foreground);
+    font-weight: 700;
+    white-space: nowrap;
   }
 
-  .prose tbody tr:nth-child(even) {
-    background-color: color-mix(in srgb, var(--muted) 50%, transparent);
-  }
-
-  /* 記事ヘッダーのマスコットはWideでだけ表示する */
-  .post-header-mascot {
-    display: none;
-  }
-
+  /* ---------- Layout ---------- */
   @media (min-width: 64rem) {
-    /* ヘッダーもページと同じ16列。タイトル12列、マスコット4列 */
-    .post-article-header {
-      display: grid;
-      grid-template-columns: repeat(16, minmax(0, 1fr));
-      column-gap: 1rem;
-    }
-
-    .post-header-content {
-      grid-column: 1 / span 12;
-    }
-
-    /*
-     * マスコットは記事によらず同じ大きさにする。上端をタイトルの上端へ
-     * 揃えるため上揃えにし、タイトルが短いときの余りはメタ情報の下へ回す。
-     */
-    .post-header-mascot {
-      display: block;
-      grid-column: 14 / span 3;
-      align-self: start;
-      block-size: var(--phi-4);
-      background-image: url("/images/kuri.svg");
-      /* 左端を14列目の線へ合わせる */
-      background-position: left bottom;
-      background-repeat: no-repeat;
-      background-size: contain;
-      /* 他ページのウォーターマークと同じ強さにする。本文と注意を奪い合わせない */
-      opacity: 0.15;
-    }
-
-    .dark .post-header-mascot {
-      background-image: url("/images/kuri-dark.svg");
-    }
-
-    /* 16列グリッド。本文12列、目次4列、gutter 16px */
+    /* 16列グリッド。本文12列、目次4列 */
     .post-reading-layout--with-toc {
       display: grid;
       grid-template-columns: repeat(16, minmax(0, 1fr));
-      column-gap: 1rem;
+      column-gap: var(--grid-gutter);
     }
 
     .post-reading-layout--with-toc > .post-reading-main {
@@ -319,10 +459,108 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     .post-reading-layout--with-toc > .post-desktop-toc {
       grid-column: 13 / span 4;
     }
-
   }
 
-  main:has(.post-page) > .kuri-watermark {
-    display: none;
+  /* ---------- Article end ---------- */
+  .post-end {
+    margin-block-start: var(--phi-4);
+  }
+
+  .post-end__main {
+    display: grid;
+    gap: var(--phi-2);
+    min-inline-size: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .post-end__main {
+      grid-column: 1 / span 12;
+    }
+  }
+
+  .post-author {
+    display: flex;
+    align-items: center;
+    gap: var(--phi-0);
+    padding-block: var(--phi-1);
+    border-block: 1px solid var(--foreground);
+  }
+
+  .post-author__photo {
+    flex: none;
+    inline-size: 3.5rem;
+    block-size: 3.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px var(--border);
+  }
+
+  .post-author__name {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .post-author__bio {
+    margin: 0.2rem 0 0;
+    color: var(--muted-foreground);
+    font-size: var(--font-size-small);
+  }
+
+  .post-pager {
+    display: grid;
+    gap: var(--grid-gutter);
+  }
+
+  @media (min-width: 48rem) {
+    .post-pager {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .post-pager__link--newer {
+      grid-column: 2;
+      text-align: end;
+    }
+  }
+
+  .post-pager__link {
+    display: grid;
+    align-content: start;
+    gap: var(--phi-neg2);
+    padding: var(--phi-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--foreground);
+    text-decoration: none;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      transform var(--duration-base) var(--ease-out);
+  }
+
+  .post-pager__link:hover {
+    border-color: var(--foreground);
+  }
+
+  .post-pager__label::before {
+    content: "← ";
+  }
+
+  .post-pager__link--newer .post-pager__label::before {
+    content: "";
+  }
+
+  .post-pager__link--newer .post-pager__label::after {
+    content: " →";
+  }
+
+  .post-pager__title {
+    font-size: 1.0625rem;
+    line-height: var(--lh-snug);
+  }
+
+  .post-pager__link:hover .post-pager__title {
+    color: var(--link);
   }
 </style>
