@@ -56,6 +56,26 @@ describe("cn", () => {
     });
   });
 
+  describe("φスペーシングトークンの競合解決", () => {
+    // globals.cssの--spacing-phi-*。未登録だと両方残り、CSSの出現順で勝敗が決まる
+    it.each([
+      ["gap", "gap-phi-xl", "gap-phi-2xs"],
+      ["padding-block", "py-phi-xl", "py-phi-xs"],
+      ["padding-inline", "px-phi-xl", "px-phi-md"],
+      ["margin-top", "mt-phi-3xs", "mt-phi-3xl"],
+    ])("%sは後者のφトークンが優先される", (_property, base, override) => {
+      expect(cn(base, override)).toBe(override);
+    });
+
+    it("φトークンと既定スケールの競合も解決する", () => {
+      expect(cn("py-phi-xl", "py-0")).toBe("py-0");
+    });
+
+    it("軸の異なるφトークンは両方保持する", () => {
+      expect(cn("px-phi-xl", "py-phi-xs")).toBe("px-phi-xl py-phi-xs");
+    });
+  });
+
   describe("エッジケース", () => {
     it("引数なしで呼び出すと空文字列を返す", () => {
       expect(cn()).toBe("");
