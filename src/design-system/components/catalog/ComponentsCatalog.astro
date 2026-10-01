@@ -1,10 +1,11 @@
 ---
 import { getCollection } from "astro:content";
+import Kuri from "@/components/Kuri.astro";
 import PageHero from "@/components/PageHero.astro";
-import PostCard from "@/components/PostCard.astro";
-import PostMeta from "@/components/PostMeta.astro";
+import PostListItem from "@/components/PostListItem.astro";
 import { ScrapboxCardList } from "@/components/scrapbox";
 import { CommandPalette } from "@/components/search/CommandPalette";
+import TagList from "@/components/TagList.astro";
 import { ThemeToggleAnimated } from "@/components/theme/ThemeToggleAnimated";
 import { TableOfContents } from "@/components/toc";
 import { Badge } from "@/components/ui/badge";
@@ -103,25 +104,25 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
       <section class="tag-interaction" data-specification="tag-interaction">
         <div>
           <h4>Tag interaction</h4>
-          <p>記事メタ情報のTagは、PostMetaの実装をそのまま使用する。</p>
+          <p>記事の分類リンクは、TagListの実装をそのまま使用する。</p>
         </div>
         <div class="tag-interaction-preview">
-          <PostMeta date={new Date("2026-07-16")} tags={["Astro", "Design System"]} />
+          <TagList tags={["Astro", "Design System"]} />
         </div>
         <div class="table-scroll">
           <table class="map">
             <thead><tr><th>状態</th><th>正規仕様</th></tr></thead>
             <tbody>
-              <tr><td>Rest</td><td>Secondaryの面と通常の文字色を表示する</td></tr>
-              <tr><td>Hover / Focus</td><td>前景色6%の面を14deg傾け、220ms ease-in-outで左から通す。文字色はLinkへ変える</td></tr>
-              <tr><td>Card coordination</td><td>Tag上では親PostCardの背景色とタイトル色のhoverを重ねない</td></tr>
-              <tr><td>Reduced motion</td><td><code>prefers-reduced-motion: reduce</code>では遷移時間を0sにし、状態変化は維持する</td></tr>
+              <tr><td>Rest</td><td>細い輪郭と<code>#</code>記号で、記事リンクとは別のリンクであることを示す</td></tr>
+              <tr><td>Hover / Focus</td><td>輪郭・文字をBrandへ、面をBrand washへ160msで変える。Focusでは輪郭線も表示する</td></tr>
+              <tr><td>Row coordination</td><td>Tag上では親PostListItemのタイトル下線と矢印のhoverを重ねない</td></tr>
+              <tr><td>Reduced motion</td><td>移動を伴う演出を持たない。色の変化だけで状態を示す</td></tr>
             </tbody>
           </table>
         </div>
       </section>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/ui/badge.tsx</code><code>src/components/PostMeta.astro</code></p>
+    <p class="source-row"><strong>Source</strong><code>src/components/ui/badge.tsx</code><code>src/components/TagList.astro</code></p>
   </div>
 
   <div class="spec-item" id="card">
@@ -163,7 +164,7 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
     <h3>5-1. Header / Global Navigation</h3>
     <p class="src">高さφ²、sticky、背景95%＋backdrop blur。ブランドリンクは透明背景の目のシンボルとブログ名を組み合わせる。シンボルは白い面、細いMuted輪郭、独立した黒目とまぶたで構成する。Desktopは水平ナビ、MobileはMenu buttonへ切り替える。</p>
     <div class="demo site-header-demo">
-      <a class="site-brand-demo" href="#global-navigation"><img src="/images/kjr020-eyes.svg" alt="" width="50" height="32" />KJR020's Blog</a>
+      <a class="site-brand-demo" href="#global-navigation"><img src="/images/kuri_photo.png" alt="" width="500" height="500" />KJR020's Blog</a>
       <nav class="nav-demo" aria-label="ヘッダー例">
         <a class="is-active" href="#global-navigation" aria-current="page">Home</a>
         <a href="#global-navigation">Posts</a>
@@ -209,16 +210,26 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
 
   <div class="spec-item" id="page-hero">
     <h3>6-1. PageHero</h3>
-    <p class="src">ページタイトルと任意のdescriptionを提示し、ページの目的を一覧本文より先に伝える。</p>
-    <div class="demo page-demo"><PageHero title="Posts" description="技術記事と思考ログを掲載しています。" /></div>
+    <p class="src">欧文の大見出しと日本語の説明で、ページの目的を一覧本文より先に伝える。下端の罫線を地面にして、任意でくりを立たせる。</p>
+    <div class="demo page-demo"><PageHero title="Posts" description="ブログ記事一覧です。" mascot /></div>
     <p class="source-row"><strong>Source</strong><code>src/components/PageHero.astro</code></p>
   </div>
 
   <div class="spec-item" id="post-card">
-    <h3>6-2. PostCard / PostMeta</h3>
-    <p class="src">カード全体を記事リンクにし、タグリンクだけz-indexで前面へ出す。hoverで背景・shadow・タイトル色を変える。</p>
-    <div class="demo post-card-wrap"><PostCard post={specimenPost} /></div>
-    <p class="source-row"><strong>Source</strong><code>src/components/PostCard.astro</code><code>src/components/PostMeta.astro</code></p>
+    <h3>6-2. PostListItem</h3>
+    <p class="src">罫線で区切った索引の1行。タイトルのリンクを行全体へ広げ、タグリンクだけ前面へ出す。Hoverではタイトルへ下線を引き、矢印を進める。</p>
+    <div class="demo post-card-wrap"><PostListItem post={specimenPost} /></div>
+    <p class="source-row"><strong>Source</strong><code>src/components/PostListItem.astro</code><code>src/components/TagList.astro</code></p>
+  </div>
+
+  <div class="spec-item" id="kuri">
+    <h3>6-5. Kuri</h3>
+    <p class="src">栗のマスコット。罫線を地面に見立てて立たせる。public/images/kuri.svgのパスをそのまま使い、ライトは塗り、ダークは線画で描く。視線がポインターを追い、まばたきし、クリックで跳ねる。動きを減らす設定では静止する。</p>
+    <div class="demo kuri-specimen">
+      <figure><Kuri size="6rem" /><figcaption>sleepy</figcaption></figure>
+      <figure><Kuri size="6rem" mood="asleep" /><figcaption>asleep</figcaption></figure>
+    </div>
+    <p class="source-row"><strong>Source</strong><code>src/components/Kuri.astro</code></p>
   </div>
 
   <div class="spec-item" id="table-of-contents">

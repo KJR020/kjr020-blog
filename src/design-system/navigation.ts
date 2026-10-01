@@ -74,6 +74,7 @@ export const designSystemPageGroups: Record<
         { label: "タイポグラフィ", href: "/design-system/foundations#typography" },
         { label: "スペーシング", href: "/design-system/foundations#spacing" },
         { label: "角丸・影", href: "/design-system/foundations#radius" },
+        { label: "モーション", href: "/design-system/foundations#motion" },
       ],
     },
     {
@@ -125,7 +126,8 @@ export const designSystemPageGroups: Record<
       href: "/design-system/components#blog-components",
       links: [
         { label: "PageHero", href: "/design-system/components#page-hero" },
-        { label: "PostCard / PostMeta", href: "/design-system/components#post-card" },
+        { label: "PostListItem", href: "/design-system/components#post-card" },
+        { label: "Kuri", href: "/design-system/components#kuri" },
         { label: "Table of Contents", href: "/design-system/components#table-of-contents" },
         { label: "Scrapbox Card List", href: "/design-system/components#scrapbox-card-list" },
       ],
@@ -197,6 +199,7 @@ const legacySectionGroups = {
     "typography",
     "spacing",
     "radius",
+    "motion",
     "layout",
     "page-shell",
     "grid",

@@ -1,4 +1,6 @@
 ---
+import Kuri from "@/components/Kuri.astro";
+
 const colorTokens = [
   { name: "--background", label: "Background / Card", role: "ページと面" },
   { name: "--foreground", label: "Foreground", role: "本文と主要情報" },
@@ -36,6 +38,42 @@ const spacingTokens = [
   ["φ²", "--phi-2"],
   ["φ³", "--phi-3"],
   ["φ⁴", "--phi-4"],
+] as const;
+
+/** UIの動き。用途の短い順に並べる */
+const uiCurves = [
+  ["--ease-enter", "--duration-slow", "Enter", "内容の入場。減速して止まる"],
+  ["--ease-exit", "--duration-fast", "Exit", "退場。加速して短く消える"],
+  ["--ease-move", "--duration-base", "Move", "位置の移動、下線"],
+  ["--ease-emphasis", "--duration-hero", "Emphasis", "ヒーローの見出しなど、表現的な入場"],
+  ["--ease-in-out", "--duration-base", "In-out", "往復する動き、まばたき以外の目の動き"],
+] as const;
+
+/** くりの演技。重さ・接地・間を表す */
+const characterCurves = [
+  ["--ease-anticipate", "--duration-kuri-jump", "Anticipate", "ジャンプ前に沈む"],
+  ["--ease-push", "--duration-kuri-jump", "Push", "押し出し。離陸の速度を空中の初速へつなぐ"],
+  ["--ease-fall", "--duration-kuri-jump", "Fall", "落下。加速したまま接地する"],
+  ["--ease-impact", "--duration-kuri-jump", "Impact", "着地の反動。すぐに止まる"],
+  ["--ease-settle", "--duration-kuri-jump", "Settle", "反動から静止へ。呼吸の吸う・吐く"],
+  ["--ease-blink-close", "--duration-blink-close", "Blink close", "まぶたは速く閉じる"],
+  ["--ease-blink-open", "--duration-blink-open", "Blink open", "まぶたはゆっくり開く"],
+] as const;
+
+const durationTokens = [
+  ["--duration-quick", "ポインターへの即時反応"],
+  ["--duration-fast", "Hover、矢印"],
+  ["--duration-base", "下線、部品の状態変化"],
+  ["--duration-slow", "内容の入場"],
+  ["--duration-hero", "ヒーローの見出し、伸び"],
+  ["--duration-blink-close", "まばたき: 閉じる"],
+  ["--duration-blink-hold", "まばたき: 閉じたまま"],
+  ["--duration-blink-open", "まばたき: 開く"],
+  ["--duration-kuri-wake", "起きる"],
+  ["--duration-kuri-enter", "罫線の下からの登場"],
+  ["--duration-kuri-jump", "ジャンプ"],
+  ["--duration-kuri-doze", "うとうとして眠る"],
+  ["--duration-kuri-breathe", "呼吸の1周期"],
 ] as const;
 
 type FoundationSection = "tokens" | "layout" | "states";
@@ -139,6 +177,82 @@ const shows = (section: FoundationSection) => sections.includes(section);
       </div>
     </div>
     <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code><code>src/design-system/styles.css</code></p>
+  </div>
+
+  <div class="spec-item" id="motion">
+    <h3>1-6. モーション</h3>
+    <p class="src">UIの動きは短く規則的に、表現的な動きはヒーローとくりに限る。カーブとdurationは<code>globals.css</code>のトークンを正本とし、くりのスクリプトも同じトークンを実行時に読み込む。各カーブは現在のトークン値から描画し、再生で同じ値の動きを確認できる。</p>
+
+    <h4 class="motion-heading">UIのイージング</h4>
+    <div class="demo curve-grid">
+      {uiCurves.map(([easing, duration, label, usage]) => (
+        <figure class="curve-card" data-easing={easing} data-duration={duration}>
+          <svg class="curve-plot" viewBox="-12 -32 124 164" aria-hidden="true">
+            <rect class="curve-frame" x="0" y="0" width="100" height="100" />
+            <line class="curve-guide" x1="0" y1="100" x2="100" y2="0" />
+            <line class="curve-handle" data-handle="1" />
+            <line class="curve-handle" data-handle="2" />
+            <path class="curve-line" />
+          </svg>
+          <figcaption>
+            <strong>{label}</strong>
+            <code>{easing}</code>
+            <code class="curve-value"></code>
+            <small>{usage}</small>
+          </figcaption>
+          <div class="curve-track"><span class="curve-dot" aria-hidden="true"></span></div>
+          <button type="button" class="curve-play">{label}を再生</button>
+        </figure>
+      ))}
+    </div>
+
+    <h4 class="motion-heading">くりのイージング</h4>
+    <div class="demo curve-grid">
+      {characterCurves.map(([easing, duration, label, usage]) => (
+        <figure class="curve-card" data-easing={easing} data-duration={duration}>
+          <svg class="curve-plot" viewBox="-12 -32 124 164" aria-hidden="true">
+            <rect class="curve-frame" x="0" y="0" width="100" height="100" />
+            <line class="curve-guide" x1="0" y1="100" x2="100" y2="0" />
+            <line class="curve-handle" data-handle="1" />
+            <line class="curve-handle" data-handle="2" />
+            <path class="curve-line" />
+          </svg>
+          <figcaption>
+            <strong>{label}</strong>
+            <code>{easing}</code>
+            <code class="curve-value"></code>
+            <small>{usage}</small>
+          </figcaption>
+          <div class="curve-track"><span class="curve-dot" aria-hidden="true"></span></div>
+          <button type="button" class="curve-play">{label}を再生</button>
+        </figure>
+      ))}
+    </div>
+
+    <h4 class="motion-heading">Duration</h4>
+    <div class="demo duration-list">
+      {durationTokens.map(([token, usage]) => (
+        <div class="duration-row" data-duration={token}>
+          <code>{token}</code>
+          <span class="duration-bar" aria-hidden="true"></span>
+          <span class="duration-value"></span>
+          <small>{usage}</small>
+        </div>
+      ))}
+    </div>
+
+    <h4 class="motion-heading">くりの演技</h4>
+    <div class="demo kuri-stage">
+      <div class="kuri-stage__ground"><Kuri size="7rem" /></div>
+      <div class="kuri-stage__controls">
+        <button type="button" data-kuri-event="kuri:enter">登場</button>
+        <button type="button" data-kuri-event="kuri:jump">ジャンプ</button>
+        <button type="button" data-kuri-event="kuri:blink">まばたき</button>
+        <button type="button" data-kuri-event="kuri:sleep">眠る</button>
+        <button type="button" data-kuri-event="kuri:wake">起きる</button>
+      </div>
+    </div>
+    <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code><code>src/components/Kuri.astro</code></p>
   </div>
 </section>
 )}
@@ -295,3 +409,63 @@ const shows = (section: FoundationSection) => sections.includes(section);
   </div>
 </section>
 )}
+
+<script>
+  // カーブとdurationは、現在のトークン値から描画する。値を標本側へ複製しない
+  const root = getComputedStyle(document.documentElement);
+  const read = (name: string) => root.getPropertyValue(name).trim();
+  const toMs = (value: string) =>
+    value.endsWith("ms") ? Number.parseFloat(value) : Number.parseFloat(value) * 1000;
+
+  for (const card of document.querySelectorAll<HTMLElement>(".curve-card")) {
+    const easing = read(card.dataset.easing ?? "");
+    const duration = toMs(read(card.dataset.duration ?? ""));
+    const match = /cubic-bezier\(([^)]+)\)/.exec(easing);
+    const valueLabel = card.querySelector(".curve-value");
+    if (valueLabel) valueLabel.textContent = `${easing} / ${duration}ms`;
+    if (match) {
+      const [x1, y1, x2, y2] = match[1].split(",").map(Number);
+      const px = (x: number) => x * 100;
+      const py = (y: number) => 100 - y * 100;
+      card
+        .querySelector(".curve-line")
+        ?.setAttribute("d", `M0 100C${px(x1)} ${py(y1)} ${px(x2)} ${py(y2)} 100 0`);
+      const handles = card.querySelectorAll(".curve-handle");
+      const set = (line: Element | undefined, a: number[], b: number[]) => {
+        line?.setAttribute("x1", String(a[0]));
+        line?.setAttribute("y1", String(a[1]));
+        line?.setAttribute("x2", String(b[0]));
+        line?.setAttribute("y2", String(b[1]));
+      };
+      set(handles[0], [0, 100], [px(x1), py(y1)]);
+      set(handles[1], [100, 0], [px(x2), py(y2)]);
+    }
+    card.querySelector(".curve-play")?.addEventListener("click", () => {
+      const track = card.querySelector<HTMLElement>(".curve-track");
+      const dot = card.querySelector<HTMLElement>(".curve-dot");
+      if (!track || !dot) return;
+      const distance = track.clientWidth - dot.offsetWidth;
+      dot.animate([{ transform: "translateX(0)" }, { transform: `translateX(${distance}px)` }], {
+        duration,
+        easing,
+        fill: "forwards",
+      });
+    });
+  }
+
+  const durations = [...document.querySelectorAll<HTMLElement>(".duration-row")];
+  const values = durations.map((row) => toMs(read(row.dataset.duration ?? "")));
+  const longest = Math.max(...values.filter((value) => value < 3000));
+  durations.forEach((row, index) => {
+    const value = values[index];
+    row.querySelector(".duration-value")!.textContent = value >= 1000 ? `${value / 1000}s` : `${value}ms`;
+    row.style.setProperty("--duration-ratio", String(Math.min(1, value / longest)));
+  });
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-kuri-event]")) {
+    button.addEventListener("click", () => {
+      const kuri = button.closest(".kuri-stage")?.querySelector("[data-kuri]");
+      kuri?.dispatchEvent(new Event(button.dataset.kuriEvent ?? ""));
+    });
+  }
+</script>
