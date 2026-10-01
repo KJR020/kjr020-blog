@@ -135,6 +135,9 @@ jobs:
         run: echo "//npm.flatt.tech/:_authToken=${{ secrets.TAKUMI_GUARD_TOKEN }}" >> ~/.npmrc
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        # OGPのテストがastro buildを実行し、Mermaid図をChromiumで描画する。
+        run: pnpm exec playwright install --with-deps chromium
       - name: Test
         run: pnpm test:run --passWithNoTests
 
@@ -157,6 +160,9 @@ jobs:
         run: echo "//npm.flatt.tech/:_authToken=${{ secrets.TAKUMI_GUARD_TOKEN }}" >> ~/.npmrc
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        # OGPのテストがastro buildを実行し、Mermaid図をChromiumで描画する。
+        run: pnpm exec playwright install --with-deps chromium
       - name: Run coverage
         run: pnpm test:coverage:check
 
@@ -178,6 +184,9 @@ jobs:
         run: echo "//npm.flatt.tech/:_authToken=${{ secrets.TAKUMI_GUARD_TOKEN }}" >> ~/.npmrc
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        # Mermaid図をビルド時にChromiumで描画する（@beoe/rehype-mermaid）。
+        run: pnpm exec playwright install --with-deps chromium
       - name: Sync Astro types
         run: pnpm astro sync
       - name: Build

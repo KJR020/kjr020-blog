@@ -45,6 +45,11 @@ description: "記事ページ用の固定fixture"
 const stableFixture = true;
 ```
 
+```mermaid
+flowchart LR
+    Markdown --> Build --> HTML
+```
+
 ## まとめ
 
 記事ページの機能を、実際の記事内容から独立して検証します。

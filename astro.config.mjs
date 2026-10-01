@@ -81,12 +81,14 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: createRemarkPlugins({ linkCardFetchMode }),
-      rehypePlugins: [rehypeArticleFigures, [rehypeMermaid, { class: "mermaid" }]],
+      rehypePlugins: [rehypeArticleFigures, [rehypeMermaid, { strategy: "inline", darkScheme: "class" }]],
       remarkRehype: {
         footnoteLabel: "脚注",
         footnoteLabelTagName: "h2",
       },
     }),
+    // Shikiが先にハイライトすると、rehype-mermaidがmermaidのコードブロックを検出できない。
+    syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid"] },
     shikiConfig: {
       themes: {
         light: "github-light",
