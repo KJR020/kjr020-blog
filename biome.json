@@ -31,7 +31,9 @@
       "src/**/*.jsx",
       "src/**/*.astro",
       "tests/**/*.ts",
-      "tests/**/*.tsx"
+      "tests/**/*.tsx",
+      "worker/**/*.ts",
+      "scripts/**/*.ts"
     ]
   },
   "overrides": [
