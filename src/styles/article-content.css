@@ -1,17 +1,19 @@
+/*
+ * Article内の9 tracksのうち、Reading laneは8 tracks、Wide laneは9 tracksを使う。
+ * 各行に置く要素は1つだけなのでCSS Gridにはしない。Gridではmarginが相殺されず、
+ * 段落間や見出しの前後が指定値の2倍に開いてしまう。
+ */
 .article-reading-content {
   --article-reading-measure: 43ic;
+  --article-reading-lane: calc(100% * 8 / 9);
 
-  display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
+  display: flow-root;
   font-size: 1rem;
   line-height: 1.9;
 }
 
 .article-reading-content > * {
-  grid-column: 1 / span 8;
-  inline-size: 100%;
-  max-inline-size: var(--article-reading-measure);
-  min-inline-size: 0;
+  max-inline-size: min(var(--article-reading-measure), var(--article-reading-lane));
 }
 
 .article-reading-content > :where(
@@ -19,7 +21,6 @@
   pre,
   table
 ) {
-  grid-column: 1 / -1;
   max-inline-size: none;
 }
 
@@ -83,9 +84,9 @@
   overflow: visible;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--background);
-  color: var(--foreground);
-  box-shadow: var(--shadow-card);
+  background: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow: var(--shadow-overlay);
 }
 
 .article-image-dialog::backdrop {
@@ -129,10 +130,10 @@
   place-items: center;
   border: 1px solid var(--border);
   border-radius: 50%;
-  background: var(--background);
+  background: var(--popover);
   color: var(--foreground);
   cursor: pointer;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-overlay);
 }
 
 .article-image-dialog-close:hover {
@@ -147,7 +148,6 @@
 
 @media (max-width: 47.999rem) {
   .article-reading-content > * {
-    grid-column: 1 / -1;
     max-inline-size: none;
   }
 

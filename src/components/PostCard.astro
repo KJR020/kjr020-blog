@@ -16,14 +16,14 @@ interface Props {
 const { post } = Astro.props;
 ---
 
-<Card className="post-card relative transition-all duration-200 hover:bg-accent/50 hover:shadow-sm py-phi-xs gap-phi-2xs group">
+<Card className="post-card relative transition-[background-color,border-color] duration-200 hover:bg-accent/50 hover:border-foreground/15 py-phi-md gap-phi-2xs group">
   <a
     href={`/posts/${post.id}`}
     class="absolute inset-0 z-0"
     aria-label={post.data.title}
   />
   <CardHeader className="py-0 gap-0">
-    <CardTitle className="post-card-title text-base group-hover:text-link transition-colors duration-200">
+    <CardTitle className="post-card-title text-base leading-normal text-pretty group-hover:text-link transition-colors duration-200">
       {post.data.title}
     </CardTitle>
   </CardHeader>
@@ -34,6 +34,7 @@ const { post } = Astro.props;
 
 <style>
   :global(.post-card:has(.post-tag-link:hover)) {
+    border-color: var(--border);
     background: var(--card);
   }
 

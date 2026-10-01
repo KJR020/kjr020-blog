@@ -113,9 +113,9 @@
   padding: var(--phi-neg1) var(--phi-0);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--card);
-  box-shadow: var(--shadow-card);
-  color: var(--foreground);
+  background: var(--popover);
+  box-shadow: var(--shadow-overlay);
+  color: var(--popover-foreground);
   font-family: var(--font-heading);
   font-size: var(--font-size-small);
   font-weight: 400;

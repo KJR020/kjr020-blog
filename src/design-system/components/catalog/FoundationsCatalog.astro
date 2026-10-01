@@ -121,7 +121,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="radius">
     <h3>1-5. 角丸・影</h3>
-    <p class="src">基準角丸は0.618rem。情報のまとまりを示す目的で使用し、装飾として過剰に丸めない。Cardには控えめなshadowを使う。</p>
+    <p class="src">基準角丸は0.618rem。情報のまとまりを示す目的で使用し、装飾として過剰に丸めない。Cardには境界を補助する控えめなshadow、前面に浮くDialog・Popover・Menuには面の重なりが分かるshadowを使う。</p>
     <div class="demo foundation-pair">
       <div class="radius-grid">
         <div><span class="radius-sample radius-sm"></span><strong>Small</strong><code>--radius-sm</code></div>
@@ -132,6 +132,10 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <div class="shadow-specimen">
         <span aria-hidden="true"></span>
         <div><strong>Card shadow</strong><code>--shadow-card</code><small>境界を補助する最小限の奥行き</small></div>
+      </div>
+      <div class="shadow-specimen shadow-specimen--overlay">
+        <span aria-hidden="true"></span>
+        <div><strong>Overlay shadow</strong><code>--shadow-overlay</code><small>Dialog・Popover・Menuなど、本文の前面に浮く面</small></div>
       </div>
     </div>
     <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code><code>src/design-system/styles.css</code></p>
