@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import satori, { type Font } from "satori";
 import sharp from "sharp";
 
+import { formatPostDate } from "../postDate";
 import { HOME_DESCRIPTION_LINES } from "../siteCopy";
 import {
   BASE_FONT_SIZE,
@@ -29,7 +30,7 @@ export type OgImageContent =
     }
   | {
       kind: "article";
-      publishedAt: Date | string;
+      publishedAt: Date;
       title: string;
       url: string;
     };
@@ -47,16 +48,6 @@ function createFonts(sansBoldFont: Buffer): Font[] {
   return [{ name: "Noto Sans JP", data: sansBoldFont, weight: 700, style: "normal" }];
 }
 
-function formatPublishedDate(value: Date | string): string {
-  const date = value instanceof Date ? value : new Date(value);
-  return new Intl.DateTimeFormat("ja-JP", {
-    day: "numeric",
-    month: "long",
-    timeZone: "Asia/Tokyo",
-    year: "numeric",
-  }).format(date);
-}
-
 export async function createOgImageSvg({
   content = SITE_OG_IMAGE_CONTENT,
   layout: layoutOverrides,
@@ -72,7 +63,7 @@ export async function createOgImageSvg({
   const brand = isArticle ? OG_IMAGE_COPY.title : undefined;
   const headline = isArticle ? content.title : OG_IMAGE_COPY.title;
   const subheadline = isArticle ? undefined : OG_IMAGE_COPY.description;
-  const publishedDate = isArticle ? formatPublishedDate(content.publishedAt) : undefined;
+  const publishedDate = isArticle ? formatPostDate(content.publishedAt) : undefined;
   const siteUrl = isArticle ? content.url : OG_IMAGE_COPY.url;
   const layout = resolveOgImageLayout(layoutOverrides);
   const cardWidth = OG_IMAGE_SIZE.width - layout.cardMargin * 2;

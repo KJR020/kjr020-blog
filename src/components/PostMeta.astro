@@ -1,5 +1,6 @@
 ---
 import { Badge } from "@/components/ui/badge";
+import { formatPostDate } from "@/lib/postDate";
 
 interface Props {
   date: Date;
@@ -8,11 +9,7 @@ interface Props {
 
 const { date, tags = [] } = Astro.props;
 
-const formattedDate = date.toLocaleDateString("ja-JP", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
+const formattedDate = formatPostDate(date);
 ---
 
 <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground min-h-7">

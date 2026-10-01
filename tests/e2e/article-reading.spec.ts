@@ -44,6 +44,13 @@ test("Figureを本文と同じReading laneへ揃える", async ({ page }, testIn
   }
 });
 
+test("日本時間0時に公開した記事を当日の日付で表示する", async ({ page }) => {
+  // fixture記事のdateは2026-01-15T00:00:00+09:00。UTCのビルド環境では前日になりやすい境界値。
+  await page.goto(articlePath);
+
+  await expect(page.locator("article time").first()).toHaveText("2026年1月15日");
+});
+
 test("Mermaid図を本文と同じReading laneへ揃える", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium");
   await page.goto(articlePath);

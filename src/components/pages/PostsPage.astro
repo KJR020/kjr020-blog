@@ -1,6 +1,7 @@
 ---
 import PostCard from "@/components/PostCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getPostYear } from "@/lib/postDate";
 import type { PostSummary } from "./types";
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 
 const { posts } = Astro.props;
 const postsByYear = posts.reduce<Record<number, PostSummary[]>>((acc, post) => {
-  const year = post.data.date.getFullYear();
+  const year = getPostYear(post.data.date);
   if (!acc[year]) acc[year] = [];
   acc[year].push(post);
   return acc;
