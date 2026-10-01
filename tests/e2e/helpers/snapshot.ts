@@ -83,6 +83,9 @@ export async function capturePageSnapshot(
   },
 ): Promise<void> {
   await setTheme(page, options.theme);
+  // マスコットの登場位置は乱数で変わり、画面の外で待つ間はページ全体の撮影幅も広がる。
+  // 動きを減らす設定にして、毎回同じ静止状態を撮る。
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(options.config.route);
   await waitForHydration(page, options.config);
   await stabilizePage(page);

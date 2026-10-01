@@ -88,15 +88,13 @@ test("記事ページを記事要素ではなくページの型として分類�
   await expect(navigation.getByText("記事読書設計", { exact: true })).toHaveCount(0);
 });
 
-test("Header標本は本番と同じ目のシンボルを表示する", async ({ page }) => {
+test("Header標本は本番と同じ著者の写真を表示する", async ({ page }) => {
   await page.goto("/design-system/components#global-navigation");
 
   const headerSpecimen = page.locator("#global-navigation");
   const brandMark = headerSpecimen.locator(".site-brand-demo img");
 
-  await expect(brandMark).toHaveAttribute("src", "/images/kjr020-eyes.svg");
-  await expect(brandMark).toHaveAttribute("width", "50");
-  await expect(brandMark).toHaveAttribute("height", "32");
+  await expect(brandMark).toHaveAttribute("src", "/images/kuri_photo.png");
   await expect(brandMark).toHaveAttribute("alt", "");
 });
 
@@ -481,10 +479,10 @@ test("Tag interactionの正規仕様を実装された標本とともに表示�
 
   await expect(page.getByRole("heading", { name: "Tag interaction" })).toBeVisible();
   await expect(specification.locator('a[href="/tags/Astro"]')).toBeVisible();
-  await expect(specification).toContainText("220ms");
-  await expect(specification).toContainText("14deg");
-  await expect(specification).toContainText("6%");
-  await expect(specification).toContainText("prefers-reduced-motion");
+  await expect(specification).toContainText("160ms");
+  await expect(specification).toContainText("#記号");
+  await expect(specification).toContainText("PostListItem");
+  await expect(specification).toContainText("Reduced motion");
 });
 
 test("記事ページの読書設計をパターンの共通レイアウト内に表示する", async ({ page }) => {
@@ -626,7 +624,16 @@ test("コード標本は記事のコード面を踏襲し言語だけを追加�
     };
   });
 
-  expect(codeStyle.backgroundColor).toBe("rgb(246, 248, 250)");
+  // 記事のコード面と同じトークンを使う
+  const codeSurface = await page.evaluate(() => {
+    const probe = document.createElement("span");
+    probe.style.backgroundColor = "var(--code-surface)";
+    document.body.append(probe);
+    const color = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    return color;
+  });
+  expect(codeStyle.backgroundColor).toBe(codeSurface);
   expect(codeStyle.borderTopWidth).toBe("0px");
   expect(Number.parseFloat(codeStyle.borderRadius)).toBeGreaterThan(0);
   expect(codeStyle.overflowX).toBe("auto");
@@ -641,7 +648,15 @@ test("コード標本は記事のコード面を踏襲し言語だけを追加�
   }
 
   await page.locator("html").evaluate((element) => element.classList.add("dark"));
-  await expect(code).toHaveCSS("background-color", "rgb(36, 41, 46)");
+  const darkCodeSurface = await page.evaluate(() => {
+    const probe = document.createElement("span");
+    probe.style.backgroundColor = "var(--code-surface)";
+    document.body.append(probe);
+    const color = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    return color;
+  });
+  await expect(code).toHaveCSS("background-color", darkCodeSurface);
 });
 
 test("本文標本はデザインシステムの標準面を使用する", async ({ page }) => {

@@ -127,7 +127,9 @@ describe("BaseHead OGP meta tags", () => {
     const indexHtml = readFileSync(join(distDir, "index.html"), "utf8");
     const indexDoc = new DOMParser().parseFromString(indexHtml, "text/html");
     const rssHeadLink = indexDoc.querySelector('link[rel="alternate"][type="application/rss+xml"]');
-    const rssFooterLink = indexDoc.querySelector('a[aria-label="RSS"]');
+    const rssFooterLink = Array.from(indexDoc.querySelectorAll("footer a")).find(
+      (link) => link.textContent?.trim() === "RSS",
+    );
 
     expect(indexHtml).toContain('<meta property="og:type" content="website">');
     expect(indexHtml).toContain('<meta property="og:locale" content="ja_JP">');
