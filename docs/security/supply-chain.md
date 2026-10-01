@@ -1,4 +1,4 @@
-# Supply Chain Security
+# サプライチェーンセキュリティ
 
 npmパッケージとGitHub Actionsのサプライチェーン侵害を前提に、依存追加・依存更新・CI実行時の運用ルールを定義する。
 

@@ -126,6 +126,7 @@ Cosenseのセッション情報は公開バンドルへ含めない。Proxyは�
 Pull Requestでは以下を独立したGitHub Actionsジョブとして実行する。
 
 - BiomeによるLintとフォーマット確認
+- lycheeによるドキュメントのリポジトリ内リンク検査
 - TypeScriptの型検査
 - VitestによるUnit／Component／Cosense API Proxy・ルーターテスト
 - 80%の閾値を持つカバレッジ計測
@@ -156,4 +157,4 @@ Pull Requestでは以下を独立したGitHub Actionsジョブとして実行す
 - [Cosense API Proxy仕様](cosense-api-proxy.md) - 入力、キャッシュ、エラー、セキュリティ仕様
 - [CI workflow](../../.github/workflows/ci.yml) - Pull Requestの品質検証
 - [Deploy workflow](../../.github/workflows/deploy.yml) - Cloudflare Workersへのデプロイ
-- [テストアーキテクチャ](test_architecture.md) - テスト種別と配置方針
+- [テストアーキテクチャ](test-architecture.md) - テスト種別と配置方針

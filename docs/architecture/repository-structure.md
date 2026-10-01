@@ -78,5 +78,5 @@
 
 - [アーキテクチャ概要](overview.md)
   - ビルド、ブラウザ、外部サービスの境界
-- [Test Architecture](test_architecture.md)
+- [テストアーキテクチャ](test-architecture.md)
   - テスト種別と配置方針
