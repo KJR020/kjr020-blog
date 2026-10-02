@@ -105,6 +105,10 @@ test("目次標本はモバイル幅でインライン目次を開閉できる",
   const specimen = page.locator("#table-of-contents");
   const trigger = specimen.getByRole("button", { name: "目次を開く" });
 
+  // ボタンはSSRで先に表示されるため、ハイドレーション前に押すと開閉が反映されない
+  await expect(specimen.locator("astro-island[client='load']:not([ssr])")).toBeAttached({
+    timeout: 30_000,
+  });
   await expect(trigger).toBeVisible();
   await trigger.click();
   await expect(specimen.getByRole("navigation", { name: "目次" })).toBeVisible();
