@@ -131,7 +131,7 @@ const moreTopics = topics.slice(VISIBLE_TOPIC_COUNT);
       color var(--duration-fast) var(--ease-out);
   }
 
-  .topic:hover {
+  .topic:is(:hover, :focus-visible) {
     border-color: var(--foreground);
     background: var(--secondary);
     color: var(--foreground);
@@ -148,7 +148,7 @@ const moreTopics = topics.slice(VISIBLE_TOPIC_COUNT);
     text-underline-offset: 0.3em;
   }
 
-  .topics__more summary:hover {
+  .topics__more summary:is(:hover, :focus-visible) {
     color: var(--foreground);
   }
 

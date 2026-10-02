@@ -495,6 +495,8 @@ function evaluateVolume({ frames }: Capture): GateResult {
 function evaluateLanding(capture: Capture, impactRatio: number): GateResult {
   const { frames, tolerance } = GATE_LIMITS.landing;
   const impact = frameIndexAt(capture, impactRatio);
+  // 着地のコマがない、または手前のコマが足りないと、空の配列で誤って合格になる
+  if (impact < frames) throw new Error(`landing: 着地の手前のコマが足りない (${impact})`);
   const before = calculateVelocityY(capture.frames).slice(impact - frames, impact);
   return {
     velocities: before.map(Math.round),
