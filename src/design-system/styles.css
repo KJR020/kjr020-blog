@@ -297,7 +297,6 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: var(--shadow-card);
 }
 
 .scope-note strong {
@@ -349,7 +348,6 @@ pre {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: var(--shadow-card);
 }
 
 .source-row {
@@ -413,7 +411,6 @@ pre {
   background: var(--card);
   color: var(--foreground);
   text-decoration: none;
-  box-shadow: var(--shadow-card);
   transition:
     border-color 180ms ease,
     color 180ms ease;
@@ -721,10 +718,6 @@ table.map th {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: var(--shadow-card);
-}
-
-.shadow-specimen--overlay > span {
   box-shadow: var(--shadow-overlay);
 }
 
@@ -1429,7 +1422,6 @@ table.map th {
     font-size: var(--font-size-small);
     font-weight: 500;
     cursor: pointer;
-    box-shadow: var(--shadow-card);
   }
 
   .sidebar-toggle-mark {
@@ -1450,7 +1442,6 @@ table.map th {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--background);
-    box-shadow: var(--shadow-card);
   }
 
   .design-system-sidebar[data-open="true"] .sidebar-panel {

@@ -92,6 +92,27 @@ test("Scrapbox Card Listの標本は実在するCosenseのページへリンク�
   }
 });
 
+test("カタログの面には影を付けず、罫線で区切る", async ({ page }) => {
+  await page.goto("/design-system");
+  await expect(page.locator(".scope-note")).toHaveCSS("box-shadow", "none");
+  await expect(page.locator(".spec-page-link").first()).toHaveCSS("box-shadow", "none");
+
+  await page.goto("/design-system/foundations#radius");
+  await expect(page.locator("#radius > .demo")).toHaveCSS("box-shadow", "none");
+
+  // 影は本文の前面に重なる面にだけ使うため、標本もOverlayの1種類だけを示す
+  const shadowSpecimens = page.locator("#radius .shadow-specimen");
+  await expect(shadowSpecimens).toHaveCount(1);
+  await expect(shadowSpecimens).toContainText("--shadow-overlay");
+  await expect(page.locator("#radius")).not.toContainText("--shadow-card");
+});
+
+test("Card部品は罫線で面を示し、影を付けない", async ({ page }) => {
+  await page.goto("/design-system/components#card");
+
+  await expect(page.locator('#card [data-slot="card"]')).toHaveCSS("box-shadow", "none");
+});
+
 test("記事ページの仕様をパターンページに統合して表示する", async ({ page }) => {
   const response = await page.goto("/design-system/patterns#article-reading");
 

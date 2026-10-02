@@ -158,7 +158,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="radius">
     <h3>1-5. 角丸・影</h3>
-    <p class="src">角丸は同じ面に属する情報のまとまりを、影は面の重なりを補助的に伝えます。基準角丸は0.618remとし、装飾だけを目的に丸みや影を追加しません。Cardの影は境界だけでは面を識別しにくい場合に、Overlayの影はDialog・Popover・Menuが本文の前面にあることを示す場合に限定します。</p>
+    <p class="src">角丸は同じ面に属する情報のまとまりを伝えます。基準角丸は0.618remとし、装飾だけを目的に丸めません。面の区切りは罫線と余白で示し、影はDialog・Popover・Menuなど、本文の前面に重なる面にだけ使います。</p>
     <div class="demo foundation-pair">
       <div class="radius-grid">
         <div><span class="radius-sample radius-sm"></span><strong>Small</strong><code>--radius-sm</code></div>
@@ -167,10 +167,6 @@ const shows = (section: FoundationSection) => sections.includes(section);
         <div><span class="radius-sample radius-full"></span><strong>Full</strong><code>9999px</code></div>
       </div>
       <div class="shadow-specimen">
-        <span aria-hidden="true"></span>
-        <div><strong>Card shadow</strong><code>--shadow-card</code><small>境界を補助する最小限の奥行き</small></div>
-      </div>
-      <div class="shadow-specimen shadow-specimen--overlay">
         <span aria-hidden="true"></span>
         <div><strong>Overlay shadow</strong><code>--shadow-overlay</code><small>Dialog・Popover・Menuなど、本文の前面に浮く面</small></div>
       </div>
