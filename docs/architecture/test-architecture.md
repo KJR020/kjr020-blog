@@ -117,7 +117,7 @@ VRTはBrowser E2Eのうち、スクリーンショットで意図しないレイ
 - ページ全体を確認する場合も、実記事ではなく固定fixtureでページを構成する
 
 fixtureページは開発サーバーと`TEST_FIXTURES=true`のテストビルドで`/__test/*`に公開し、
-通常の本番ビルドには含めない。本番ページとfixtureページは`src/components/pages/`の
+通常の本番ビルドには含めない。`pnpm build`の後処理で、通常のビルドに`__test`のページがないことを検査する。テストビルド(`pnpm build:test`)だけが、検査スクリプトへ`--allow-test-fixtures`を渡す。本番ページとfixtureページは`src/components/pages/`の
 ページコンポーネントを共有し、前者には実データ、後者には`src/test-fixtures/fixtures.ts`の固定データを渡す。
 機能検証と`tests/e2e/snapshot.spec.ts`の画像比較は同じfixtureページを使う。
 
@@ -177,3 +177,4 @@ Playwright用のCompose構成はE2EとVRTの再現性を担保するために使
 - [fixtures.ts](../../src/test-fixtures/fixtures.ts) - Browser E2Eへ渡す固定データ
 - [fixture pages](../../src/test-fixtures/pages/) - 開発サーバーとテストビルドだけで公開するテスト対象ページ
 - [fixture article](../../content/posts/__test/article.md) - テストビルドだけで公開する固定Markdown記事
+- [verify-public-build.ts](../../scripts/verify-public-build.ts) - ビルド後に公開成果物を検査するスクリプト

@@ -12,7 +12,7 @@
 | --- | --- |
 | デザインシステム | 原則・仕様・トークン・実コンポーネント・確認手段を含む体系全体 |
 | デザイン仕様書 | この文書群。判断基準、用途、制約、期待する振る舞いを定義する |
-| 確認用カタログ | 開発時限定の`/design-system`。実装を表示・操作して確認する。独立した実装や別の仕様正本を持たない |
+| 確認用カタログ | 本番サイトで公開する`/design-system`。実装を表示・操作して確認する。独立した実装や別の仕様正本を持たない |
 
 ## 全体像
 
@@ -228,6 +228,13 @@ Headerのブランドリンクは、著者の写真(栗のマスコットの実�
 
 ホームの紹介文には画像やアイコンを添えず、文章だけを置く。著者の写真はHeaderで全ページに表示する。
 
+HeaderのNavigationは`Home`、`Posts`、`Design System`、`Search`、`Cosense`の順に並べる。
+
+- 48rem以上では横に並べ、未満ではMenu buttonにまとめる
+- 横に並べるときは、各項目を折り返さずに1行へ収める
+- 60rem未満では、Searchの`⌘K`表示を省く
+  - 48remでは全項目が1行に収まらないため。`⌘K`はキーボード操作の補助表示で、省いても検索は開ける
+
 ### OGP
 
 OGPはブログ名、ページの主題、サイトURL、栗マスコットを組み合わせる。
@@ -405,9 +412,34 @@ Wideでは目次の開閉操作を設けず、本文と目次の幅を一定に�
 
 ## 確認用カタログ
 
-`pnpm dev`を起動し、`http://localhost:4321/design-system`を開く。色・文字・spacingは`globals.css`のCSS変数、Button・Badge・Input・Card・ブログパターンは実コンポーネントから描画される。全ページを共通のHeader・Sidebar・トークンで描画し、ライトとダークの両方で確認できる。
+本番サイトの`https://kjr020.dev/design-system`で公開する。開発中は`pnpm dev`を起動し、`http://localhost:4321/design-system`で確認する。色・文字・spacingは`globals.css`のCSS変数、Button・Badge・Input・Card・ブログパターンは実コンポーネントから描画される。全ページを共通のHeader・Sidebar・トークンで描画し、ライトとダークの両方で確認できる。
 
-このルートはAstroの`dev`コマンドでだけ注入する。`build`、`preview`、`sync`では登録せず、公開成果物へ出力しない。検索エンジン向けにも`noindex,nofollow`を指定する。
+カタログは公開するページとして、次の条件を満たす。
+
+- 本番と同じビルドに含め、Astroのすべてのコマンドでルートを登録する
+  - 実装と同じトークンとコンポーネントから描画するため、別にデプロイすると本番と版がずれる
+- HeaderのNavigationからリンクする
+- 検索エンジンに索引させない
+  - 全ページに`noindex,nofollow`を指定し、sitemapに載せない
+  - 標本の文言が、記事より先に検索結果へ出ないようにするため
+- サイト内検索とRSSの対象にしない
+  - Pagefindは`data-pagefind-body`を持つ記事ページだけを索引する。カタログには付けない
+  - RSSは記事のコレクションだけから生成する
+- 外部サービスのページを模した標本は、予約ドメイン`example.com`の架空のページへリンクする
+  - 実在するページに、標本用に書いた説明や日付を添えて公開しないため
+- 記事の標本には、公開済みの最新記事を使う
+  - 実データでの表示崩れに気づけるため
+- テスト用fixture(`/__test/*`)は、開発サーバーと`TEST_FIXTURES=true`のテストビルドだけに登録し、本番の成果物へ出力しない
+
+`pnpm build`の後処理で、成果物が次の条件を満たすかを検査する。
+
+- カタログの各ページが出力され、`noindex`と`nofollow`が有効になっている
+- カタログのページに`data-pagefind-body`がなく、記事ページの少なくとも1つにある
+  - Pagefindは、`data-pagefind-body`を持つページが1つもないと、すべてのページを索引するため
+- sitemapとRSSが出力され、カタログのURLを含まない
+- テスト用fixtureがない
+  - テストビルドだけが、検査スクリプトへ`--allow-test-fixtures`を渡してfixtureを許可する
+  - fixtureを生成する`TEST_FIXTURES`で許可も切り替えると、本番へ混入したときに検査も素通りするため
 
 ページとセクションの対応は[navigation.ts](../../src/design-system/navigation.ts)を正本とする。記事ページの読書仕様は`/design-system/patterns#article-reading`で確認できる。
 
@@ -422,6 +454,8 @@ Wideでは目次の開閉操作を設けず、本文と目次の幅を一定に�
   - 標準仕様の変更は変更管理の対象とし、具体的な値や文面であるという理由だけで例として扱わない
 - コードから読み取れない判断理由を残す。実装を詳細に言い直さない
 - 部品名は実装のコンポーネント名と対応させる
+- 確認用カタログの章とページの説明は、何を定義するか、なぜ共通化するか、どの判断に使うかの順に書く
+  - 実装値の列挙だけでは、標本を見た人が使い分けを判断できないため
 - 用途を表すトークンは、その意味に基づいて命名する
   - 異なる用途が同じ値を共有しても、値が同じという理由だけで統合しない
   - 使用箇所では値の一致ではなく用途で選ぶ
@@ -440,14 +474,21 @@ Wideでは目次の開閉操作を設けず、本文と目次の幅を一定に�
 2. 作業ブランチで仕様書の改訂案を作成し、対応する実装・関連ガイド・確認用カタログ・検証を、変更の影響範囲に応じて更新する
 3. 変更対象の仕様に記載した要件と期待する結果を、影響する画面幅・テーマ・入力方法・状態で確認する。自動化していない確認は、結果をPull Requestに記録する
 4. `pnpm test:design-system`で実コンポーネントとの接続を確認する
-5. `pnpm build`で`dist/design-system`が生成されないことを確認する
+5. `pnpm build`を実行し、後処理の公開成果物の検査が通ることを確認する
 
 ## 関連ファイル
 
 - [記事の本文幅と目次表示の簡素化](../architecture/adr/0003-simplify-article-reading-layout.md) - 本文幅の変更とWideの目次開閉を廃止した判断
+- [確認用カタログの公開](../architecture/adr/0004-publish-design-system-catalog.md) - カタログを本番サイトで公開した判断
 - [Grid system](grid-system.md) - ページ骨格とレスポンシブ
 - [UIライティングガイドライン](ui-writing-guidelines.md) - UI文言の判断と表記
 - [globals.css](../../src/styles/globals.css) - グローバルトークンと記事表現
 - [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - ページシェル
-- [Dev integration](../../src/integrations/devDesignSystem.ts) - 確認用カタログの登録条件
+- [injectedRoutes.ts](../../src/integrations/injectedRoutes.ts) - 確認用カタログとテスト用fixtureの登録条件
+- [publicBuildOutput.ts](../../src/lib/publicBuildOutput.ts) - 公開成果物の検査
 - [E2E](../../tests/e2e/design-system.spec.ts) - 確認用カタログと実装の接続
+- [公開ビルドのE2E](../../tests/e2e/design-system-public.spec.ts) - 公開したカタログのメタ情報とサイト内検索からの除外
+
+## 参考資料
+
+- [SmartHR Design System「デザイントークン」](https://smarthr.design/products/design-tokens/) - 目的、種類、用途を分けて説明する情報構造

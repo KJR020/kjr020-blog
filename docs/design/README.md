@@ -14,4 +14,4 @@ KJR020's Blogの視覚言語、レイアウト骨格、UI文言に関する正�
 2. レイアウトを変更するときは[Grid system](grid-system.md)を参照する
 3. 文言を変更するときは[UIライティングガイドライン](ui-writing-guidelines.md)を参照する
 
-`pnpm dev`を起動し`http://localhost:4321/design-system`を開くと、実装から描画された標本を確認できます。
+[確認用カタログ](https://kjr020.dev/design-system)で、実装から描画された標本を確認できます。開発中は`pnpm dev`を起動し、`http://localhost:4321/design-system`で確認できます。

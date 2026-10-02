@@ -151,7 +151,7 @@ Wideでは記事ヘッダーも同じ16列に乗せ、タイトルとメタ情�
 
 - [16列のページレイアウト採用](../architecture/adr/0002-adopt-sixteen-column-layout.md) - 列数の比較と実装手段の選定経緯
 - [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
-- [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - 配置の視覚例(`pnpm dev`の`/design-system/foundations`)
+- [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - 配置の視覚例(`/design-system/foundations`)
 - [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - Page shell
 - [記事詳細](../../src/pages/posts/[...slug].astro) - 本文と目次の配置、CompactとMediumの目次開閉
 - [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - Grid外の検索UI
