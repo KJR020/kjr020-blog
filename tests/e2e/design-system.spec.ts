@@ -419,6 +419,23 @@ test("実装とつながったデザインシステムを表示する", async ({
   await expect(page.locator('[data-slot="card"]').first()).toBeVisible();
 });
 
+test("モーションの標本は、くり専用の値をKuri.astroから読んで描画する", async ({ page }) => {
+  await page.goto("/design-system/foundations#motion");
+
+  const kuriCurve = page.locator('.curve-card[data-easing="--ease-emerge"]');
+  await expect(kuriCurve.locator(".curve-value")).toHaveText("cubic-bezier(0.2, 0, 0, 1) / 540ms");
+  await expect(kuriCurve.locator(".curve-line")).toHaveAttribute("d", "M0 100C20 100 0 0 100 0");
+  await expect(
+    page.locator('.duration-row[data-duration="--duration-kuri-jump"] .duration-value'),
+  ).toHaveText("620ms");
+
+  // くり専用の値はページ全体のトークンに置かない
+  const rootValue = await page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue("--duration-kuri-jump"),
+  );
+  expect(rootValue).toBe("");
+});
+
 test("共通ヘッダーはページに関わらずsystem sansを使う", async ({ page }) => {
   await page.goto("/design-system");
   const designSystemFont = await page
