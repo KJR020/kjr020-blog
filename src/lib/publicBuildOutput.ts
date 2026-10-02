@@ -13,6 +13,7 @@ type FindPublicBuildOutputProblemsOptions = {
   allowsTestFixtures: boolean;
 };
 
+const HTML_COMMENT = /<!--[\s\S]*?-->/g;
 const META_TAG = /<meta\b[^>]*>/gi;
 const ATTRIBUTE = /([\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/g;
 
@@ -22,11 +23,16 @@ const LISTED_URL = /<(loc|link)>([^<]+)<\/\1>/g;
 const SITEMAP_FILE = /^sitemap-\d+\.xml$/;
 const RSS_FILE = "rss.xml";
 
+/** HTMLコメントを取り除く。コメント内の要素はブラウザーやクローラーに対して効かないため。 */
+function withoutComments(html: string) {
+  return html.replace(HTML_COMMENT, "");
+}
+
 /** HTML内の`<meta name="robots">`が指定するdirectiveを、小文字の集合で返す。 */
 function robotsDirectives(html: string): Set<string> {
   const directives = new Set<string>();
 
-  for (const [tag] of html.matchAll(META_TAG)) {
+  for (const [tag] of withoutComments(html).matchAll(META_TAG)) {
     const attributes = new Map(
       Array.from(tag.matchAll(ATTRIBUTE), ([, name, ...values]) => [
         name.toLowerCase(),
@@ -49,7 +55,7 @@ function preventsIndexAndFollow(html: string) {
 }
 
 function hasPagefindBody(html: string) {
-  return html.includes("data-pagefind-body");
+  return withoutComments(html).includes("data-pagefind-body");
 }
 
 /**

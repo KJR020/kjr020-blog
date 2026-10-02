@@ -88,6 +88,10 @@ describe("findPublicBuildOutputProblems", () => {
         ["noindexだけを指定している", '<meta name="robots" content="noindex">'],
         ["index,followを指定している", '<meta name="robots" content="index,follow">'],
         [
+          "コメントの中にだけ指定している",
+          '<!-- <meta name="robots" content="noindex,nofollow"> -->',
+        ],
+        [
           "別のmetaにnoindex,nofollowを書いている",
           '<meta name="googlebot-news" content="noindex,nofollow">',
         ],
@@ -106,6 +110,14 @@ describe("findPublicBuildOutputProblems", () => {
 
         expect(problemsOf({ "design-system/patterns/index.html": html })).toEqual([
           "design-system/patterns/index.html: data-pagefind-bodyが指定されています",
+        ]);
+      });
+
+      it("コメントの中にだけdata-pagefind-bodyがあれば、ないものとして報告する", () => {
+        const html = "<html><body><!-- <article data-pagefind-body> --></body></html>";
+
+        expect(problemsOf({ "posts/hello/index.html": html })).toEqual([
+          "data-pagefind-bodyを持つページがないため、Pagefindがカタログも索引します",
         ]);
       });
 
