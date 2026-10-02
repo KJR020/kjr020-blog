@@ -303,13 +303,14 @@ const EYELIDS = [
      * 目は体より少し遅れて動かし、重さを出す（フォロースルー）
      */
     jump() {
-      if (reducedMotion.matches || this.acting) return;
-      // 寝ているところを突かれたら、起きて跳ねる
+      if (this.acting) return;
+      // 寝ているところを突かれたら、起きて跳ねる。動きを減らす設定でも、起きることだけは伝える
       window.clearTimeout(this.sleepTimer);
       if (!this.awake) {
         void this.wake();
         this.scheduleDoze(2600);
       }
+      if (reducedMotion.matches) return;
       this.acting = true;
       this.svg.classList.add("is-acting");
       const height = 120; // viewBox単位。体の高さの約24%

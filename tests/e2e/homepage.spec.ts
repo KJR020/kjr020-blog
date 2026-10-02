@@ -61,6 +61,21 @@ test.describe("トップページのブランド表現", () => {
     expect(characterBottom).toBeCloseTo(baseBox?.y ?? 0, 0);
   });
 
+  test("動きを減らす設定でも、眠っているフッターのキャラクターは押すと目を開ける", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/__test/home");
+
+    const sleeper = page.locator("footer [data-kuri]");
+    await sleeper.scrollIntoViewIfNeeded();
+    await expect(sleeper).toHaveClass(/is-closed/);
+
+    await sleeper.click();
+
+    await expect(sleeper).not.toHaveClass(/is-closed/);
+  });
+
   test("狭い画面ではブログ名を2行に組み、キャラクターと重ねない", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/__test/home");
