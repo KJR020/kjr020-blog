@@ -317,7 +317,8 @@ const EYELIDS = [
       const takeoff = 0.24;
       const apex = 0.5;
       const impact = 0.79;
-      const liftOff = height * 0.16;
+      // 押し出しで上がる高さ。短いと、空中の初速まで最後の数コマで急に加速し、離陸で速度が跳ねる
+      const liftOff = height * 0.24;
       const air: Keyframe[] = [];
       for (let offset = takeoff + 0.03; offset < impact - 0.001; offset += 0.03) {
         const rising = offset <= apex;

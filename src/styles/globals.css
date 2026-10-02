@@ -139,7 +139,7 @@
    * Kuri.astroはこの値を実行時に読み込んで使う。
    */
   --ease-anticipate: cubic-bezier(0.45, 0, 0.55, 1); /* 予備動作で沈む */
-  --ease-push: cubic-bezier(0.6, 0, 0.92, 0.5); /* 押し出し。離陸の瞬間の速度を空中の初速へつなぐ */
+  --ease-push: cubic-bezier(0.6, 0, 0.75, 0.31); /* 押し出し。離陸の瞬間の速度を空中の初速へつなぐ */
   --ease-fall: cubic-bezier(0.55, 0, 1, 0.45); /* 落下。加速したまま接地する */
   --ease-impact: cubic-bezier(0.16, 1, 0.3, 1); /* 着地の反動。すぐに止まる */
   --ease-settle: cubic-bezier(0.4, 0, 0.6, 1); /* 反動から静止へ */
