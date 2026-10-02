@@ -184,8 +184,7 @@ const codeSample = `export function getReadingWidth(viewport: number) {
       <li>
         <strong>行長</strong>
         <ul>
-          <li>最大40字を基準とする</li>
-          <li>Wideで目次を閉じたときは最大48字まで広げる</li>
+          <li>本文幅の上限は43ic</li>
         </ul>
       </li>
       <li>
@@ -198,10 +197,12 @@ const codeSample = `export function getReadingWidth(viewport: number) {
     </ul>
 
     <article class="demo type-specimen type-candidate" data-reading-lane>
-      <header><span>BODY</span><strong>16–17px / 1.90–2.00 / 40字</strong></header>
-      <p>
-        Pagefindは静的サイト向けの全文検索ライブラリです。ビルド後のHTMLを解析して検索インデックスを生成するため、専用サーバーを必要としません。
-      </p>
+      <header><span>BODY</span><strong>16–17px / 1.90–2.00 / 43ic</strong></header>
+      <div class="article-reading-content">
+        <p>
+          Pagefindは静的サイト向けの全文検索ライブラリです。ビルド後のHTMLを解析して検索インデックスを生成するため、専用サーバーを必要としません。
+        </p>
+      </div>
       <small>本文の連続性を優先し、視線が次の行頭を見失わない幅に制限する。</small>
     </article>
   </section>
