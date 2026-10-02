@@ -12,6 +12,7 @@ import { chromium } from "playwright";
 
 import { clipAround, contactSheet, openPage, readOptions, rest, type Shot, THEMES } from "./shared";
 
+/** 比べる目の状態。開いた目、まばたきで閉じきった瞬間、眠っている目 */
 const STATES = [
   { label: "open", closed: false, css: "" },
   {

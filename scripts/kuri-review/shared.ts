@@ -11,6 +11,7 @@ import { parseArgs } from "node:util";
 import type { Browser, Locator, Page } from "playwright";
 import sharp from "sharp";
 
+/** 撮影するテーマ。くりはライトで塗り、ダークで線画になる */
 export type Theme = "light" | "dark";
 export const THEMES: Theme[] = ["light", "dark"];
 
@@ -24,6 +25,7 @@ declare global {
   }
 }
 
+/** コマンドライン引数から決まる、出力先・撮影先・テーマ */
 export interface ReviewOptions {
   outDir: string;
   baseUrl: string;
@@ -45,6 +47,7 @@ export function readOptions(): ReviewOptions {
   return { outDir: values.out, baseUrl: values["base-url"], theme: values.theme };
 }
 
+/** 撮影用にページを開くときの設定 */
 interface PageOptions {
   deviceScaleFactor?: number;
   /** 撮影のために追加するCSS */
@@ -109,6 +112,7 @@ export async function clipAround(
   };
 }
 
+/** 1枚の撮影画像と、並べたときに下へ書くラベル */
 export interface Shot {
   buffer: Buffer;
   label?: string;
@@ -158,6 +162,7 @@ export async function contactSheet(
     .toFile(file);
 }
 
+/** 折れ線グラフの1系列。時刻ごとの値と描画色 */
 export interface Series {
   label: string;
   color: string;
