@@ -70,10 +70,11 @@ const { tags, size = "sm", label = "タグ" } = Astro.props;
     transition: color var(--duration-fast) var(--ease-out);
   }
 
+  /* 青はリンクの印に取っておき、Tagは墨色の輪郭と面の濃さで反応する */
   .tag-link:is(:hover, :focus-visible) {
-    border-color: var(--brand);
-    background-color: var(--brand-wash);
-    color: var(--brand);
+    border-color: var(--foreground);
+    background-color: var(--secondary);
+    color: var(--foreground);
   }
 
   .tag-link:is(:hover, :focus-visible) .tag-link__hash {

@@ -27,14 +27,15 @@ test("記事タグはHoverしなくても輪郭でリンクと分かる", async 
   await expect(tag).toContainText("#");
 });
 
-test("記事タグはHoverするとBrandの輪郭と文字色になる", async ({ page }) => {
+test("記事タグはHoverすると墨色の輪郭になり、リンクの青を使わない", async ({ page }) => {
   const tag = getAstroTag(page);
-  const brand = await resolveColor(page, "var(--brand)");
+  const ink = await resolveColor(page, "var(--foreground)");
 
   await tag.hover();
 
-  await expect(tag).toHaveCSS("color", brand);
-  await expect(tag).toHaveCSS("border-top-color", brand);
+  await expect(tag).toHaveCSS("color", ink);
+  await expect(tag).toHaveCSS("border-top-color", ink);
+  await expect(tag).not.toHaveCSS("color", await resolveColor(page, "var(--link)"));
 });
 
 test("記事タグ上では記事行のHover表現を重ねない", async ({ page }) => {
@@ -69,5 +70,5 @@ test("記事タグはキーボードフォーカスで輪郭線を表示する",
   await tag.focus();
 
   await expect(tag).toHaveCSS("outline-style", "solid");
-  await expect(tag).toHaveCSS("color", await resolveColor(page, "var(--brand)"));
+  await expect(tag).toHaveCSS("outline-color", await resolveColor(page, "var(--foreground)"));
 });

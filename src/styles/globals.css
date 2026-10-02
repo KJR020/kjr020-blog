@@ -51,7 +51,8 @@
   --border: var(--line);
   --border-strong: var(--line-strong);
   --input: var(--line-strong);
-  --ring: var(--accent-blue);
+  /* フォーカスの輪郭は墨色。青はリンクの印に取っておく */
+  --ring: var(--ink);
   --code-surface: var(--paper-sunken);
   --selection: hsl(230 70% 50% / 0.18);
 
