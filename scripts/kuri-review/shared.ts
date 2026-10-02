@@ -52,7 +52,7 @@ interface PageOptions {
   deviceScaleFactor?: number;
   /** 撮影のために追加するCSS */
   css?: string;
-  /** Math.randomを固定値にし、乱数で分かれる演技を再現できるようにする */
+  /** Math.randomを固定値にし、乱数で分かれるアクションを再現できるようにする */
   random?: number;
 }
 
