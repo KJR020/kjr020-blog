@@ -1,5 +1,35 @@
 import type { AstroIntegration } from "astro";
 
+type RouteDefinition = {
+  pattern: string;
+  /** このファイルからの相対パス */
+  entrypoint: string;
+};
+
+const DESIGN_SYSTEM_ROUTES: readonly RouteDefinition[] = [
+  { pattern: "/design-system", entrypoint: "../design-system/pages/index.astro" },
+  { pattern: "/design-system/foundations", entrypoint: "../design-system/pages/foundations.astro" },
+  { pattern: "/design-system/components", entrypoint: "../design-system/pages/components.astro" },
+  { pattern: "/design-system/patterns", entrypoint: "../design-system/pages/patterns.astro" },
+  { pattern: "/design-system/content", entrypoint: "../design-system/pages/content.astro" },
+  { pattern: "/design-system/governance", entrypoint: "../design-system/pages/governance.astro" },
+  // 記事の読書体験の標本を移動する前のURL。どちらも現在の場所へ転送する。
+  {
+    pattern: "/design-system/patterns/article-reading",
+    entrypoint: "../design-system/pages/article-reading-redirect.astro",
+  },
+  {
+    pattern: "/design-system/article-reading",
+    entrypoint: "../design-system/pages/article-reading-redirect.astro",
+  },
+];
+
+const TEST_FIXTURE_ROUTES: readonly RouteDefinition[] = [
+  { pattern: "/__test/home", entrypoint: "../test-fixtures/pages/home.astro" },
+  { pattern: "/__test/posts", entrypoint: "../test-fixtures/pages/posts.astro" },
+  { pattern: "/__test/404", entrypoint: "../test-fixtures/pages/404.astro" },
+];
+
 /**
  * デザインシステムとブラウザテスト用fixtureを本番サイトから分離して公開する。
  *
@@ -15,64 +45,13 @@ export function devDesignSystem(): AstroIntegration {
         const includesTestFixtures =
           command === "dev" || (command === "build" && process.env.TEST_FIXTURES === "true");
 
-        if (!includesDesignSystem && !includesTestFixtures) {
-          return;
-        }
+        const routes = [
+          ...(includesDesignSystem ? DESIGN_SYSTEM_ROUTES : []),
+          ...(includesTestFixtures ? TEST_FIXTURE_ROUTES : []),
+        ];
 
-        if (includesDesignSystem) {
-          injectRoute({
-            pattern: "/design-system",
-            entrypoint: new URL("../design-system/pages/index.astro", import.meta.url),
-          });
-          injectRoute({
-            pattern: "/design-system/foundations",
-            entrypoint: new URL("../design-system/pages/foundations.astro", import.meta.url),
-          });
-          injectRoute({
-            pattern: "/design-system/components",
-            entrypoint: new URL("../design-system/pages/components.astro", import.meta.url),
-          });
-          injectRoute({
-            pattern: "/design-system/patterns",
-            entrypoint: new URL("../design-system/pages/patterns.astro", import.meta.url),
-          });
-          injectRoute({
-            pattern: "/design-system/content",
-            entrypoint: new URL("../design-system/pages/content.astro", import.meta.url),
-          });
-          injectRoute({
-            pattern: "/design-system/governance",
-            entrypoint: new URL("../design-system/pages/governance.astro", import.meta.url),
-          });
-          injectRoute({
-            pattern: "/design-system/patterns/article-reading",
-            entrypoint: new URL(
-              "../design-system/pages/article-reading-redirect.astro",
-              import.meta.url,
-            ),
-          });
-          injectRoute({
-            pattern: "/design-system/article-reading",
-            entrypoint: new URL(
-              "../design-system/pages/article-reading-redirect.astro",
-              import.meta.url,
-            ),
-          });
-        }
-
-        if (includesTestFixtures) {
-          injectRoute({
-            pattern: "/__test/home",
-            entrypoint: new URL("../test-fixtures/pages/home.astro", import.meta.url),
-          });
-          injectRoute({
-            pattern: "/__test/posts",
-            entrypoint: new URL("../test-fixtures/pages/posts.astro", import.meta.url),
-          });
-          injectRoute({
-            pattern: "/__test/404",
-            entrypoint: new URL("../test-fixtures/pages/404.astro", import.meta.url),
-          });
+        for (const { pattern, entrypoint } of routes) {
+          injectRoute({ pattern, entrypoint: new URL(entrypoint, import.meta.url) });
         }
       },
     },

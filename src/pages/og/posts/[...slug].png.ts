@@ -1,11 +1,10 @@
 import { getCollection } from "astro:content";
-import path from "node:path";
 import type { APIRoute } from "astro";
 
-import { createOgImagePng, OG_IMAGE_COPY } from "@/lib/og-image";
+import { createOgImagePng, OG_IMAGE_COPY, resolveOgImageAssetPaths } from "@/lib/og-image";
+import { isPublishedPost } from "@/lib/posts";
 
-const projectRoot = process.cwd();
-const publishedPosts = getCollection("posts", ({ data }) => !data.draft);
+const publishedPosts = getCollection("posts", isPublishedPost);
 
 export async function getStaticPaths() {
   const posts = await publishedPosts;
@@ -28,8 +27,7 @@ export const GET: APIRoute = async ({ params }) => {
       title: post.data.title,
       url: OG_IMAGE_COPY.url,
     },
-    photoPath: path.join(projectRoot, "src", "assets", "og", "kuri-cutout.png"),
-    sansBoldFontPath: path.join(projectRoot, "src", "assets", "og", "NotoSansJP-Bold.otf"),
+    ...resolveOgImageAssetPaths(),
   });
 
   return new Response(new Uint8Array(png), {

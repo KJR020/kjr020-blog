@@ -11,9 +11,9 @@
 
 | コマンド | 内容 | 検査対象 | 設定 | CIジョブ |
 | --- | --- | --- | --- | --- |
-| `pnpm lint` | Biomeによるリント | `src/`配下の`.ts` `.tsx` `.js` `.jsx` `.astro` | `biome.json` | `lint` |
+| `pnpm lint` | Biomeによるリント | `src/` `tests/` `worker/` `scripts/`配下のTypeScriptと`.astro` | `biome.json` | `lint` |
 | `pnpm format:check` | Biomeによる整形チェック | 同上 | `biome.json` | `format` |
-| `pnpm typecheck` | TypeScriptの型検査 | `tsconfig.json`の対象 | `tsconfig.json` | `typecheck` |
+| `pnpm typecheck` | TypeScriptの型検査 | 各`tsconfig`の対象 | `tsconfig.json`、`tsconfig.worker.json` | `typecheck` |
 | `pnpm check:links` | ドキュメントのリポジトリ内リンク検査 | `README.md`、`docs/**/*.md` | `lychee.toml` | `links` |
 
 いずれも`.github/workflows/ci.yml`が各Pull Requestで実行し、検査に失敗すると該当するCIジョブが失敗する。
@@ -28,7 +28,8 @@ pnpm lint:fix  # 自動修正できるものを修正する
 ```
 
 - ルールは`recommended`を有効にしている
-- 検査対象は`src/`配下の`.ts` `.tsx` `.js` `.jsx` `.astro`
+- 検査対象は`biome.json`の`files.includes`で定義する。`src/`、`tests/`、`worker/`、`scripts/`配下のTypeScriptと`.astro`が対象
+  - コマンドにはパスを渡さない。対象を設定ファイルの1か所で管理し、コマンドと設定の食い違いで検査から漏れるディレクトリを作らないため
 - `.gitignore`を参照し、無視対象のファイルは検査しない
 - `.astro`ファイルでは次のルールを無効にしている。Astroコンポーネントのフロントマターで誤検知するため
   - `style/useConst`、`style/useImportType`
@@ -54,7 +55,14 @@ pnpm format:check  # 整形済みかを検査する(CIはこちらを実行す�
 pnpm typecheck
 ```
 
-`tsc --noEmit`を実行する。Astroが生成する型定義に依存するため、型定義が古い場合は先に同期する。
+実行環境の異なる2つの対象を、別々の設定で検査する。
+
+| 設定 | 対象 | 実行環境の型 |
+| --- | --- | --- |
+| `tsconfig.json` | `src/`、`tests/`（`tests/worker/`を除く） | ブラウザとNode.js |
+| `tsconfig.worker.json` | `worker/`、`tests/worker/` | Cloudflare Workers |
+
+Astroが生成する型定義に依存するため、型定義が古い場合は先に同期する。
 
 ```shell
 pnpm astro sync

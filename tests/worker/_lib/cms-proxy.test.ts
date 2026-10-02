@@ -213,6 +213,20 @@ describe("fetchPages", () => {
     expect(result.message).toBe("Invalid response body");
   });
 
+  it("URLへ変換できないタイトル (孤立サロゲート) を含む場合 upstream_error を返す", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(mockApiResponse({ pages: [{ title: "broken\uD800title" }] })),
+    );
+    const result = await fetchPages("KJR020", "", "sid");
+    expect(result).toEqual({
+      ok: false,
+      code: "upstream_error",
+      message: "Invalid response body",
+      status: 200,
+    });
+  });
+
   it("ネットワークエラーで network_error を返す", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("DNS failed")));
     const result = await fetchPages("KJR020", "", "sid");

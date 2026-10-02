@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import ThemeInit from "@/components/theme/ThemeInit.astro";
+import { SITE_DESCRIPTION } from "@/lib/siteCopy";
 import { buildPageStructuredData, serializeJsonLd } from "@/lib/structuredData";
 
 interface Props {
@@ -19,7 +20,7 @@ interface Props {
 
 const {
   title,
-  description = "KJR020の技術ブログ",
+  description = SITE_DESCRIPTION,
   image = "/og-image.png",
   imageWidth = 1200,
   imageHeight = 630,

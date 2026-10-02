@@ -13,6 +13,7 @@ import {
   generateOgImage,
   OG_IMAGE_COPY,
   OG_IMAGE_SIZE,
+  resolveOgImageAssetPaths,
 } from "@/lib/og-image";
 
 const temporaryDirectories: string[] = [];
@@ -199,6 +200,23 @@ describe("OG image content", () => {
   });
 });
 
+describe("resolveOgImageAssetPaths", () => {
+  it("プロジェクトルートを基準に、実在する素材のパスを返す", () => {
+    const { photoPath, sansBoldFontPath } = resolveOgImageAssetPaths();
+
+    expect(photoPath).toBe(join(ogAssetDirectory, "kuri-cutout.png"));
+    expect(sansBoldFontPath).toBe(join(ogAssetDirectory, "NotoSansJP-Bold.otf"));
+    expect(existsSync(photoPath)).toBe(true);
+    expect(existsSync(sansBoldFontPath)).toBe(true);
+  });
+
+  it("指定したプロジェクトルートを基準にする", () => {
+    expect(resolveOgImageAssetPaths("/repo").photoPath).toBe(
+      join("/repo", "src", "assets", "og", "kuri-cutout.png"),
+    );
+  });
+});
+
 describe("generateOgImage", () => {
   it("renders distinct site and article variants from the shared template", async () => {
     const sourceOptions = {
@@ -255,9 +273,9 @@ describe("generateOgImage", () => {
 
     expect(packageJson.scripts["generate:og-image"]).toBe("tsx scripts/generate-og-image.ts");
     expect(packageJson.scripts.prebuild).toBe("tsx scripts/prepare-public-build.ts");
-    expect(prebuildSource).toContain('import { generateOgImage } from "../src/lib/og-image";');
+    expect(prebuildSource).toContain("await generateOgImage({");
     expect(prebuildSource).toContain(
-      'outputPath: path.join(projectRoot, "public", "og-image.png")',
+      'outputPath: path.join(process.cwd(), "public", "og-image.png")',
     );
   });
 });

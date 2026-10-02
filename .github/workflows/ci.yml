@@ -141,11 +141,10 @@ jobs:
       - name: Test
         run: pnpm test:run --passWithNoTests
 
-  # カバレッジ測定（初回はwarning扱い）
+  # カバレッジ測定（閾値はvitest.config.tsで定義し、下回るとジョブが失敗する）
   coverage:
     if: ${{ github.event_name != 'workflow_dispatch' || !inputs.update_snapshots }}
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

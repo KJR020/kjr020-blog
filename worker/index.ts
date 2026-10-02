@@ -1,5 +1,5 @@
-import { handlePagesRequest } from "./api/pages";
 import { jsonResponse } from "./_lib/http";
+import { handlePagesRequest } from "./api/pages";
 import type { Env } from "./env";
 
 /**

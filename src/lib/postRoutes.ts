@@ -1,3 +1,5 @@
+import { isPublishedPost } from "./posts";
+
 type PostRouteEntry = {
   id: string;
   data: {
@@ -5,12 +7,18 @@ type PostRouteEntry = {
   };
 };
 
+/**
+ * 公開する記事だけを、記事詳細ルートの静的パスへ変換する。
+ *
+ * `includedDraftIds`に挙げた下書きは例外として生成する。テストビルドで、
+ * 固定fixture記事を通常の記事と同じルートへ出力するために使う。
+ */
 export function createPublishedPostStaticPaths<TPost extends PostRouteEntry>(
   posts: TPost[],
   includedDraftIds: readonly string[] = [],
 ) {
   return posts
-    .filter((post) => !post.data.draft || includedDraftIds.includes(post.id))
+    .filter((post) => isPublishedPost(post) || includedDraftIds.includes(post.id))
     .map((post) => ({
       params: { slug: post.id },
       props: { post },

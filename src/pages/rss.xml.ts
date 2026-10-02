@@ -1,19 +1,18 @@
 import { getCollection } from "astro:content";
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
+import { isPublishedPost, sortPostsByNewest } from "@/lib/posts";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/siteCopy";
 
 export async function GET(context: APIContext) {
-  const posts = await getCollection("posts", ({ data }) => !data.draft);
-  const sortedPosts = posts.sort(
-    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-  );
+  const sortedPosts = sortPostsByNewest(await getCollection("posts", isPublishedPost));
   const site = context.site?.toString() ?? "https://kjr020.dev";
   const feedUrl = new URL("/rss.xml", site).toString();
   const latestPublishedAt = sortedPosts.at(0)?.data.date.toUTCString();
 
   return rss({
-    title: "KJR020's Blog",
-    description: "KJR020の技術ブログ",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     site,
     trailingSlash: false,
     items: sortedPosts.map((post) => ({

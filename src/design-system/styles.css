@@ -1134,12 +1134,9 @@ table.map th {
   color: var(--muted-foreground);
 }
 
+/* ホームの補助領域（4列）に近い幅で一覧を確認する */
 .scrapbox-specimen {
-  display: grid;
-  grid-auto-columns: minmax(14rem, 18rem);
-  grid-auto-flow: column;
-  gap: var(--phi-0);
-  overflow-x: auto;
+  max-inline-size: 24rem;
 }
 
 .article-prose {
