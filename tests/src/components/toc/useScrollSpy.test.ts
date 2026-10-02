@@ -56,6 +56,7 @@ describe("useScrollSpy", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
     document.body.innerHTML = "";
   });
 
@@ -171,5 +172,51 @@ describe("useScrollSpy", () => {
 
     // オプションが渡されることを確認（実装で検証）
     expect(MockIntersectionObserver.instances.length).toBe(1);
+  });
+
+  describe("ページ末尾付近でスクロールしたとき", () => {
+    const headingIds = ["heading-1", "heading-2", "heading-3"];
+    const pageHeight = 2000;
+    const viewportHeight = 800;
+
+    const mockScrollPosition = (scrollY: number) => {
+      vi.spyOn(window, "scrollY", "get").mockReturnValue(scrollY);
+      vi.spyOn(window, "innerHeight", "get").mockReturnValue(viewportHeight);
+      vi.spyOn(document.documentElement, "scrollHeight", "get").mockReturnValue(pageHeight);
+    };
+
+    it.each([
+      { case: "末尾に達した", scrollY: 1200 },
+      { case: "末尾まで1px以内（小数点以下の丸め誤差）", scrollY: 1198.5 },
+    ])("$caseときは最後の見出しがactiveIdになる", ({ scrollY }) => {
+      mockScrollPosition(scrollY);
+      const { result } = renderHook(() => useScrollSpy(headingIds));
+
+      act(() => {
+        window.dispatchEvent(new Event("scroll"));
+      });
+
+      expect(result.current.activeId).toBe("heading-3");
+    });
+
+    it("末尾まで2px以上残っているときはactiveIdを変えない", () => {
+      mockScrollPosition(1198);
+      const { result } = renderHook(() => useScrollSpy(headingIds));
+
+      act(() => {
+        window.dispatchEvent(new Event("scroll"));
+      });
+
+      expect(result.current.activeId).toBe("heading-1");
+    });
+
+    it("アンマウント時にscrollリスナーが解除される", () => {
+      const removeEventListenerSpy = vi.spyOn(window, "removeEventListener");
+      const { unmount } = renderHook(() => useScrollSpy(headingIds));
+
+      unmount();
+
+      expect(removeEventListenerSpy).toHaveBeenCalledWith("scroll", expect.any(Function));
+    });
   });
 });
