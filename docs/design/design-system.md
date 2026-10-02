@@ -442,7 +442,7 @@ Wideでは目次の開閉操作を設けず、本文と目次の幅を一定に�
   - Pagefindは、`data-pagefind-body`を持つページが1つもないと、すべてのページを索引するため
 - sitemapとRSSが出力され、カタログのURLを含まない
 - テスト用fixtureがない
-  - テストビルドだけが、検査スクリプトへ`--allow-test-fixtures`を渡してfixtureを許可する
+  - テストビルドだけが、`TEST_FIXTURES`とは別の指定で検査にfixtureを許可する。設定は`package.json`の`build:test`で定義する
   - fixtureを生成する`TEST_FIXTURES`で許可も切り替えると、本番へ混入したときに検査も素通りするため
 
 ページとセクションの対応は[navigation.ts](../../src/design-system/navigation.ts)を正本とする。記事ページの読書仕様は`/design-system/patterns#article-reading`で確認できる。
