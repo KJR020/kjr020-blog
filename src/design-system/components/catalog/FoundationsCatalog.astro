@@ -49,7 +49,7 @@ const uiCurves = [
   ["--ease-in-out", "--duration-base", "In-out", "往復する動き、まばたき以外の目の動き"],
 ] as const;
 
-/** くりのモーション。重さ・接地・間を表す */
+/** キャラクターのモーション。重さ・接地・間を表す */
 const characterCurves = [
   ["--ease-anticipate", "--duration-kuri-jump", "Anticipate", "ジャンプ前に沈む"],
   ["--ease-push", "--duration-kuri-jump", "Push", "押し出し。離陸の速度を空中の初速へつなぐ"],
@@ -60,12 +60,15 @@ const characterCurves = [
   ["--ease-blink-open", "--duration-blink-open", "Blink open", "まぶたはゆっくり開く"],
 ] as const;
 
-const durationTokens = [
+const uiDurations = [
   ["--duration-quick", "ポインターへの即時反応"],
   ["--duration-fast", "Hover、矢印"],
   ["--duration-base", "下線、部品の状態変化"],
   ["--duration-slow", "内容の入場"],
   ["--duration-hero", "ヒーローの見出し、伸び"],
+] as const;
+
+const characterDurations = [
   ["--duration-blink-close", "まばたき: 閉じる"],
   ["--duration-blink-hold", "まばたき: 閉じたまま"],
   ["--duration-blink-open", "まばたき: 開く"],
@@ -279,7 +282,10 @@ const shows = (section: FoundationSection) => sections.includes(section);
       </li>
     </ul>
 
-    <h4 class="motion-heading">UIのイージング</h4>
+    <h4 class="motion-group-heading">UIのモーション</h4>
+    <p class="src">状態・階層・遷移を短く規則的に伝え、操作には即応します。</p>
+
+    <h5 class="motion-heading">イージング</h5>
     <div class="demo curve-grid">
       {uiCurves.map(([easing, duration, label, usage]) => (
         <figure class="curve-card" data-easing={easing} data-duration={duration}>
@@ -302,7 +308,22 @@ const shows = (section: FoundationSection) => sections.includes(section);
       ))}
     </div>
 
-    <h4 class="motion-heading">くりのイージング</h4>
+    <h5 class="motion-heading">Duration</h5>
+    <div class="demo duration-list">
+      {uiDurations.map(([token, usage]) => (
+        <div class="duration-row" data-duration={token}>
+          <code>{token}</code>
+          <span class="duration-bar" aria-hidden="true"></span>
+          <span class="duration-value"></span>
+          <small>{usage}</small>
+        </div>
+      ))}
+    </div>
+
+    <h4 class="motion-group-heading">キャラクターのモーション</h4>
+    <p class="src">くりの人格を、ポーズ、重心、間で表します。体は重く動かず、目だけが素早く動きます。</p>
+
+    <h5 class="motion-heading">イージング</h5>
     <div class="demo curve-grid">
       {characterCurves.map(([easing, duration, label, usage]) => (
         <figure class="curve-card" data-easing={easing} data-duration={duration}>
@@ -325,9 +346,9 @@ const shows = (section: FoundationSection) => sections.includes(section);
       ))}
     </div>
 
-    <h4 class="motion-heading">Duration</h4>
+    <h5 class="motion-heading">Duration</h5>
     <div class="demo duration-list">
-      {durationTokens.map(([token, usage]) => (
+      {characterDurations.map(([token, usage]) => (
         <div class="duration-row" data-duration={token}>
           <code>{token}</code>
           <span class="duration-bar" aria-hidden="true"></span>
@@ -337,7 +358,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
       ))}
     </div>
 
-    <h4 class="motion-heading">くりのモーション</h4>
+    <h5 class="motion-heading">アクション</h5>
     <div class="demo kuri-stage">
       <div class="kuri-stage__ground"><Kuri size="7rem" /></div>
       <div class="kuri-stage__controls">

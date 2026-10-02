@@ -134,6 +134,29 @@ test("カタログの面には影を付けず、罫線で区切る", async ({ pa
   await expect(page.locator("#radius")).not.toContainText("--shadow-card");
 });
 
+test("モーションはUIとキャラクターに分け、それぞれのトークンだけを並べる", async ({ page }) => {
+  await page.goto("/design-system/foundations#motion");
+
+  const motion = page.locator("#motion");
+  await expect(motion.locator("h4.motion-group-heading")).toHaveText([
+    "UIのモーション",
+    "キャラクターのモーション",
+  ]);
+
+  const [uiDurations, characterDurations] = await motion
+    .locator(".duration-list")
+    .evaluateAll((lists) =>
+      lists.map((list) =>
+        Array.from(list.querySelectorAll("[data-duration]"), (row) =>
+          row.getAttribute("data-duration"),
+        ),
+      ),
+    );
+  expect(uiDurations).toContain("--duration-quick");
+  expect(uiDurations.some((token) => /kuri|blink/.test(token ?? ""))).toBe(false);
+  expect(characterDurations.every((token) => /kuri|blink/.test(token ?? ""))).toBe(true);
+});
+
 test("Card部品は罫線で面を示し、影を付けない", async ({ page }) => {
   await page.goto("/design-system/components#card");
 

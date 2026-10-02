@@ -1713,6 +1713,15 @@ table.map th {
 }
 
 /* ---------- 1-6. モーション ---------- */
+/* UIとキャラクターの区切りは罫線で示す */
+.motion-group-heading {
+  margin: var(--phi-2) 0 var(--phi-neg2);
+  padding-block-start: var(--phi-0);
+  border-block-start: 1px solid var(--border);
+  font-size: var(--font-size-body);
+  font-weight: 600;
+}
+
 .motion-heading {
   margin: var(--phi-1) 0 var(--phi-neg1);
   font-size: var(--font-size-small);
