@@ -237,7 +237,7 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
     <p class="src">Desktopは右4列・sticky・内部scrollで常時表示する。Mobileは記事ヘッダー直後に置き、Radix Collapsibleで開閉して、項目選択後に閉じる。</p>
     <div class="demo toc-specimen">
       <TableOfContents headings={tocHeadings} variant="responsive" client:load />
-      <div class="toc-specimen-summary"><strong>Desktop</strong><span>sticky · internal scroll · collapsible</span><strong>Mobile</strong><span>Inline · Collapsible · aria-expanded</span></div>
+      <div class="toc-specimen-summary"><strong>Desktop</strong><span>sticky · internal scroll · always visible</span><strong>Mobile</strong><span>Inline · Collapsible · aria-expanded</span></div>
     </div>
     <p class="source-row"><strong>Source</strong><code>src/components/toc/TableOfContents.tsx</code><code>src/components/toc/MobileTOC.tsx</code></p>
   </div>
