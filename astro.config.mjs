@@ -9,7 +9,8 @@ import { rehypeMermaid } from "@beoe/rehype-mermaid";
 // @ts-ignore
 import remarkLinkCard from "remark-link-card";
 import remarkCallout from "@r4ai/remark-callout";
-import { devDesignSystem } from "./src/integrations/devDesignSystem.ts";
+import { isDesignSystemPage } from "./src/design-system/navigation.ts";
+import { injectedRoutes } from "./src/integrations/injectedRoutes.ts";
 import { rehypeArticleFigures } from "./src/integrations/rehypeArticleFigures.ts";
 
 /** @type {Record<string, string>} */
@@ -74,7 +75,13 @@ export default defineConfig({
   build: {
     format: "directory",
   },
-  integrations: [react(), sitemap(), pagefind(), devDesignSystem()],
+  integrations: [
+    react(),
+    // デザインシステムのカタログはnoindexで公開するため、検索エンジンへ案内しない
+    sitemap({ filter: (page) => !isDesignSystemPage(page) }),
+    pagefind(),
+    injectedRoutes(),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },

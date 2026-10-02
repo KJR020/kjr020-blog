@@ -266,6 +266,16 @@ export const legacySectionRoutes = Object.fromEntries(
   ),
 ) as Record<string, string>;
 
+/**
+ * URLまたはパスが、デザインシステムのカタログ配下のページを指すかを返す。
+ *
+ * カタログは`noindex`で公開するため、sitemapや公開成果物の検査で除外対象を判定する。
+ */
+export function isDesignSystemPage(url: string): boolean {
+  const { pathname } = new URL(url, "https://example.com");
+  return pathname === "/design-system" || pathname.startsWith("/design-system/");
+}
+
 export function isTopLevelPageCurrent(
   activePage: DesignSystemPageId,
   pageId: DesignSystemPageId,
