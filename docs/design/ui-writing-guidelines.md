@@ -232,4 +232,4 @@ Cosenseの0件と404は、同じ文言にしない。どちらも「ページ」
 - [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - 検索UI
 - [ThemeToggleAnimated.tsx](../../src/components/theme/ThemeToggleAnimated.tsx) - Theme切り替え
 - [ScrapboxCardList.tsx](../../src/components/scrapbox/ScrapboxCardList.tsx) - Cosenseの状態表示
-- [posts/[...slug].astro](../../src/pages/posts/[...slug].astro) - Code Copy
+- [posts/[...slug].astro](../../src/pages/posts/%5B...slug%5D.astro) - Code Copy

@@ -153,7 +153,7 @@ Wideでは記事ヘッダーも同じ16列に乗せ、タイトルとメタ情�
 - [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
 - [デザインシステムの基盤ページ](../../src/design-system/pages/foundations.astro) - 配置の視覚例(`/design-system/foundations`)
 - [BaseLayout.astro](../../src/layouts/BaseLayout.astro) - Page shell
-- [記事詳細](../../src/pages/posts/[...slug].astro) - 本文と目次の配置、CompactとMediumの目次開閉
+- [記事詳細](../../src/pages/posts/%5B...slug%5D.astro) - 本文と目次の配置、CompactとMediumの目次開閉
 - [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - Grid外の検索UI
 - [PostsPage.astro](../../src/components/pages/PostsPage.astro) - 記事一覧layout
 - [HomePage.astro](../../src/components/pages/HomePage.astro) - ホームlayout

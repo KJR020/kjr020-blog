@@ -102,7 +102,7 @@ Homeではブログ名と紹介文、最新記事(Posts)、Cosenseのメモ(Note
 | 管理対象 | 正本・役割 |
 | --- | --- |
 | 判断基準、用途、許可・禁止する振る舞い | デザイン仕様書(この文書群) |
-| 共通UIトークンの現在値 | [globals.css](../../src/styles/globals.css) |
+| 共通UIトークンの現在値 | [グローバルスタイルシート](../../src/styles/globals.css) |
 | 部品の構造、公開するprops・variant | 対応するコンポーネント実装 |
 | ページシェルとページ側Grid | [Grid system](grid-system.md) |
 | UI文言の選択規則と表記 | [UIライティングガイドライン](ui-writing-guidelines.md) |
@@ -113,7 +113,7 @@ Homeではブログ名と紹介文、最新記事(Posts)、Cosenseのメモ(Note
 
 文書と実装に不一致がある場合は、原則・個別要件・承認済みの変更意図に照らし、実装不具合、文書の誤記・記載漏れ、または仕様変更の必要性を判断する。実装の現在値だけを理由に、仕様を追認しない。
 
-独立したHTMLへ値や部品を複製しない。確認用カタログへCSS値やコンポーネントの見た目を再実装しない。標本固有のレイアウトだけを[styles.css](../../src/design-system/styles.css)へ置く。
+独立したHTMLへ値や部品を複製しない。確認用カタログへCSS値やコンポーネントの見た目を再実装しない。標本固有のレイアウトだけを[確認用カタログのスタイルシート](../../src/design-system/styles.css)へ置く。
 
 ## ビジュアル言語
 
@@ -178,7 +178,7 @@ durationは次の値を使う。
 
 くりの人格は「体は重く動かず、目だけが素早い」とする。体を3D回転させて向きを表すと平面の看板に見えるため、使わない。
 
-くりの動きはUIと分けて管理する。重さ・接地・間を表す値であり、UIの「なめらかさ」の値を流用しない。[Kuri.astro](../../src/components/Kuri.astro)はこれらのトークンを実行時に読み込む。イージングとdurationは次の値を使う。
+くりの動きはUIと分けて管理する。重さ・接地・間を表す値であり、UIの「なめらかさ」の値を流用しない。[くりのコンポーネント](../../src/components/Kuri.astro)はこれらのトークンを実行時に読み込む。イージングとdurationは次の値を使う。
 
 | Token | 値 | 用途 |
 | --- | --- | --- |
@@ -208,7 +208,7 @@ durationは次の値を使う。
 | 眠り | 起きるのは速く(160ms)、眠るのはゆっくり(まぶたが重くなり、一度持ち直してから閉じる。1.7秒) |
 | 優先度 | 登場・ジャンプ > まばたき > 視線 > 呼吸・見回し。アクション中は下位の動きを止める |
 
-くりの動きを変えたときは、[scripts/kuri-review/](../../scripts/kuri-review/)のスクリプトで、コマ送りの画像、速度のカーブ、数値の関門(接地、体積、着地の加速など)を出力して確認する。使い方は各スクリプトの冒頭に記載している。
+くりの動きを変えたときは、[くりの動きの確認スクリプト](../../scripts/kuri-review/)で、コマ送りの画像、速度のカーブ、数値の関門(接地、体積、着地の加速など)を出力して確認する。使い方は各スクリプトの冒頭に記載している。
 
 ### Reduced motion
 
@@ -260,7 +260,7 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 
 ### ページ内のマスコット
 
-栗のマスコット「くり」は、ページの主役にせず、罫線の端にさりげなく立たせる。[Kuri.astro](../../src/components/Kuri.astro)で描画する。`public/images/kuri.svg`のパスをそのまま使い、元の表現を変えずに動きだけを加える。
+栗のマスコット「くり」は、ページの主役にせず、罫線の端にさりげなく立たせる。[くりのコンポーネント](../../src/components/Kuri.astro)で描画する。`public/images/kuri.svg`のパスをそのまま使い、元の表現を変えずに動きだけを加える。
 
 | 項目 | 仕様 |
 | --- | --- |
@@ -297,7 +297,7 @@ OGPはブログ名、ページの主題、サイトURL、栗マスコットを�
 
 ### 関連実装
 
-[Header.astro](../../src/components/Header.astro)、[Kuri.astro](../../src/components/Kuri.astro)、[src/lib/og-image/](../../src/lib/og-image/)、[og/posts/[...slug].png.ts](../../src/pages/og/posts/[...slug].png.ts)、[siteCopy.ts](../../src/lib/siteCopy.ts)
+[Header.astro](../../src/components/Header.astro)、[Kuri.astro](../../src/components/Kuri.astro)、[src/lib/og-image/](../../src/lib/og-image/)、[og/posts/[...slug].png.ts](../../src/pages/og/posts/%5B...slug%5D.png.ts)、[siteCopy.ts](../../src/lib/siteCopy.ts)
 
 ## 記事の読書設計
 
@@ -382,13 +382,13 @@ Wideでは目次の開閉操作を設けず、本文と目次の幅を一定に�
 
 ### 関連実装
 
-[posts/[...slug].astro](../../src/pages/posts/[...slug].astro)、[rehypeArticleFigures.ts](../../src/integrations/rehypeArticleFigures.ts)、[ImageLightbox.astro](../../src/components/article/ImageLightbox.astro)、[articleCode.ts](../../src/lib/articleCode.ts)、[article-content.css](../../src/styles/article-content.css)、[article-code.css](../../src/styles/article-code.css)
+[posts/[...slug].astro](../../src/pages/posts/%5B...slug%5D.astro)、[rehypeArticleFigures.ts](../../src/integrations/rehypeArticleFigures.ts)、[ImageLightbox.astro](../../src/components/article/ImageLightbox.astro)、[articleCode.ts](../../src/lib/articleCode.ts)、[article-content.css](../../src/styles/article-content.css)、[article-code.css](../../src/styles/article-code.css)
 
 ## Tag interaction
 
 記事一覧の行では、行全体が記事へのリンクであり、その中のTagは分類ページへの別のリンクである。読者が遷移先を取り違えないようにする(原則3)。
 
-記事一覧の行と記事ヘッダーのTag([TagList.astro](../../src/components/TagList.astro))に適用する。
+記事一覧の行と記事ヘッダーで、[Tagの一覧](../../src/components/TagList.astro)が描画するTagに適用する。
 
 ### 要件
 
@@ -447,7 +447,7 @@ Wideでは目次の開閉操作を設けず、本文と目次の幅を一定に�
   - テストビルドだけが、`TEST_FIXTURES`とは別の指定で検査にfixtureを許可する。設定は`package.json`の`build:test`で定義する
   - fixtureを生成する`TEST_FIXTURES`で許可も切り替えると、本番へ混入したときに検査も素通りするため
 
-ページとセクションの対応は[navigation.ts](../../src/design-system/navigation.ts)を正本とする。記事ページの読書仕様は`/design-system/patterns#article-reading`で確認できる。
+ページとセクションの対応は[確認用カタログのナビゲーション定義](../../src/design-system/navigation.ts)を正本とする。記事ページの読書仕様は`/design-system/patterns#article-reading`で確認できる。
 
 ## 運用
 

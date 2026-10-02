@@ -1,6 +1,6 @@
 # Cloudflare Workers運用手順
 
-Cloudflare Workersのデプロイ先`kjr020-blog`に、Cosense API ProxyとStatic Assetsを一緒にデプロイする。設定の正は[wrangler.toml](../../wrangler.toml)、配信する静的ファイルは`dist/`、APIの入口は[worker/index.ts](../../worker/index.ts)。
+Cloudflare Workersのデプロイ先`kjr020-blog`に、Cosense API ProxyとStatic Assetsを一緒にデプロイする。設定の正は[Wranglerの設定ファイル](../../wrangler.toml)、配信する静的ファイルは`dist/`、APIの入口は[Workerのエントリーポイント](../../worker/index.ts)。
 
 ## ローカル確認
 
