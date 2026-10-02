@@ -38,32 +38,33 @@ const tocHeadings = [
   { id: "code-image", text: "Code Copy / Image", level: 2 as const },
 ];
 
+// 公開するカタログに実在のページと架空の説明を並べないよう、予約ドメインを使った標本データにする
 const scrapboxPages = [
   {
-    id: "agent-harness",
-    title: "Agent Harness設計メモ",
+    id: "specimen-design-note",
+    title: "設計メモの標本",
     imageUrl: null,
-    description: "日々の調査メモや実装時の気づきをCosenseから取得して表示。",
+    description: "一覧での見え方を確認するための標本です。説明は2行を超えると省略します。",
     updatedAt: "2026-07-11T00:00:00.000Z",
-    url: "https://scrapbox.io/KJR020/Agent_Harness設計メモ",
+    url: "https://example.com/cosense/specimen-design-note",
   },
   {
-    id: "astro-content-collection",
-    title: "Astro Content Collection",
+    id: "specimen-reading-note",
+    title: "読書メモの標本",
     imageUrl: null,
-    description: "記事データとタグの扱いについて。",
+    description: "タイトル、説明、更新日の順に並べます。",
     updatedAt: "2026-07-08T00:00:00.000Z",
-    url: "https://scrapbox.io/KJR020/Astro_Content_Collection",
+    url: "https://example.com/cosense/specimen-reading-note",
   },
 ];
-
-const buttonCode = `<Button variant="default">記事を読む</Button>
-<Button variant="outline">下書きを確認</Button>
-<Button variant="destructive">削除する</Button>`;
 ---
 
 <section class="spec" id="primitives">
   <h2>4. 基本部品</h2>
+  <ul class="src rule-list">
+    <li>ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUI</li>
+    <li>用途・構造・状態を共通化し、ページごとの独自実装を増やさないために使用する</li>
+  </ul>
 
   <div class="spec-item" id="button">
     <h3>4-1. Button</h3>
@@ -84,10 +85,6 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
         <Button disabled>読み込み中…</Button>
       </div>
     </div>
-    <details class="code-sample">
-      <summary>使用例を表示</summary>
-      <div><pre><code>{buttonCode}</code></pre><Button type="button" variant="outline" size="sm" data-copy-button>コピー</Button></div>
-    </details>
     <p class="source-row"><strong>Source</strong><code>src/components/ui/button.tsx</code></p>
   </div>
 
@@ -159,17 +156,19 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
 
 <section class="spec" id="navigation">
   <h2>5. ナビゲーション・検索部品</h2>
+  <p class="src">サイト内の現在地、移動先、検索手段を読者へ伝える部品です。Pointer・Touch・Keyboardのいずれでも同じ場所と操作へ到達できることを基準とします。</p>
 
   <div class="spec-item" id="global-navigation">
     <h3>5-1. Header / Global Navigation</h3>
-    <p class="src">高さ4rem、sticky、背景は紙色82%＋backdrop blur。ブランドリンクは著者の写真とブログ名を組み合わせる。写真は32×32pxの円に細い輪郭を付ける。現在地は文字の下の青い点で示す。Desktopは水平ナビ、MobileはMenu buttonへ切り替える。</p>
+    <p class="src">高さ4rem、sticky、背景は紙色82%＋backdrop blur。ブランドリンクは著者の写真とブログ名を組み合わせる。写真は32×32pxの円に細い輪郭を付ける。現在地は文字の下の青い点で示す。Desktopは水平ナビ、MobileはMenu buttonへ切り替える。水平ナビは項目を折り返さず、60rem未満ではSearchの<kbd>⌘K</kbd>表示を省く。</p>
     <div class="demo site-header-demo">
       <a class="site-brand-demo" href="#global-navigation"><img src="/images/kuri_photo.png" alt="" width="500" height="500" />KJR020's Blog</a>
       <nav class="nav-demo" aria-label="ヘッダー例">
         <a class="is-active" href="#global-navigation" aria-current="page">Home</a>
         <a href="#global-navigation">Posts</a>
+        <a href="#global-navigation">Design System</a>
         <button type="button">Search <kbd>⌘K</kbd></button>
-        <a href="https://scrapbox.io/KJR020">Scrapbox</a>
+        <a href="#global-navigation">Cosense</a>
       </nav>
     </div>
     <p class="source-row"><strong>Source</strong><code>src/components/Header.astro</code></p>
@@ -207,6 +206,7 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
 
 <section class="spec" id="blog-components">
   <h2>6. ブログ固有部品</h2>
+  <p class="src">記事を探す・読む・関連情報へ移動するために、KJR020's Blog固有の情報構造を持つ部品です。実データと状態を含めて再利用し、ページごとに別の見た目や挙動を作りません。</p>
 
   <div class="spec-item" id="page-hero">
     <h3>6-1. PageHero</h3>
@@ -246,7 +246,7 @@ const buttonCode = `<Button variant="default">記事を読む</Button>
     <h3>6-4. Scrapbox Card List</h3>
     <p class="src">Cosenseのメモを、タイトル・説明・更新日の一覧として縦に並べる。各項目は外部リンクで開く。0件のときは、親が領域ごと畳めるよう印だけを出す。</p>
     <div class="demo scrapbox-specimen">
-      <ScrapboxCardList project="KJR020" pages={scrapboxPages} client:visible />
+      <ScrapboxCardList project="specimen" pages={scrapboxPages} client:visible />
     </div>
     <p class="source-row"><strong>Source</strong><code>src/components/scrapbox/ScrapboxCardList.tsx</code></p>
   </div>
