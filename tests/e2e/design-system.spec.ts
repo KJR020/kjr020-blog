@@ -533,7 +533,7 @@ test("モバイルではサイドバーを折りたたみ目次として表示�
   const sidebar = page.getByRole("complementary", {
     name: "デザインシステムの目次",
   });
-  const toggle = sidebar.getByRole("button", { name: "デザインシステムの目次" });
+  const toggle = sidebar.getByRole("button", { name: "ページとセクション" });
 
   await expect(toggle).toBeVisible();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
