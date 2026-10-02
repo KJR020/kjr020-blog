@@ -1,6 +1,17 @@
-# Architecture diagram icons
+# アーキテクチャ図のロゴ
 
-`blog-architecture.drawio`とREADME用SVGで使用するロゴの原本。Reactロゴは図の検討時に取得した候補で、現行図には配置していません。
+アーキテクチャ図で使用するロゴの原本と、検討用に取得したReactロゴをまとめています。
+
+## 文書一覧
+
+- [github.svg](github.svg) - GitHubとGiscusの識別に使うロゴの原本
+- [cloudflare.svg](cloudflare.svg) - Cloudflare Workersの識別に使うロゴの原本
+- [markdown.svg](markdown.svg) - Markdown記事の識別に使うロゴの原本
+- [astro.svg](astro.svg) - Astro Buildの識別に使うロゴの原本
+- [github-actions.svg](github-actions.svg) - Deploy workflowの識別に使うロゴの原本
+- [react.svg](react.svg) - クライアント側コンポーネントの検討用で、現行図では未使用のロゴ原本
+
+## 参考資料
 
 | ファイル | 出典 | 備考 |
 | --- | --- | --- |
