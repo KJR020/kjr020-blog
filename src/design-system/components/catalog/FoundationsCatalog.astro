@@ -46,18 +46,44 @@ const uiCurves = [
   ["--ease-exit", "--duration-fast", "Exit", "退場。加速して短く消える"],
   ["--ease-move", "--duration-base", "Move", "位置の移動、下線"],
   ["--ease-emphasis", "--duration-hero", "Emphasis", "ヒーローの見出しなど、表現的な入場"],
-  ["--ease-in-out", "--duration-base", "In-out", "往復する動き、まばたき以外の目の動き"],
+  ["--ease-in-out", "--duration-base", "In-out", "往復する動き"],
 ] as const;
 
-/** キャラクターのモーション。重さ・接地・間を表す */
+/** キャラクターのモーション。重さ・接地・間を表す。アクションの順に並べる */
 const characterCurves = [
+  [
+    "--ease-emerge",
+    "--duration-kuri-enter",
+    "Emerge",
+    "登場。罫線の下から出て、行き過ぎた位置で止まる",
+  ],
+  [
+    "--ease-touchdown",
+    "--duration-kuri-enter",
+    "Touchdown",
+    "登場。行き過ぎた位置から足を罫線へ下ろす",
+  ],
+  ["--ease-recover", "--duration-kuri-enter", "Recover", "登場。着地でつぶれた形から戻る"],
   ["--ease-anticipate", "--duration-kuri-jump", "Anticipate", "ジャンプ前に沈む"],
   ["--ease-push", "--duration-kuri-jump", "Push", "押し出し。離陸の速度を空中の初速へつなぐ"],
-  ["--ease-fall", "--duration-kuri-jump", "Fall", "落下。加速したまま接地する"],
   ["--ease-impact", "--duration-kuri-jump", "Impact", "着地の反動。すぐに止まる"],
   ["--ease-settle", "--duration-kuri-jump", "Settle", "反動から静止へ。呼吸の吸う・吐く"],
+  ["--ease-eye-lag", "--duration-kuri-jump", "Eye lag", "ジャンプ中、目が体に遅れて動く"],
+  ["--ease-eye-catch-up", "--duration-kuri-jump", "Eye catch-up", "遅れた目が体に追いつく"],
+  ["--ease-eye-drop", "--duration-kuri-jump", "Eye drop", "着地の衝撃で目が落ちる"],
   ["--ease-blink-close", "--duration-blink-close", "Blink close", "まぶたは速く閉じる"],
   ["--ease-blink-open", "--duration-blink-open", "Blink open", "まぶたはゆっくり開く"],
+  ["--ease-doze", "--duration-kuri-doze", "Doze", "まぶたが重くなり、一度持ち直す"],
+  ["--ease-drift-off", "--duration-kuri-doze", "Drift off", "持ち直したまぶたが力尽きて閉じきる"],
+  ["--ease-relax", "--duration-kuri-doze", "Relax", "寝入って体の力が抜ける"],
+  [
+    "--ease-eye-swap",
+    "--duration-kuri-eye-swap",
+    "Eye swap",
+    "開いた目の縁と眠った目の弧を入れ替える",
+  ],
+  ["--ease-zzz-fade", "--duration-kuri-zzz-fade", "Zzz fade", "起きるとzzzが消える"],
+  ["--ease-zzz-float", "--duration-kuri-zzz-float", "Zzz float", "zzzが浮かんで消える"],
 ] as const;
 
 const uiDurations = [
@@ -73,9 +99,12 @@ const characterDurations = [
   ["--duration-blink-hold", "まばたき: 閉じたまま"],
   ["--duration-blink-open", "まばたき: 開く"],
   ["--duration-kuri-wake", "起きる"],
+  ["--duration-kuri-eye-swap", "目の縁と眠った目の弧の入れ替え"],
   ["--duration-kuri-enter", "罫線の下からの登場"],
   ["--duration-kuri-jump", "ジャンプ"],
   ["--duration-kuri-doze", "うとうとして眠る"],
+  ["--duration-kuri-zzz-fade", "起きたときにzzzが消える"],
+  ["--duration-kuri-zzz-float", "zzzが浮かんで消える1周期"],
   ["--duration-kuri-breathe", "呼吸の1周期"],
 ] as const;
 
@@ -269,8 +298,8 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>トークン</strong>
         <ul>
-          <li>カーブとdurationは<code>globals.css</code>のトークンを正本とする</li>
-          <li>くりのスクリプトも、同じトークンを実行時に読み込む</li>
+          <li>UIのカーブとdurationは<code>globals.css</code>、くりの値は<code>Kuri.astro</code>のトークンを正本とする</li>
+          <li>くりの動きには、UIのトークンを流用しない</li>
         </ul>
       </li>
       <li>
@@ -326,7 +355,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
     <h5 class="motion-heading">イージング</h5>
     <div class="demo curve-grid">
       {characterCurves.map(([easing, duration, label, usage]) => (
-        <figure class="curve-card" data-easing={easing} data-duration={duration}>
+        <figure class="curve-card" data-easing={easing} data-duration={duration} data-token-owner="kuri">
           <svg class="curve-plot" viewBox="-12 -32 124 164" aria-hidden="true">
             <rect class="curve-frame" x="0" y="0" width="100" height="100" />
             <line class="curve-guide" x1="0" y1="100" x2="100" y2="0" />
@@ -349,7 +378,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
     <h5 class="motion-heading">Duration</h5>
     <div class="demo duration-list">
       {characterDurations.map(([token, usage]) => (
-        <div class="duration-row" data-duration={token}>
+        <div class="duration-row" data-duration={token} data-token-owner="kuri">
           <code>{token}</code>
           <span class="duration-bar" aria-hidden="true"></span>
           <span class="duration-value"></span>
@@ -648,19 +677,32 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
 <script>
   // カーブとdurationは、現在のトークン値から描画する。値を標本側へ複製しない
-  const root = getComputedStyle(document.documentElement);
-  const read = (name: string) => root.getPropertyValue(name).trim();
+  // UIの値は:rootから、くり専用の値はそれを定義している標本のくりから読む
+  const styles = {
+    ui: getComputedStyle(document.documentElement),
+    kuri: (() => {
+      const kuri = document.querySelector(".kuri-stage [data-kuri]");
+      return kuri ? getComputedStyle(kuri) : undefined;
+    })(),
+  };
+  const read = (element: HTMLElement, name: string) => {
+    const style = element.dataset.tokenOwner === "kuri" ? styles.kuri : styles.ui;
+    return style?.getPropertyValue(name).trim() ?? "";
+  };
   const toMs = (value: string) =>
     value.endsWith("ms") ? Number.parseFloat(value) : Number.parseFloat(value) * 1000;
 
   for (const card of document.querySelectorAll<HTMLElement>(".curve-card")) {
-    const easing = read(card.dataset.easing ?? "");
-    const duration = toMs(read(card.dataset.duration ?? ""));
+    const easing = read(card, card.dataset.easing ?? "");
+    const duration = toMs(read(card, card.dataset.duration ?? ""));
     const match = /cubic-bezier\(([^)]+)\)/.exec(easing);
+    const points = match?.[1].split(",").map(Number);
     const valueLabel = card.querySelector(".curve-value");
-    if (valueLabel) valueLabel.textContent = `${easing} / ${duration}ms`;
-    if (match) {
-      const [x1, y1, x2, y2] = match[1].split(",").map(Number);
+    // コンポーネントの<style>は0.45を.45へ縮めて出力するため、数値から表記を揃える
+    const label = points ? `cubic-bezier(${points.join(", ")})` : easing;
+    if (valueLabel) valueLabel.textContent = `${label} / ${duration}ms`;
+    if (points) {
+      const [x1, y1, x2, y2] = points;
       const px = (x: number) => x * 100;
       const py = (y: number) => 100 - y * 100;
       card
@@ -690,7 +732,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
   }
 
   const durations = [...document.querySelectorAll<HTMLElement>(".duration-row")];
-  const values = durations.map((row) => toMs(read(row.dataset.duration ?? "")));
+  const values = durations.map((row) => toMs(read(row, row.dataset.duration ?? "")));
   const longest = Math.max(...values.filter((value) => value < 3000));
   durations.forEach((row, index) => {
     const value = values[index];
