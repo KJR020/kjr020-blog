@@ -126,6 +126,16 @@ test("本文組版の標本も768pxからMediumの文字サイズを使う", asy
   await expect(paragraph).toHaveCSS("font-size", "17px");
 });
 
+test("本文組版の標本は記事本文と同じ43icの上限で折り返す", async ({ page }) => {
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto("/design-system/patterns#reading-typography");
+
+  const paragraph = page.locator("#reading-typography .article-reading-content > p");
+  const width = await paragraph.evaluate((element) => element.getBoundingClientRect().width);
+
+  expect(width).toBeCloseTo(17 * 43, 0);
+});
+
 test("サイドバーはどのページでも全カテゴリの項目を保持する", async ({ page }) => {
   await page.goto("/design-system/foundations");
 
