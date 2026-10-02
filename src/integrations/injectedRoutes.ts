@@ -31,22 +31,22 @@ const TEST_FIXTURE_ROUTES: readonly RouteDefinition[] = [
 ];
 
 /**
- * デザインシステムとブラウザテスト用fixtureを本番サイトから分離して公開する。
+ * `src/pages`の外に置いたページをルートとして登録する。
  *
- * デザインシステムは開発サーバーだけ、fixtureは開発サーバーと
- * `TEST_FIXTURES=true`を指定したテストビルドだけにルートを注入する。
+ * デザインシステムのカタログは本番を含むすべてのコマンドで登録する。
+ * ブラウザテスト用fixtureは、開発サーバーと`TEST_FIXTURES=true`を指定した
+ * テストビルドだけに登録し、本番の成果物へ出力しない。
  */
-export function devDesignSystem(): AstroIntegration {
+export function injectedRoutes(): AstroIntegration {
   return {
-    name: "kjr020:dev-design-system",
+    name: "kjr020:injected-routes",
     hooks: {
       "astro:config:setup": ({ command, injectRoute }) => {
-        const includesDesignSystem = command === "dev";
         const includesTestFixtures =
           command === "dev" || (command === "build" && process.env.TEST_FIXTURES === "true");
 
         const routes = [
-          ...(includesDesignSystem ? DESIGN_SYSTEM_ROUTES : []),
+          ...DESIGN_SYSTEM_ROUTES,
           ...(includesTestFixtures ? TEST_FIXTURE_ROUTES : []),
         ];
 

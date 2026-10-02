@@ -297,7 +297,6 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: var(--shadow-card);
 }
 
 .scope-note strong {
@@ -349,7 +348,6 @@ pre {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: var(--shadow-card);
 }
 
 .source-row {
@@ -413,7 +411,6 @@ pre {
   background: var(--card);
   color: var(--foreground);
   text-decoration: none;
-  box-shadow: var(--shadow-card);
   transition:
     border-color 180ms ease,
     color 180ms ease;
@@ -612,31 +609,12 @@ pre {
   background: var(--card);
 }
 
-.code-sample summary {
-  padding: var(--phi-neg1) var(--phi-0);
-  color: var(--muted-foreground);
-  font-size: var(--font-size-small);
-  cursor: pointer;
-}
-
-.code-sample > div {
-  position: relative;
-  border-block-start: 1px solid var(--border);
-  background: var(--secondary);
-}
-
 .code-sample pre {
   margin: 0;
   overflow-x: auto;
   padding: var(--phi-0);
   font-size: 0.78rem;
   line-height: 1.7;
-}
-
-.code-sample button {
-  position: absolute;
-  inset: var(--phi-neg1) var(--phi-neg1) auto auto;
-  background: var(--background);
 }
 
 .input-grid {
@@ -711,12 +689,29 @@ table.map th {
 }
 
 .rule-list {
-  margin: 0;
+  margin: 0 0 var(--phi-0);
   padding-inline-start: var(--phi-1);
+  list-style: disc;
 }
 
 .rule-list li + li {
   margin-block-start: var(--phi-neg2);
+}
+
+/* ルールの見出しを親に、説明を子に置く */
+.rule-list > li > strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.rule-list ul {
+  margin: var(--phi-neg3) 0 0;
+  padding-inline-start: var(--phi-1);
+  list-style: circle;
+}
+
+.rule-list ul li + li {
+  margin-block-start: var(--phi-neg3);
 }
 
 .foundation-pair {
@@ -740,10 +735,6 @@ table.map th {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: var(--shadow-card);
-}
-
-.shadow-specimen--overlay > span {
   box-shadow: var(--shadow-overlay);
 }
 
@@ -1418,15 +1409,6 @@ table.map th {
   text-underline-offset: 0.2rem;
 }
 
-.copy-status {
-  position: fixed;
-  inline-size: 1px;
-  block-size: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 @media (max-width: 56rem) {
   .book-shell {
     display: block;
@@ -1457,7 +1439,6 @@ table.map th {
     font-size: var(--font-size-small);
     font-weight: 500;
     cursor: pointer;
-    box-shadow: var(--shadow-card);
   }
 
   .sidebar-toggle-mark {
@@ -1478,7 +1459,6 @@ table.map th {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--background);
-    box-shadow: var(--shadow-card);
   }
 
   .design-system-sidebar[data-open="true"] .sidebar-panel {
@@ -1733,6 +1713,15 @@ table.map th {
 }
 
 /* ---------- 1-6. モーション ---------- */
+/* UIとキャラクターの区切りは罫線で示す */
+.motion-group-heading {
+  margin: var(--phi-2) 0 var(--phi-neg2);
+  padding-block-start: var(--phi-0);
+  border-block-start: 1px solid var(--border);
+  font-size: var(--font-size-body);
+  font-weight: 600;
+}
+
 .motion-heading {
   margin: var(--phi-1) 0 var(--phi-neg1);
   font-size: var(--font-size-small);

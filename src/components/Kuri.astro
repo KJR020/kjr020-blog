@@ -171,9 +171,9 @@ const EYELIDS = [
 
 <script>
   /*
-   * くりの動き。状態ごとに優先度を持たせ、同時に1つの演技だけを見せる。
+   * くりの動き。状態ごとに優先度を持たせ、同時に1つのアクションだけを見せる。
    *   登場・ジャンプ（action） > まばたき > 視線 > 呼吸・見回し
-   * 演技中は下位の動きを止める（Staging）。
+   * アクション中は下位の動きを止める（Staging）。
    */
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -255,7 +255,7 @@ const EYELIDS = [
       this.lookX = createSpring((x) => svg.style.setProperty("--gaze-x", `${x * GAZE_X}px`));
       this.lookY = createSpring((y) => svg.style.setProperty("--gaze-y", `${y * GAZE_Y}px`));
       svg.addEventListener("pointerdown", () => this.jump());
-      // 動きの確認用。外から演技を呼び出せるようにする
+      // 動きの確認用。外からアクションを呼び出せるようにする
       svg.addEventListener("kuri:enter", () => this.enter());
       svg.addEventListener("kuri:jump", () => this.jump());
       svg.addEventListener("kuri:blink", () => void this.blink());

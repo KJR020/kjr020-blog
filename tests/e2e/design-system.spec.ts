@@ -32,12 +32,135 @@ test("カテゴリカードはカード全体をリンクにして補助ラベ�
   await expect(directory.locator("a.spec-page-link")).toHaveCount(5);
   await expect(directory).not.toContainText("開く");
   await expect(directory.locator(".spec-page-link > span")).toHaveText([
-    "視覚表現とレイアウトの共通ルール",
-    "再利用するUI部品とナビゲーション",
-    "状態・記事・ページを組み立てる方法",
-    "声の性格とUI文言のルール",
-    "正規仕様の適用と更新ルール",
+    "色・文字・余白・Gridなど、全ページが共有する値と配置のルール",
+    "情報表示と操作を一貫して実装するための再利用可能なUI部品",
+    "状態、記事、ページを読者の目的に沿って組み立てる方法",
+    "操作と状態を自然で具体的な言葉で伝えるUIライティング",
+    "正規仕様と実装を一致させて保つための管理・更新ルール",
   ]);
+});
+
+test("公開ページは仕様の目的と使い方を説明する", async ({ page }) => {
+  const pageDescriptions = [
+    { path: "/design-system", description: "同じ役割に同じ表現を使うための判断基準" },
+    {
+      path: "/design-system/foundations",
+      description: "画面幅やテーマが変わっても情報の意味と優先順位を保つ",
+    },
+    { path: "/design-system/components", description: "同じ役割のUIを同じ構造で実装する" },
+    { path: "/design-system/patterns", description: "探す・読む・移動する流れを保つ" },
+    { path: "/design-system/content", description: "起きたこと、次にできることを自然な日本語" },
+    { path: "/design-system/governance", description: "採用済みの仕様だけを正規情報として保つ" },
+  ] as const;
+
+  for (const pageDescription of pageDescriptions) {
+    await page.goto(pageDescription.path);
+    await expect(page.locator(".book-lead")).toContainText(pageDescription.description);
+  }
+
+  await page.goto("/design-system/foundations");
+  await expect(page.locator("#tokens > .src")).toContainText("用途を表す名前");
+  await expect(page.locator("#layout > .src")).toContainText("読む順序");
+});
+
+test("説明はルールの見出しを親に、説明を子にした箇条書きで書き、項目末尾に句点を付けない", async ({
+  page,
+}) => {
+  for (const path of [
+    "/design-system/foundations",
+    "/design-system/components",
+    "/design-system/patterns",
+    "/design-system/content",
+    "/design-system/governance",
+  ]) {
+    await page.goto(path);
+
+    const ruleItems = await page.locator(".rule-list li").evaluateAll((items) =>
+      items.map((item) => ({
+        text: (item.querySelector(":scope > ul")
+          ? item.querySelector(":scope > strong")
+          : item
+        )?.textContent?.trim(),
+      })),
+    );
+    expect(ruleItems.filter(({ text }) => text?.endsWith("。"))).toEqual([]);
+  }
+
+  await page.goto("/design-system/foundations#radius");
+  const radiusRules = page.locator("#radius > .rule-list > li");
+  await expect(radiusRules.locator(":scope > strong")).toHaveText(["角丸", "影"]);
+  await expect(radiusRules.nth(1).locator(":scope > ul > li")).toHaveText([
+    "面の区切りには使わず、罫線と余白で示す",
+    "Dialog・Popover・Menuなど、本文の前面に重なる面にだけ使う",
+  ]);
+});
+
+test("Button標本は実装例のコードを重ねず状態とvariantだけを表示する", async ({ page }) => {
+  await page.goto("/design-system/components#button");
+
+  await expect(page.locator("#primitives > .src")).toContainText("複数の場所で使う最小単位のUI");
+
+  const buttonSpecimen = page.locator("#button");
+  await expect(buttonSpecimen).not.toContainText("使用例を表示");
+  await expect(buttonSpecimen.locator(".code-sample")).toHaveCount(0);
+  await expect(buttonSpecimen.getByRole("button", { name: "記事を読む" })).toBeVisible();
+  await expect(buttonSpecimen.getByText("src/components/ui/button.tsx")).toBeVisible();
+});
+
+test("Scrapbox Card Listの標本は実在するCosenseのページへリンクしない", async ({ page }) => {
+  await page.goto("/design-system/components#scrapbox-card-list");
+
+  const links = page.locator("#scrapbox-card-list .scrapbox-specimen").getByRole("link");
+  await expect(links).toHaveCount(2);
+  for (const href of await links.evaluateAll((elements) =>
+    elements.map((element) => element.getAttribute("href") ?? ""),
+  )) {
+    expect(new URL(href).hostname).toBe("example.com");
+  }
+});
+
+test("カタログの面には影を付けず、罫線で区切る", async ({ page }) => {
+  await page.goto("/design-system");
+  await expect(page.locator(".scope-note")).toHaveCSS("box-shadow", "none");
+  await expect(page.locator(".spec-page-link").first()).toHaveCSS("box-shadow", "none");
+
+  await page.goto("/design-system/foundations#radius");
+  await expect(page.locator("#radius > .demo")).toHaveCSS("box-shadow", "none");
+
+  // 影は本文の前面に重なる面にだけ使うため、標本もOverlayの1種類だけを示す
+  const shadowSpecimens = page.locator("#radius .shadow-specimen");
+  await expect(shadowSpecimens).toHaveCount(1);
+  await expect(shadowSpecimens).toContainText("--shadow-overlay");
+  await expect(page.locator("#radius")).not.toContainText("--shadow-card");
+});
+
+test("モーションはUIとキャラクターに分け、それぞれのトークンだけを並べる", async ({ page }) => {
+  await page.goto("/design-system/foundations#motion");
+
+  const motion = page.locator("#motion");
+  await expect(motion.locator("h4.motion-group-heading")).toHaveText([
+    "UIのモーション",
+    "キャラクターのモーション",
+  ]);
+
+  const [uiDurations, characterDurations] = await motion
+    .locator(".duration-list")
+    .evaluateAll((lists) =>
+      lists.map((list) =>
+        Array.from(list.querySelectorAll("[data-duration]"), (row) =>
+          row.getAttribute("data-duration"),
+        ),
+      ),
+    );
+  expect(uiDurations).toContain("--duration-quick");
+  expect(uiDurations.some((token) => /kuri|blink/.test(token ?? ""))).toBe(false);
+  expect(characterDurations.every((token) => /kuri|blink/.test(token ?? ""))).toBe(true);
+});
+
+test("Card部品は罫線で面を示し、影を付けない", async ({ page }) => {
+  await page.goto("/design-system/components#card");
+
+  await expect(page.locator('#card [data-slot="card"]')).toHaveCSS("box-shadow", "none");
 });
 
 test("記事ページの仕様をパターンページに統合して表示する", async ({ page }) => {
@@ -263,6 +386,10 @@ test("実装とつながったデザインシステムを表示する", async ({
   await expect(header).toBeVisible();
   await expect(header.getByRole("link", { name: "KJR020's Blog" })).toHaveAttribute("href", "/");
   await expect(header.getByRole("link", { name: "Posts" })).toHaveAttribute("href", "/posts");
+  await expect(header.getByRole("link", { name: "Design System" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
   await expect(header.getByRole("button", { name: /Search/ })).toBeVisible();
   await expect(header.getByRole("link", { name: /Cosense/ })).toHaveAttribute(
     "href",
@@ -357,11 +484,10 @@ test("ヘッダー・本文・コードで合意したフォントを使い分�
   ).toEqual([]);
 
   await page.goto("/design-system/foundations#typography");
-  await expect(
-    page.getByText(
-      "ヘッダーはsystem sans、本文と見出しはNoto Sans JP、コードとトークン名はJetBrains Monoを使用する。",
-    ),
-  ).toBeVisible();
+  const typographyDescription = page.locator("#typography > .rule-list");
+  await expect(typographyDescription).toContainText("Headerはsystem sans");
+  await expect(typographyDescription).toContainText("本文と見出しはNoto Sans JP");
+  await expect(typographyDescription).toContainText("コードとトークン名はJetBrains Mono");
   const codeFont = await page
     .locator("#typography code")
     .first()
@@ -471,7 +597,7 @@ test("モバイルではサイドバーを折りたたみ目次として表示�
   const sidebar = page.getByRole("complementary", {
     name: "デザインシステムの目次",
   });
-  const toggle = sidebar.getByRole("button", { name: "デザインシステムの目次" });
+  const toggle = sidebar.getByRole("button", { name: "ページとセクション" });
 
   await expect(toggle).toBeVisible();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
@@ -599,7 +725,11 @@ test("記事ページの仕様は他の仕様項目と同じ見出し・説明�
     "Figure",
     "Code example",
   ]);
-  await expect(sections.locator(":scope > p.src")).toHaveCount(5);
+  // 各項目は、リード文かルールの箇条書きの少なくとも一方を持つ
+  const descriptionCounts = await sections.evaluateAll((elements) =>
+    elements.map((element) => element.querySelectorAll(":scope > .src").length),
+  );
+  expect(descriptionCounts.every((count) => count > 0)).toBe(true);
   await expect(sections.locator(":scope > .demo")).toHaveCount(5);
   await expect(page.locator("#article-reading .section-heading")).toHaveCount(0);
   await expect(page.locator("#article-reading .section-lead")).toHaveCount(0);

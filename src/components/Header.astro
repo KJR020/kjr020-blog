@@ -5,6 +5,7 @@ import { ThemeToggleAnimated } from "@/components/theme/ThemeToggleAnimated";
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/posts", label: "Posts" },
+  { href: "/design-system", label: "Design System" },
   { action: "search" as const, label: "Search" },
   { href: "https://scrapbox.io/kjr020/", label: "Cosense", external: true },
 ];
@@ -186,6 +187,7 @@ const isActive = (href: string) => {
     font-size: 0.875rem;
     font-weight: 500;
     text-decoration: none;
+    white-space: nowrap;
     transition: color var(--duration-fast) var(--ease-out);
   }
 
@@ -235,8 +237,9 @@ const isActive = (href: string) => {
     color: var(--foreground);
   }
 
+  /* 横並びにする最小幅では全項目が1行に収まらないため、キーボード操作の補助表示を省く */
   .site-search__kbd {
-    display: inline-flex;
+    display: none;
     block-size: 1.5rem;
     align-items: center;
     margin-inline-start: 0.5rem;
@@ -245,5 +248,11 @@ const isActive = (href: string) => {
     background: var(--secondary);
     color: var(--muted-foreground);
     font-size: 0.6875rem;
+  }
+
+  @media (min-width: 60rem) {
+    .site-search__kbd {
+      display: inline-flex;
+    }
   }
 </style>

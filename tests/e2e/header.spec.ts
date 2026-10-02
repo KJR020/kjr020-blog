@@ -30,6 +30,10 @@ test.describe("モバイルビューポートでのメニュー動作", () => {
     const mobileNav = page.locator("astro-island nav");
     const homeLink = mobileNav.getByRole("link", { name: "Home" });
     await expect(homeLink).toBeVisible();
+    await expect(mobileNav.getByRole("link", { name: "Design System" })).toHaveAttribute(
+      "href",
+      "/design-system",
+    );
 
     await menuButton.click();
     await expect(menuButton).toHaveAttribute("aria-expanded", "false");
@@ -84,6 +88,25 @@ test.describe("モバイルビューポートでのメニュー動作", () => {
   });
 });
 
+test.describe("ナビゲーションを横に並べる最小幅での表示", () => {
+  test.use({ viewport: { width: 768, height: 720 } });
+
+  test("すべての項目を1行に収め、横にはみ出さない", async ({ page }) => {
+    await page.goto("/__test/home");
+
+    const nav = page.locator("header nav");
+    await expect(nav).toBeVisible();
+    const { navHeight, scrollWidth, innerWidth } = await page.evaluate(() => ({
+      navHeight: document.querySelector("header nav")?.getBoundingClientRect().height ?? 0,
+      scrollWidth: document.documentElement.scrollWidth,
+      innerWidth: window.innerWidth,
+    }));
+    expect(scrollWidth).toBeLessThanOrEqual(innerWidth);
+    // 折り返すと項目の高さ(2.25rem)を超える
+    expect(navHeight).toBeLessThanOrEqual(36);
+  });
+});
+
 test.describe("デスクトップビューポートでの表示", () => {
   test.use({ viewport: { width: 1280, height: 720 } });
 
@@ -99,6 +122,8 @@ test.describe("デスクトップビューポートでの表示", () => {
     await expect(homeLink).toBeVisible();
     const postsLink = desktopNav.getByRole("link", { name: "Posts" });
     await expect(postsLink).toBeVisible();
+    const designSystemLink = desktopNav.getByRole("link", { name: "Design System" });
+    await expect(designSystemLink).toHaveAttribute("href", "/design-system");
   });
 
   test("ハンバーガーメニューが非表示", async ({ page }) => {

@@ -121,7 +121,7 @@ Pagefind、API、proxyなどの実装語は、記事本文や開発者向けロ�
 ### 日本語と英語
 
 - Navigationのカテゴリ名とサービス固有名は英語を使用できる
-  - `Home`, `Posts`, `Search`, `Cosense`
+  - `Home`, `Posts`, `Design System`, `Search`, `Cosense`
 - 説明、操作、状態は日本語を基本とする
 - 技術固有名詞は公式表記を使う
   - `Astro`, `Pagefind`, `Cosense`, `Google Analytics`
@@ -227,7 +227,7 @@ Cosenseの0件と404は、同じ文言にしない。どちらも「ページ」
 
 ## 関連ファイル
 
-- [デザインシステムのコンテンツページ](../../src/design-system/pages/content.astro) - UIライティングの視覚サマリー(`pnpm dev`の`/design-system/content`)
+- [デザインシステムのコンテンツページ](../../src/design-system/pages/content.astro) - UIライティングの視覚サマリー(`/design-system/content`)
 - [デザイン仕様](design-system.md) - デザイン原則とSource of Truth
 - [CommandPalette.tsx](../../src/components/search/CommandPalette.tsx) - 検索UI
 - [ThemeToggleAnimated.tsx](../../src/components/theme/ThemeToggleAnimated.tsx) - Theme切り替え

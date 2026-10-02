@@ -39,11 +39,11 @@ import {
 // 何をレビューするか
 // ---------------------------------------------------------------------------
 
-/** 1つの演技について、撮り方と判定する関門を宣言する */
+/** 1つのアクションについて、撮り方と判定する関門を宣言する */
 interface Scenario {
   /** 出力ファイル名の先頭に付ける名前 */
   name: string;
-  /** 演技を始めるイベント。`Kuri.astro`が受け取る */
+  /** アクションを始めるイベント。`Kuri.astro`が受け取る */
   event: string;
   /** 止めて見るポーズの名前と、その時刻（総時間に対する割合） */
   keyPoses: Record<string, number>;
@@ -51,11 +51,11 @@ interface Scenario {
   onionPose: string;
   /** フィルムストリップに全コマを並べるか。省くと1コマおきに並べる */
   everyFrame?: boolean;
-  /** この演技に掛ける関門 */
+  /** このアクションに掛ける関門 */
   gates: GateSpec[];
 }
 
-/** 関門の種類と、その演技に固有の設定 */
+/** 関門の種類と、そのアクションに固有の設定 */
 type GateSpec =
   /** 接地: 足が地面に着いているはずの区間（総時間に対する割合）で、体が上下にずれない */
   | { kind: "contact"; grounded: [number, number][] }
@@ -136,7 +136,7 @@ const PASSES = {
   normal: "",
   // 体の動きだけを見る（目を隠す）
   body: ".kuri__gaze{visibility:hidden!important}",
-  // 目の演技だけを見る（体を薄くする）
+  // 目の動きだけを見る（体を薄くする）
   eyes: ".kuri__whole .kuri__ink{fill:#d4d4d4!important;stroke:#d4d4d4!important}",
 };
 type Pass = keyof typeof PASSES;
@@ -148,7 +148,7 @@ const TIME_EPSILON_MS = 0.1;
 // どの順でレビューするか
 // ---------------------------------------------------------------------------
 
-/** 1つの演技のレビュー結果。report.jsonへ書く */
+/** 1つのアクションのレビュー結果。report.jsonへ書く */
 interface ScenarioReport {
   duration: number;
   gates: Record<string, GateResult>;
@@ -157,7 +157,7 @@ interface ScenarioReport {
 /** シナリオ名を先頭に付けた出力パスを返す */
 type ArtifactPath = (name: string) => string;
 
-/** 1つの演技を撮り、レビューの順に成果物を書き出して、関門の結果を返す */
+/** 1つのアクションを撮り、レビューの順に成果物を書き出して、関門の結果を返す */
 async function reviewScenario(
   browser: Browser,
   options: ReviewOptions,
@@ -188,7 +188,7 @@ async function reviewScenario(
 
 /** ある時刻に撮った画像と、同じ時刻のくりの姿勢 */
 interface Frame {
-  /** 演技の開始からの時刻（ms） */
+  /** アクションの開始からの時刻（ms） */
   t: number;
   buffer: Buffer;
   /** 体の縦位置（viewBox単位、上が負） */
@@ -212,7 +212,7 @@ interface Capture {
   cssPxPerUnit: number;
 }
 
-/** 1つの演技を、指定のテーマと見え方で撮る */
+/** 1つのアクションを、指定のテーマと見え方で撮る */
 async function captureScenario(
   browser: Browser,
   options: ReviewOptions,
@@ -239,7 +239,7 @@ async function captureScenario(
   }
 }
 
-/** ホームを開いてくりを基準の姿勢で止め、演技を始めてすぐ一時停止する */
+/** ホームを開いてくりを基準の姿勢で止め、アクションを始めてすぐ一時停止する */
 async function prepareScenario(
   browser: Browser,
   options: ReviewOptions,
@@ -271,7 +271,7 @@ async function prepareScenario(
 
 type Clip = Awaited<ReturnType<typeof clipAround>>;
 
-/** 演技を始めてすぐ止め、総時間を返す。まばたきは他の動きの最中だと始まらないので、数回試す */
+/** アクションを始めてすぐ止め、総時間を返す。まばたきは他の動きの最中だと始まらないので、数回試す */
 async function triggerAndPause(kuri: Locator, event: string): Promise<number> {
   for (let attempt = 0; attempt < 10; attempt++) {
     if (attempt) await kuri.page().waitForTimeout(300);
@@ -288,7 +288,7 @@ async function triggerAndPause(kuri: Locator, event: string): Promise<number> {
   throw new Error(`${event}: アニメーションが開始されなかった`);
 }
 
-/** 止めた演技を指定の時刻へ動かし、その時刻の姿勢を測る */
+/** 止めたアクションを指定の時刻へ動かし、その時刻の姿勢を測る */
 const seekAndMeasure = (kuri: Locator, time: number) =>
   kuri.evaluate((svg, t) => {
     for (const animation of window.__kuriReview) animation.currentTime = t;
@@ -315,7 +315,7 @@ function frameTimes(duration: number): number[] {
   return times;
 }
 
-/** 演技を1/60秒ごとにコマ送りして撮る */
+/** アクションを1/60秒ごとにコマ送りして撮る */
 async function captureFrames(page: Page, kuri: Locator, clip: Clip, duration: number) {
   const frames: Frame[] = [];
   for (const t of frameTimes(duration)) {
