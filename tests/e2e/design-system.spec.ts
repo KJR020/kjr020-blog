@@ -63,15 +63,42 @@ test("公開ページは仕様の目的と使い方を説明する", async ({ pa
   await expect(page.locator("#layout > .src")).toContainText("読む順序");
 });
 
+test("説明はルールの見出しを親に、説明を子にした箇条書きで書き、項目末尾に句点を付けない", async ({
+  page,
+}) => {
+  for (const path of [
+    "/design-system/foundations",
+    "/design-system/components",
+    "/design-system/patterns",
+    "/design-system/content",
+    "/design-system/governance",
+  ]) {
+    await page.goto(path);
+
+    const ruleItems = await page.locator(".rule-list li").evaluateAll((items) =>
+      items.map((item) => ({
+        text: (item.querySelector(":scope > ul")
+          ? item.querySelector(":scope > strong")
+          : item
+        )?.textContent?.trim(),
+      })),
+    );
+    expect(ruleItems.filter(({ text }) => text?.endsWith("。"))).toEqual([]);
+  }
+
+  await page.goto("/design-system/foundations#radius");
+  const radiusRules = page.locator("#radius > .rule-list > li");
+  await expect(radiusRules.locator(":scope > strong")).toHaveText(["角丸", "影"]);
+  await expect(radiusRules.nth(1).locator(":scope > ul > li")).toHaveText([
+    "面の区切りには使わず、罫線と余白で示す",
+    "Dialog・Popover・Menuなど、本文の前面に重なる面にだけ使う",
+  ]);
+});
+
 test("Button標本は実装例のコードを重ねず状態とvariantだけを表示する", async ({ page }) => {
   await page.goto("/design-system/components#button");
 
-  const chapterDescription = page.locator("#primitives > .src");
-  await expect(chapterDescription).toHaveJSProperty("tagName", "UL");
-  await expect(chapterDescription.locator("li")).toHaveText([
-    "ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUI",
-    "用途・構造・状態を共通化し、ページごとの独自実装を増やさないために使用する",
-  ]);
+  await expect(page.locator("#primitives > .src")).toContainText("複数の場所で使う最小単位のUI");
 
   const buttonSpecimen = page.locator("#button");
   await expect(buttonSpecimen).not.toContainText("使用例を表示");
@@ -420,7 +447,7 @@ test("ヘッダー・本文・コードで合意したフォントを使い分�
   ).toEqual([]);
 
   await page.goto("/design-system/foundations#typography");
-  const typographyDescription = page.locator("#typography > .src");
+  const typographyDescription = page.locator("#typography > .rule-list");
   await expect(typographyDescription).toContainText("Headerはsystem sans");
   await expect(typographyDescription).toContainText("本文と見出しはNoto Sans JP");
   await expect(typographyDescription).toContainText("コードとトークン名はJetBrains Mono");
@@ -661,7 +688,11 @@ test("記事ページの仕様は他の仕様項目と同じ見出し・説明�
     "Figure",
     "Code example",
   ]);
-  await expect(sections.locator(":scope > p.src")).toHaveCount(5);
+  // 各項目は、リード文かルールの箇条書きの少なくとも一方を持つ
+  const descriptionCounts = await sections.evaluateAll((elements) =>
+    elements.map((element) => element.querySelectorAll(":scope > .src").length),
+  );
+  expect(descriptionCounts.every((count) => count > 0)).toBe(true);
   await expect(sections.locator(":scope > .demo")).toHaveCount(5);
   await expect(page.locator("#article-reading .section-heading")).toHaveCount(0);
   await expect(page.locator("#article-reading .section-lead")).toHaveCount(0);

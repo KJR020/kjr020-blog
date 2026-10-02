@@ -93,7 +93,30 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="color">
     <h3>1-1. 色の役割</h3>
-    <p class="src">色は情報の役割、操作可能性、状態を伝えるために使います。Light / Darkで同じ意味を保つsemantic tokenを選び、色だけを唯一の手がかりにしません。ニュートラルを面と文字、青を遷移、赤を破壊的状態、4色を記事内Calloutに限定します。</p>
+    <p class="src">色は情報の役割、操作可能性、状態を伝えるために使います。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Token</strong>
+        <ul>
+          <li>Light / Darkで同じ意味を保つsemantic tokenを選ぶ</li>
+        </ul>
+      </li>
+      <li>
+        <strong>用途</strong>
+        <ul>
+          <li>ニュートラルは面と文字</li>
+          <li>青は遷移</li>
+          <li>赤は破壊的状態</li>
+          <li>4色は記事内Callout</li>
+        </ul>
+      </li>
+      <li>
+        <strong>色以外の手がかり</strong>
+        <ul>
+          <li>色だけを唯一の手がかりにしない</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo swatches">
       {colorTokens.map((token) => (
         <div class="swatch" data-token={token.name}>
@@ -109,7 +132,22 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="callout-colors">
     <h3>1-2. 記事コールアウト色</h3>
-    <p class="src">Callout色は、本文から補足の種類を識別するためだけに使います。面全体を塗らず、左2pxの境界とタイトル文字へ適用します。色が分からなくても見出しから意味を判断できるようにします。</p>
+    <p class="src">Callout色は、本文から補足の種類を識別するためだけに使います。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>適用する場所</strong>
+        <ul>
+          <li>面全体を塗らない</li>
+          <li>左2pxの境界とタイトル文字へ適用する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>色以外の手がかり</strong>
+        <ul>
+          <li>色が分からなくても、見出しから意味を判断できるようにする</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo swatches">
       {calloutTokens.map(([token, label, role]) => (
         <div class="swatch" data-token={token}>
@@ -125,7 +163,23 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="typography">
     <h3>1-3. 文字階層</h3>
-    <p class="src">書体、サイズ、ウェイト、行高で、ページ内の情報階層と読み方を伝えます。Headerはsystem sans、本文と見出しはNoto Sans JP、コードとトークン名はJetBrains Monoを使います。役割ごとのサイズと行高は黄金比φを基準に定義します。</p>
+    <p class="src">書体、サイズ、ウェイト、行高で、ページ内の情報階層と読み方を伝えます。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>書体</strong>
+        <ul>
+          <li>Headerはsystem sans</li>
+          <li>本文と見出しはNoto Sans JP</li>
+          <li>コードとトークン名はJetBrains Mono</li>
+        </ul>
+      </li>
+      <li>
+        <strong>サイズと行高</strong>
+        <ul>
+          <li>役割ごとに黄金比φを基準に定義する</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo type-list">
       {typeScale.map(([label, token, weight, usage]) => (
         <div class="type-row">
@@ -142,7 +196,22 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="spacing">
     <h3>1-4. 黄金比スペーシング</h3>
-    <p class="src">余白は、要素どうしの関係と情報の区切りを伝えるために使います。黄金比φのscaleから選び、同一要素内、部品間、セクション間、ページ外周の順に広げます。局所的な数値を追加する前に、既存tokenで関係を表せるか確認します。</p>
+    <p class="src">余白は、要素どうしの関係と情報の区切りを伝えるために使います。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>値の選び方</strong>
+        <ul>
+          <li>黄金比φのscaleから選ぶ</li>
+          <li>局所的な数値を追加する前に、既存tokenで関係を表せるか確認する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>広げる順序</strong>
+        <ul>
+          <li>同一要素内、部品間、セクション間、ページ外周の順に広げる</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo spacing-list">
       {spacingTokens.map(([label, token]) => (
         <div class="spacing-row">
@@ -158,7 +227,23 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="radius">
     <h3>1-5. 角丸・影</h3>
-    <p class="src">角丸は同じ面に属する情報のまとまりを伝えます。基準角丸は0.618remとし、装飾だけを目的に丸めません。面の区切りは罫線と余白で示し、影はDialog・Popover・Menuなど、本文の前面に重なる面にだけ使います。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>角丸</strong>
+        <ul>
+          <li>同じ面に属する情報のまとまりを伝える</li>
+          <li>基準は0.618rem</li>
+          <li>装飾だけを目的に丸めない</li>
+        </ul>
+      </li>
+      <li>
+        <strong>影</strong>
+        <ul>
+          <li>面の区切りには使わず、罫線と余白で示す</li>
+          <li>Dialog・Popover・Menuなど、本文の前面に重なる面にだけ使う</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo foundation-pair">
       <div class="radius-grid">
         <div><span class="radius-sample radius-sm"></span><strong>Small</strong><code>--radius-sm</code></div>
@@ -176,7 +261,23 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="motion">
     <h3>1-6. モーション</h3>
-    <p class="src">UIの動きは短く規則的に、表現的な動きはヒーローとくりに限る。カーブとdurationは<code>globals.css</code>のトークンを正本とし、くりのスクリプトも同じトークンを実行時に読み込む。各カーブは現在のトークン値から描画し、再生で同じ値の動きを確認できる。</p>
+    <p class="src">UIの動きは短く規則的にし、表現的な動きはヒーローとくりに限ります。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>トークン</strong>
+        <ul>
+          <li>カーブとdurationは<code>globals.css</code>のトークンを正本とする</li>
+          <li>くりのスクリプトも、同じトークンを実行時に読み込む</li>
+        </ul>
+      </li>
+      <li>
+        <strong>標本</strong>
+        <ul>
+          <li>各カーブは現在のトークン値から描画する</li>
+          <li>再生すると、同じ値の動きを確認できる</li>
+        </ul>
+      </li>
+    </ul>
 
     <h4 class="motion-heading">UIのイージング</h4>
     <div class="demo curve-grid">
@@ -261,7 +362,20 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="page-shell">
     <h3>2-1. ページシェル</h3>
-    <p class="src">全ページはSticky Header → Main → Footerで構成する。Mainの栗マスコットは本文操作を妨げない背景要素として扱う。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>構成</strong>
+        <ul>
+          <li>Sticky Header → Main → Footerで構成する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>栗マスコット</strong>
+        <ul>
+          <li>Mainでは、本文の操作を妨げない背景要素として扱う</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo layout-stack">
       <div class="layout-bar"><strong>Sticky Header</strong><span>border-bottom · backdrop blur</span></div>
       <div class="layout-bar layout-main"><strong>Main</strong><span>flex: 1 · Kuri watermark</span></div>
@@ -272,7 +386,22 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="grid">
     <h3>2-2. 16列グリッド</h3>
-    <p class="src">Wideではシェルの内容幅を16列とgutter 16pxへ分割し、主要領域の幅と位置を列で決める。列は配置を揃えるための座標系で、CSS Gridの使用そのものは要件にしない。部品内部はspacing tokenで配置する。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>列</strong>
+        <ul>
+          <li>Wideでは、シェルの内容幅を16列とgutter 16pxへ分割する</li>
+          <li>主要領域の幅と位置を列で決める</li>
+          <li>列は配置をそろえる座標系で、CSS Gridの使用は要件にしない</li>
+        </ul>
+      </li>
+      <li>
+        <strong>部品の内部</strong>
+        <ul>
+          <li>spacing tokenで配置する</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo">
       <div class="shell-anatomy" aria-label="シェルと内部配置の見本">
         <span class="shell-margin">16px</span>
@@ -291,7 +420,20 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="grid-breakpoints">
     <h3>2-3. Breakpoints</h3>
-    <p class="src">Tailwindのmdとlgに合わせて3段階とする。Breakpointはviewport全体の幅で判定する。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>段階</strong>
+        <ul>
+          <li>Tailwindのmdとlgに合わせた3段階</li>
+        </ul>
+      </li>
+      <li>
+        <strong>判定</strong>
+        <ul>
+          <li>viewport全体の幅で判定する</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo table-scroll">
       <table class="map">
         <thead><tr><th>Mode</th><th>Viewport</th><th>Tailwind</th><th>左右余白</th><th>主要領域</th></tr></thead>
@@ -306,7 +448,20 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="grid-types">
     <h3>2-4. ページ別の最大幅</h3>
-    <p class="src">最大幅はページごとに定める。16列へ分割するのはシェルの内容幅。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>最大幅</strong>
+        <ul>
+          <li>ページごとに定める</li>
+        </ul>
+      </li>
+      <li>
+        <strong>列の分割</strong>
+        <ul>
+          <li>16列へ分割するのはシェルの内容幅</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo table-scroll">
       <table class="map">
         <thead><tr><th>ページ</th><th>最大幅</th><th>指定</th></tr></thead>
@@ -322,7 +477,22 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="grid-composition">
     <h3>2-5. 配置パターン</h3>
-    <p class="src">Wideでは主領域を1〜12列、補助領域を13〜16列へ置く。Medium以下はDOM順を保ったまま全幅で縦積みし、記事詳細の目次は折りたたみ表示へ切り替える。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Wide</strong>
+        <ul>
+          <li>主領域は1〜12列</li>
+          <li>補助領域は13〜16列</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Medium以下</strong>
+        <ul>
+          <li>DOM順を保ったまま全幅で縦積みする</li>
+          <li>記事詳細の目次は折りたたみ表示へ切り替える</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo grid-composition">
       <div class="grid-region grid-region-header"><strong>記事ヘッダー</strong><span>タイトル 1〜12列 / マスコット 14〜16列</span></div>
       <div class="grid-region grid-region-main"><strong>本文 / 記事一覧</strong><span>Wide: 1〜12列</span></div>
@@ -332,7 +502,20 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="width-tokens">
     <h3>2-6. 幅トークン</h3>
-    <p class="src">最大幅はTailwindのユーティリティで指定する。ページごとの採用値は<code>docs/design/grid-system.md</code>を参照する。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>指定方法</strong>
+        <ul>
+          <li>Tailwindのユーティリティで指定する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>採用値</strong>
+        <ul>
+          <li>ページごとの値は<code>docs/design/grid-system.md</code>を参照する</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo layout-stack width-stack">
       <div class="layout-bar width-wide"><strong>max-w-6xl</strong><span>1152px · 記事詳細</span></div>
       <div class="layout-bar width-narrow"><strong>max-w-3xl</strong><span>768px · Privacy Policy</span></div>
@@ -342,7 +525,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="spacing-hierarchy">
     <h3>2-7. 余白の階層</h3>
-    <p class="src">情報の関係が強いほど狭く、セクションやページの境界ほど広い余白を使う。</p>
+    <p class="src">情報の関係が強いほど狭く、セクションやページの境界ほど広い余白を使います。</p>
     <div class="demo table-scroll">
       <table class="map">
         <thead><tr><th>関係</th><th>主な値</th><th>実装例</th></tr></thead>
@@ -358,7 +541,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="emphasis-hierarchy">
     <h3>2-8. 見出しと強調の階層</h3>
-    <p class="src">ページタイトル → セクション見出し → カードタイトル → メタ情報の順に、サイズ・太さ・色を弱める。</p>
+    <p class="src">ページタイトル → セクション見出し → カードタイトル → メタ情報の順に、サイズ・太さ・色を弱めます。</p>
     <div class="demo emphasis-demo">
       <div class="emphasis-level emphasis-page"><strong>Page title</strong><span>title1 / bold / tracking-tight</span></div>
       <div class="emphasis-level emphasis-section"><strong>Section heading</strong><span>title3 / 左にlink色2px線</span></div>
@@ -376,7 +559,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="interaction-states">
     <h3>3-1. 操作状態</h3>
-    <p class="src">色の反転だけに頼らず、背景・文字色・ring・opacityの組み合わせで表す。</p>
+    <p class="src">色の反転だけに頼らず、背景・文字色・ring・opacityの組み合わせで表します。</p>
     <div class="demo state-grid">
       <div class="interactive-state">Default<span>surface + border</span></div>
       <div class="interactive-state state-hover">Hover<span>accent background</span></div>
@@ -388,7 +571,20 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="async-states">
     <h3>3-2. 非同期データの4状態</h3>
-    <p class="src">非同期コンテンツは、ローディング・表示済み・空・エラーを区別する。回復可能なエラーには再読み込みを用意する。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>状態の区別</strong>
+        <ul>
+          <li>ローディング・表示済み・空・エラーを区別する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>回復</strong>
+        <ul>
+          <li>回復可能なエラーには再読み込みを用意する</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo state-grid async-grid">
       <div class="async-state"><span class="spinner" aria-hidden="true"></span><strong>読み込んでいます…</strong></div>
       <div class="async-state"><span aria-hidden="true">✓</span><strong>コンテンツを表示</strong></div>
@@ -399,7 +595,27 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="selection-states">
     <h3>3-3. 現在地と選択</h3>
-    <p class="src">Headerとサイドバーの現在ページはlink色＋semibold。見出しのアクセントラインは現在地表示へ転用しない。目次は現在見出しをforeground＋medium。Command Paletteは選択行をaccent面で示す。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Headerとサイドバー</strong>
+        <ul>
+          <li>現在ページはlink色＋semibold</li>
+          <li>見出しのアクセントラインは、現在地の表示へ転用しない</li>
+        </ul>
+      </li>
+      <li>
+        <strong>目次</strong>
+        <ul>
+          <li>現在の見出しはforeground＋medium</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Command Palette</strong>
+        <ul>
+          <li>選択行はaccent面で示す</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo selection-demo">
       <a href="#selection-states" aria-current="page">Page navigation current</a>
       <a href="#selection-states" aria-current="location">TOC current</a>

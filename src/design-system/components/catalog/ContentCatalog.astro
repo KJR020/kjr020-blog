@@ -11,7 +11,20 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="markdown-content">
     <h3>7-1. Markdown本文</h3>
-    <p class="src">記事は最大幅を親グリッドに委ね、h2/h3、本文、list、inline code、Shiki code、blockquote、tableをグローバルに整形する。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>幅</strong>
+        <ul>
+          <li>最大幅は親グリッドに委ねる</li>
+        </ul>
+      </li>
+      <li>
+        <strong>整形</strong>
+        <ul>
+          <li>h2/h3、本文、list、inline code、Shiki code、blockquote、tableをグローバルに整形する</li>
+        </ul>
+      </li>
+    </ul>
     <article class="demo article-prose">
       <h2>セクション見出し</h2>
       <p>本文は読み続けられる行間を保ち、<a href="#article">リンク</a>と<code>inline code</code>を文章の流れに含める。</p>
@@ -28,7 +41,21 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="callout">
     <h3>7-2. Callout</h3>
-    <p class="src">remark-callout。本文より小さい文字と左境界で、補足の強さを抑える。色は種別の識別だけに使用する。</p>
+    <p class="src">remark-calloutで変換します。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>強さ</strong>
+        <ul>
+          <li>本文より小さい文字と左境界で、補足の強さを抑える</li>
+        </ul>
+      </li>
+      <li>
+        <strong>色</strong>
+        <ul>
+          <li>種別の識別だけに使う</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo callout-grid">
       <aside data-callout data-callout-type="note"><div data-callout-title>Note</div><div data-callout-body>追加の背景情報や参照。</div></aside>
       <aside data-callout data-callout-type="tip"><div data-callout-title>Tip</div><div data-callout-body>実装を進めるためのヒント。</div></aside>
@@ -40,7 +67,27 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="link-card">
     <h3>7-3. Link Card</h3>
-    <p class="src">remark-link-card。モバイルは本文＋116px正方形画像、60ch以上は本文＋220px・1.91:1画像。画像なしはglobe iconへfallbackする。</p>
+    <p class="src">remark-link-cardで変換します。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>モバイル</strong>
+        <ul>
+          <li>本文＋116px正方形画像</li>
+        </ul>
+      </li>
+      <li>
+        <strong>60ch以上</strong>
+        <ul>
+          <li>本文＋220px・1.91:1画像</li>
+        </ul>
+      </li>
+      <li>
+        <strong>画像がない場合</strong>
+        <ul>
+          <li>globe iconへfallbackする</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo link-card-specimens">
       <a class="rlc-container" href="https://docs.astro.build/" target="_blank" rel="noreferrer">
         <span class="rlc-info">
@@ -63,7 +110,21 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="code-image">
     <h3>7-4. Code Copy / Image</h3>
-    <p class="src">code blockは言語、横スクロール、Copy操作、完了通知を同じ構造で提供する。画像はFigureへ変換し、Captionと拡大表示を組み合わせる。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Code block</strong>
+        <ul>
+          <li>言語、横スクロール、Copy操作、完了通知を同じ構造で提供する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>画像</strong>
+        <ul>
+          <li>Figureへ変換する</li>
+          <li>Captionと拡大表示を組み合わせる</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo code-image-grid">
       <div class="code-sample code-sample-inline">
         <pre class="article-code" data-language="javascript" tabindex="0"><code>{codeExample}</code></pre>
@@ -87,7 +148,21 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="home-page">
     <h3>8-1. ホーム</h3>
-    <p class="src">ブログを紹介し、最新の記事とCosenseのメモへ案内する。プロフィール → Posts → Notesの順で配置し、検索とTag一覧は常設しない。</p>
+    <p class="src">ブログを紹介し、最新の記事とCosenseのメモへ案内します。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>配置</strong>
+        <ul>
+          <li>プロフィール → Posts → Notesの順に置く</li>
+        </ul>
+      </li>
+      <li>
+        <strong>常設しないもの</strong>
+        <ul>
+          <li>検索とTag一覧</li>
+        </ul>
+      </li>
+    </ul>
     <article class="demo page-card" aria-label="ホームのページ構造">
       <div class="wire"><div class="wire-title"></div><div class="wire-line wire-medium"></div><div class="wire-card"></div><div class="wire-card"></div><div class="wire-line wire-short"></div></div>
     </article>
@@ -95,7 +170,7 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="post-archive-page">
     <h3>8-2. 記事一覧</h3>
-    <p class="src">記事を時系列またはタグで探せるようにする。PageHero → タグ一覧 → 年のsticky label → PostListItemの順で配置する。</p>
+    <p class="src">記事を時系列またはタグで探せるようにします。PageHero → タグ一覧 → 年のsticky label → PostListItemの順で配置します。</p>
     <article class="demo page-card" aria-label="記事一覧のページ構造">
       <div class="wire"><div class="wire-title wire-short"></div><div class="wire-two-col"><div><div class="wire-card"></div><div class="wire-card"></div></div><div class="wire-line"></div></div></div>
     </article>
@@ -105,7 +180,21 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="search-page">
     <h3>8-4. 検索ユーティリティ</h3>
-    <p class="src">検索は独立ページやHomeのsectionではなく、Headerから必要なときだけ開くCommand Paletteとして提供する。旧URLからも同じdialogへ到達させる。</p>
+    <p class="src">検索は、Headerから必要なときだけ開くCommand Paletteとして提供します。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>置かない場所</strong>
+        <ul>
+          <li>独立ページやHomeのsectionにはしない</li>
+        </ul>
+      </li>
+      <li>
+        <strong>旧URL</strong>
+        <ul>
+          <li>旧URLからも同じdialogへ到達させる</li>
+        </ul>
+      </li>
+    </ul>
     <article class="demo page-card" aria-label="検索ユーティリティの構造">
       <div class="wire"><div class="wire-title wire-short"></div><div class="wire-card"></div><div class="wire-line"></div><div class="wire-line"></div></div>
     </article>
@@ -113,7 +202,7 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="policy-state-page">
     <h3>8-5. ポリシー・状態</h3>
-    <p class="src">規約または単一の状態を伝える。内容に応じてnarrow cardまたはcentered panelを使用する。</p>
+    <p class="src">規約または単一の状態を伝えます。内容に応じて、narrow cardまたはcentered panelを使います。</p>
     <article class="demo page-card" aria-label="ポリシー・状態のページ構造">
       <div class="wire"><div class="wire-title wire-short"></div><div class="wire-card"></div><div class="wire-line wire-medium"></div></div>
     </article>

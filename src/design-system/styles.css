@@ -689,12 +689,29 @@ table.map th {
 }
 
 .rule-list {
-  margin: 0;
+  margin: 0 0 var(--phi-0);
   padding-inline-start: var(--phi-1);
+  list-style: disc;
 }
 
 .rule-list li + li {
   margin-block-start: var(--phi-neg2);
+}
+
+/* ルールの見出しを親に、説明を子に置く */
+.rule-list > li > strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.rule-list ul {
+  margin: var(--phi-neg3) 0 0;
+  padding-inline-start: var(--phi-1);
+  list-style: circle;
+}
+
+.rule-list ul li + li {
+  margin-block-start: var(--phi-neg3);
 }
 
 .foundation-pair {

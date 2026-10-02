@@ -17,19 +17,43 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
 <div class="spec-item article-reading-spec" id="article-reading">
   <h3>8-3. 記事ページ</h3>
-  <p class="src">
-    技術記事の読書体験を定義する。文字・画像・コードを同じ情報構造の中で扱い、内容に応じて読むための幅と表示方法を使い分ける。
-  </p>
+  <p class="src">技術記事の読書体験を定義します。</p>
+  <ul class="src rule-list">
+    <li>
+      <strong>情報構造</strong>
+      <ul>
+        <li>文字・画像・コードを、同じ情報構造の中で扱う</li>
+      </ul>
+    </li>
+    <li>
+      <strong>幅と表示方法</strong>
+      <ul>
+        <li>内容に応じて、読むための幅と表示方法を使い分ける</li>
+      </ul>
+    </li>
+  </ul>
   <div class="scope-note article-reading-scope">
     <strong>適用範囲</strong>
-    <span>記事ページのArticle header、本文、目次、画像、コード、参照情報に適用する。</span>
+    <span>記事ページのArticle header、本文、目次、画像、コード、参照情報に適用します。</span>
   </div>
 
   <section class="spec article-reading-section" id="reading-model">
     <h4>Content model</h4>
-    <p class="src">
-      Articleをキーオブジェクトとし、Sectionから目次を導出する。画像やコードは装飾ではなく、本文と同じく意味を伝えるコンテンツとして扱う。
-    </p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Article</strong>
+        <ul>
+          <li>キーオブジェクトとする</li>
+          <li>Sectionから目次を導出する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>画像とコード</strong>
+        <ul>
+          <li>装飾ではなく、本文と同じく意味を伝えるコンテンツとして扱う</li>
+        </ul>
+      </li>
+    </ul>
 
     <div class="demo object-model" aria-label="記事ページのコンテンツ構造">
       <div class="object-card object-card-primary">
@@ -74,9 +98,33 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
   <section class="spec article-reading-section" id="reading-layout">
     <h4>Layout</h4>
-    <p class="src">
-      記事ヘッダーは全幅に置き、Wideでは右側をキャラクター領域として空ける。その下で本文・画像・図をReading laneへ揃え、コード・表は必要に応じてWide laneへ広げ、目次は現在位置を示しながら画面内に追従するRailへ置く。
-    </p>
+    <ul class="src rule-list">
+      <li>
+        <strong>記事ヘッダー</strong>
+        <ul>
+          <li>全幅に置く</li>
+          <li>Wideでは右側をキャラクター領域として空ける</li>
+        </ul>
+      </li>
+      <li>
+        <strong>本文・画像・図</strong>
+        <ul>
+          <li>Reading laneへそろえる</li>
+        </ul>
+      </li>
+      <li>
+        <strong>コード・表</strong>
+        <ul>
+          <li>必要に応じてWide laneへ広げる</li>
+        </ul>
+      </li>
+      <li>
+        <strong>目次</strong>
+        <ul>
+          <li>現在位置を示しながら、画面内に追従するRailへ置く</li>
+        </ul>
+      </li>
+    </ul>
 
     <div class="demo layout-specimen">
       <div class="column-ruler" aria-hidden="true">
@@ -125,9 +173,29 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
   <section class="spec article-reading-section" id="reading-typography">
     <h4>Typography</h4>
-    <p class="src">
-      Compactでは16px・行高1.90、Medium以上では17px・行高2.00、最大40字を基準とする。Wideで目次を閉じたときは最大48字まで広げる。長文を続けて読める行間を保ち、コードや図と行き来しても本文の位置を見失いにくい行長に制限する。
-    </p>
+    <ul class="src rule-list">
+      <li>
+        <strong>文字サイズと行高</strong>
+        <ul>
+          <li>Compactは16px・行高1.90</li>
+          <li>Medium以上は17px・行高2.00</li>
+        </ul>
+      </li>
+      <li>
+        <strong>行長</strong>
+        <ul>
+          <li>最大40字を基準とする</li>
+          <li>Wideで目次を閉じたときは最大48字まで広げる</li>
+        </ul>
+      </li>
+      <li>
+        <strong>目的</strong>
+        <ul>
+          <li>長文を続けて読める行間を保つ</li>
+          <li>コードや図と行き来しても、本文の位置を見失いにくい行長に制限する</li>
+        </ul>
+      </li>
+    </ul>
 
     <article class="demo type-specimen type-candidate" data-reading-lane>
       <header><span>BODY</span><strong>16–17px / 1.90–2.00 / 40字</strong></header>
@@ -140,9 +208,22 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
   <section class="spec article-reading-section" id="figure-pattern">
     <h4>Figure</h4>
-    <p class="src">
-      図と文章の左右端を揃えて読書の流れを保つ。画像リンクは原寸表示へフォールバックし、JavaScript利用時はDialogで拡大する。Captionは読者が確認すべき点を示す。
-    </p>
+    <p class="src">図と文章の左右端をそろえて、読書の流れを保ちます。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>画像リンク</strong>
+        <ul>
+          <li>原寸表示へフォールバックする</li>
+          <li>JavaScript利用時はDialogで拡大する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Caption</strong>
+        <ul>
+          <li>読者が確認すべき点を示す</li>
+        </ul>
+      </li>
+    </ul>
 
     <figure class="demo article-figure">
       <a
@@ -175,9 +256,27 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
   <section class="spec article-reading-section" id="code-pattern">
     <h4>Code example</h4>
-    <p class="src">
-      Shikiのdata-languageから言語を示し、Copy操作をコード上の定位置へ置く。長い行はコード領域の中だけで横スクロールさせ、完了結果はアイコンとpolite通知で伝える。
-    </p>
+    <ul class="src rule-list">
+      <li>
+        <strong>言語</strong>
+        <ul>
+          <li>Shikiのdata-languageから示す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Copy操作</strong>
+        <ul>
+          <li>コード上の定位置へ置く</li>
+          <li>完了結果はアイコンとpolite通知で伝える</li>
+        </ul>
+      </li>
+      <li>
+        <strong>長い行</strong>
+        <ul>
+          <li>コード領域の中だけで横スクロールさせる</li>
+        </ul>
+      </li>
+    </ul>
 
     <div class="demo">
       <pre class="astro-code article-code" data-language="typescript" tabindex="0"><code>{codeSample}</code></pre>

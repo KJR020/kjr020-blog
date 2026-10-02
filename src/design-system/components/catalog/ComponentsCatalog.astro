@@ -61,14 +61,25 @@ const scrapboxPages = [
 
 <section class="spec" id="primitives">
   <h2>4. 基本部品</h2>
-  <ul class="src rule-list">
-    <li>ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUI</li>
-    <li>用途・構造・状態を共通化し、ページごとの独自実装を増やさないために使用する</li>
-  </ul>
+  <p class="src">ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUIです。用途・構造・状態を共通化し、ページごとの独自実装を増やさないために使います。</p>
 
   <div class="spec-item" id="button">
     <h3>4-1. Button</h3>
-    <p class="src">操作を開始する。ラベルには押したあとに起きることを具体的に書く。6 variantsと用途別のsizeを同じprimitiveで扱う。</p>
+    <p class="src">操作を開始する部品です。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>ラベル</strong>
+        <ul>
+          <li>押したあとに起きることを具体的に書く</li>
+        </ul>
+      </li>
+      <li>
+        <strong>variantとsize</strong>
+        <ul>
+          <li>6 variantsと用途別のsizeを、同じprimitiveで扱う</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo component-demo">
       <div class="button-row">
         <Button>記事を読む</Button>
@@ -90,7 +101,26 @@ const scrapboxPages = [
 
   <div class="spec-item" id="badge">
     <h3>4-2. Badge / Tag</h3>
-    <p class="src">Badgeは短い状態、Tagは記事の分類と絞り込みへのリンクを示す。主要な操作や長い説明には使わない。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Badge</strong>
+        <ul>
+          <li>短い状態を示す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Tag</strong>
+        <ul>
+          <li>記事の分類と、絞り込みへのリンクを示す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>使わない場面</strong>
+        <ul>
+          <li>主要な操作や長い説明には使わない</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo component-demo">
       <div class="button-row">
         <Badge>Default</Badge>
@@ -124,7 +154,7 @@ const scrapboxPages = [
 
   <div class="spec-item" id="card">
     <h3>4-3. Card</h3>
-    <p class="src">関連する情報と操作を1つの単位にまとめる。Card / Header / Title / Description / Content / Footerの合成部品として扱う。</p>
+    <p class="src">関連する情報と操作を1つの単位にまとめる部品です。Card / Header / Title / Description / Content / Footerの合成部品として扱います。</p>
     <div class="demo card-demo">
       <Card className="specimen-card">
         <CardHeader>
@@ -141,7 +171,27 @@ const scrapboxPages = [
 
   <div class="spec-item" id="input">
     <h3>4-4. Input / TextLink / Kbd</h3>
-    <p class="src">Inputの目的はlabelで伝え、Placeholderは入力内容の補助に限定する。TextLinkは遷移、Kbdは利用可能なショートカットを示す。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Input</strong>
+        <ul>
+          <li>目的はlabelで伝える</li>
+          <li>Placeholderは入力内容の補助に限る</li>
+        </ul>
+      </li>
+      <li>
+        <strong>TextLink</strong>
+        <ul>
+          <li>遷移を示す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Kbd</strong>
+        <ul>
+          <li>利用できるショートカットを示す</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo input-grid input-grid-complete">
       <label><span>記事を検索</span><Input placeholder="キーワードを入力" /></label>
       <label><span>無効な入力</span><Input defaultValue="Astro" aria-invalid="true" readOnly /></label>
@@ -160,7 +210,36 @@ const scrapboxPages = [
 
   <div class="spec-item" id="global-navigation">
     <h3>5-1. Header / Global Navigation</h3>
-    <p class="src">高さ4rem、sticky、背景は紙色82%＋backdrop blur。ブランドリンクは著者の写真とブログ名を組み合わせる。写真は32×32pxの円に細い輪郭を付ける。現在地は文字の下の青い点で示す。Desktopは水平ナビ、MobileはMenu buttonへ切り替える。水平ナビは項目を折り返さず、60rem未満ではSearchの<kbd>⌘K</kbd>表示を省く。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>外観</strong>
+        <ul>
+          <li>高さ4rem、sticky</li>
+          <li>背景は紙色82%＋backdrop blur</li>
+        </ul>
+      </li>
+      <li>
+        <strong>ブランドリンク</strong>
+        <ul>
+          <li>著者の写真とブログ名を組み合わせる</li>
+          <li>写真は32×32pxの円に細い輪郭を付ける</li>
+        </ul>
+      </li>
+      <li>
+        <strong>現在地</strong>
+        <ul>
+          <li>文字の下の青い点で示す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>幅による切り替え</strong>
+        <ul>
+          <li>Desktopは水平ナビ、MobileはMenu button</li>
+          <li>水平ナビは項目を折り返さない</li>
+          <li>60rem未満では、Searchの<kbd>⌘K</kbd>表示を省く</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo site-header-demo">
       <a class="site-brand-demo" href="#global-navigation"><img src="/images/kuri_photo.png" alt="" width="500" height="500" />KJR020's Blog</a>
       <nav class="nav-demo" aria-label="ヘッダー例">
@@ -176,14 +255,29 @@ const scrapboxPages = [
 
   <div class="spec-item" id="command-palette">
     <h3>5-2. Command Palette</h3>
-    <p class="src">HeaderのSearchまたは<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd> でnative dialogを開く。Arrow Up/Downで選択、Enterで遷移、Escape/背景クリックで閉じる。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>開き方</strong>
+        <ul>
+          <li>HeaderのSearch、または<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>でnative dialogを開く</li>
+        </ul>
+      </li>
+      <li>
+        <strong>操作</strong>
+        <ul>
+          <li>Arrow Up/Downで選択する</li>
+          <li>Enterで遷移する</li>
+          <li>Escapeまたは背景クリックで閉じる</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo command-demo">
       <div class="command-search"><span aria-hidden="true">⌕</span><span>記事を検索</span><kbd>Esc</kbd></div>
       <div class="command-results" role="listbox" aria-label="検索候補の例">
         <div class="command-option is-selected" role="option" aria-selected="true">Astroブログに全文検索を導入した<small>Pagefindを使った検索UIの実装</small></div>
         <div class="command-option" role="option" aria-selected="false">Astroブログにコールアウト機能を追加した<small>記事表現を拡張する</small></div>
       </div>
-      <p class="demo-instruction">このページでも <kbd>⌘K</kbd> / <kbd>Ctrl K</kbd> で実装されたdialogを確認できる。</p>
+      <p class="demo-instruction">このページでも <kbd>⌘K</kbd> / <kbd>Ctrl K</kbd> で実装されたdialogを確認できます。</p>
       <CommandPalette client:load />
     </div>
     <p class="source-row"><strong>Source</strong><code>src/components/search/CommandPalette.tsx</code></p>
@@ -191,7 +285,21 @@ const scrapboxPages = [
 
   <div class="spec-item" id="theme-mobile">
     <h3>5-3. Theme Toggle / Mobile Menu</h3>
-    <p class="src">Theme Toggleは画面全体を覆う波とアイコン遷移を使う。Mobile Menuは右上からfixed dropdownで開き、外側クリックとEscapeで閉じる。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Theme Toggle</strong>
+        <ul>
+          <li>画面全体を覆う波とアイコンの遷移を使う</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Mobile Menu</strong>
+        <ul>
+          <li>右上からfixed dropdownで開く</li>
+          <li>外側クリックとEscapeで閉じる</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo navigation-actions-demo">
       <div><span>Theme Toggle</span><ThemeToggleAnimated client:load /></div>
       <div><span>Mobile Menu</span><button type="button" aria-label="メニューを開く" aria-expanded="false">☰</button></div>
@@ -210,21 +318,61 @@ const scrapboxPages = [
 
   <div class="spec-item" id="page-hero">
     <h3>6-1. PageHero</h3>
-    <p class="src">欧文の大見出しと日本語の説明で、ページの目的を一覧本文より先に伝える。下端の罫線を地面にして、任意でくりを立たせる。</p>
+    <p class="src">欧文の大見出しと日本語の説明で、ページの目的を一覧本文より先に伝えます。下端の罫線を地面にして、任意でくりを立たせます。</p>
     <div class="demo page-demo"><PageHero title="Posts" description="ブログ記事一覧です。" mascot /></div>
     <p class="source-row"><strong>Source</strong><code>src/components/PageHero.astro</code></p>
   </div>
 
   <div class="spec-item" id="post-card">
     <h3>6-2. PostListItem</h3>
-    <p class="src">罫線で区切った索引の1行。タイトルのリンクを行全体へ広げ、タグリンクだけ前面へ出す。Hoverではタイトルへ下線を引き、矢印を進める。</p>
+    <p class="src">罫線で区切った索引の1行です。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>リンク</strong>
+        <ul>
+          <li>タイトルのリンクを行全体へ広げる</li>
+          <li>タグリンクだけ前面へ出す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Hover</strong>
+        <ul>
+          <li>タイトルへ下線を引く</li>
+          <li>矢印を進める</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo post-card-wrap"><PostListItem post={specimenPost} /></div>
     <p class="source-row"><strong>Source</strong><code>src/components/PostListItem.astro</code><code>src/components/TagList.astro</code></p>
   </div>
 
   <div class="spec-item" id="kuri">
     <h3>6-5. Kuri</h3>
-    <p class="src">栗のマスコット。罫線を地面に見立てて立たせる。public/images/kuri.svgのパスをそのまま使い、ライトは塗り、ダークは線画で描く。視線がポインターを追い、まばたきし、クリックで跳ねる。動きを減らす設定では静止する。</p>
+    <p class="src">栗のマスコットです。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>配置</strong>
+        <ul>
+          <li>罫線を地面に見立てて立たせる</li>
+        </ul>
+      </li>
+      <li>
+        <strong>描画</strong>
+        <ul>
+          <li>public/images/kuri.svgのパスをそのまま使う</li>
+          <li>ライトは塗り、ダークは線画で描く</li>
+        </ul>
+      </li>
+      <li>
+        <strong>アクション</strong>
+        <ul>
+          <li>視線がポインターを追う</li>
+          <li>まばたきする</li>
+          <li>クリックで跳ねる</li>
+          <li>動きを減らす設定では静止する</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo kuri-specimen">
       <figure><Kuri size="6rem" /><figcaption>sleepy</figcaption></figure>
       <figure><Kuri size="6rem" mood="asleep" /><figcaption>asleep</figcaption></figure>
@@ -234,7 +382,22 @@ const scrapboxPages = [
 
   <div class="spec-item" id="table-of-contents">
     <h3>6-3. Table of Contents</h3>
-    <p class="src">Desktopは右4列・sticky・内部scrollで常時表示する。Mobileは記事ヘッダー直後に置き、Radix Collapsibleで開閉して、項目選択後に閉じる。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Desktop</strong>
+        <ul>
+          <li>右4列に置き、stickyと内部scrollで常時表示する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Mobile</strong>
+        <ul>
+          <li>記事ヘッダーの直後に置く</li>
+          <li>Radix Collapsibleで開閉する</li>
+          <li>項目を選ぶと閉じる</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo toc-specimen">
       <TableOfContents headings={tocHeadings} variant="responsive" client:load />
       <div class="toc-specimen-summary"><strong>Desktop</strong><span>sticky · internal scroll · collapsible</span><strong>Mobile</strong><span>Inline · Collapsible · aria-expanded</span></div>
@@ -244,7 +407,21 @@ const scrapboxPages = [
 
   <div class="spec-item" id="scrapbox-card-list">
     <h3>6-4. Scrapbox Card List</h3>
-    <p class="src">Cosenseのメモを、タイトル・説明・更新日の一覧として縦に並べる。各項目は外部リンクで開く。0件のときは、親が領域ごと畳めるよう印だけを出す。</p>
+    <p class="src">Cosenseのメモを、タイトル・説明・更新日の一覧として縦に並べます。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>リンク</strong>
+        <ul>
+          <li>各項目は外部リンクで開く</li>
+        </ul>
+      </li>
+      <li>
+        <strong>0件のとき</strong>
+        <ul>
+          <li>親が領域ごと畳めるよう、印だけを出す</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo scrapbox-specimen">
       <ScrapboxCardList project="specimen" pages={scrapboxPages} client:visible />
     </div>
