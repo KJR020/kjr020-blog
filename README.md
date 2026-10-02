@@ -8,7 +8,7 @@
 </h1>
 
 [kjr020.dev](https://kjr020.dev/) で公開している、Astroで開発した個人技術ブログです。<br />
-Cloudflare Workersでホスティングし、記事や主要ページは静的サイトとして配信しています。
+Cloudflare Workersでホスティングし、記事や主要ページはStatic Assetsとして配信しています。
 
 
 [![CI](https://github.com/KJR020/kjr020-blog/actions/workflows/ci.yml/badge.svg)](https://github.com/KJR020/kjr020-blog/actions/workflows/ci.yml)
@@ -33,20 +33,11 @@ Cloudflare Workersでホスティングし、記事や主要ページは静的�
 
 ## アーキテクチャ
 
-記事と主要ページはビルド時に静的生成します。ブラウザで動くReactは検索、メニュー、目次、コメントなどに限定し、Cosense（旧Scrapbox）の認証情報が必要な通信だけをCosense API Proxyへ分離しています。
+`content/posts/`のMarkdownをAstroで静的生成し、`dist/`に出力した記事HTMLや関連ファイルをCloudflare Workers Static Assetsから配信します。`dist/`にはCSS／JS、OGP画像、RSS、sitemap、Pagefindインデックスも含まれます。通常の記事配信ではWorkerコードを実行しません。
 
-```mermaid
-graph LR
-    M[Markdown記事] --> A[Astro Build]
-    A --> D[静的サイト・OGP・RSS]
-    A --> P[Pagefindインデックス]
-    D --> C[Cloudflare Workers Static Assets]
-    P --> C
-    C --> B[ブラウザ]
-    B --> F[Cosense API Proxy]
-    F --> S[Cosense API]
-    B --> G[Giscus]
-```
+[![Markdown記事の公開と配信の流れ](docs/architecture/blog-architecture.drawio.svg)](docs/architecture/blog-architecture.drawio.svg)
+
+Cosenseカードは同一Originの`/api/*`からWorker API Proxyを利用します。Cosense用の認証情報とCache APIによるキャッシュはWorker側で扱います。コメントはGiscus／GitHub Discussionsを利用します。
 
 ビルド時と実行時のデータフロー、コンポーネント境界、設計判断は[アーキテクチャ概要](docs/architecture/overview.md)にまとめています。
 
@@ -139,7 +130,7 @@ VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテク
 
 ## デプロイ
 
-`main`へのpushを契機にGitHub Actionsがビルドし、Cloudflare Workersへデプロイします。Pull RequestではLint、フォーマット、型、Unit／Component、カバレッジ、ビルド、E2Eを検証します。
+`main`へのpushを契機にDeploy workflowがビルド・型検査・テストを行い、`wrangler deploy`でWorkerコードと`dist/`をまとめてデプロイします。デプロイ後は疎通確認を実行します。Pull Requestでは独立したCI workflowがLint、フォーマット、型、Unit／Component、カバレッジ、ビルド、E2Eを検証します。
 
 Secret、CD用トークン、カスタムドメインの管理は[Cloudflare Workers運用手順](docs/development/workers-operations.md)を参照してください。
 
