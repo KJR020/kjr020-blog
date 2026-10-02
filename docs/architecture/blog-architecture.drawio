@@ -4,13 +4,13 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" value="記事が読者に届くまで" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=32;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="title" value="ブログのアーキテクチャ" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=32;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="40" y="24" width="900" height="54" as="geometry" />
         </mxCell>
         <mxCell id="delivery-label" value="1  記事を制作・公開" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=19;fontColor=#334155;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="40" y="100" width="360" height="34" as="geometry" />
         </mxCell>
-        <mxCell id="reader-title" value="2  読者が記事を閲覧" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=19;fontColor=#334155;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="reader-title" value="2  閲覧者が記事を開く" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=19;fontColor=#334155;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="40" y="393" width="360" height="34" as="geometry" />
         </mxCell>
         <mxCell id="dev" value="著者" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#CBD5E1;align=center;verticalAlign=bottom;spacingBottom=13;fontSize=18;fontStyle=1;" vertex="1" parent="1">
@@ -58,7 +58,7 @@
         <mxCell id="deploy-sub" value="型検査・テスト後に公開" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=center;verticalAlign=middle;fontSize=13;fontColor=#6D5AA8;" vertex="1" parent="deploy">
           <mxGeometry x="18" y="134" width="388" height="18" as="geometry" />
         </mxCell>
-        <mxCell id="browser" value="読者のブラウザ" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#3B82F6;strokeWidth=2.5;align=center;verticalAlign=bottom;spacingBottom=12;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="browser" value="閲覧者のブラウザ" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#3B82F6;strokeWidth=2.5;align=center;verticalAlign=bottom;spacingBottom=12;fontSize=20;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="45" y="455" width="210" height="135" as="geometry" />
         </mxCell>
         <mxCell id="browser-icon" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#434445;aspect=fixed;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.vvd.web_browser;" vertex="1" parent="browser">

@@ -37,8 +37,6 @@ Cloudflare Workersでホスティングし、記事や主要ページはStatic A
 
 [![Markdown記事の公開と配信の流れ](docs/architecture/blog-architecture.drawio.svg)](docs/architecture/blog-architecture.drawio.svg)
 
-編集用の原本は[Draw.ioファイル](docs/architecture/blog-architecture.drawio)です。
-
 Cosenseカードは同一Originの`/api/*`からWorker API Proxyを利用します。Cosense用の認証情報とCache APIによるキャッシュはWorker側で扱います。コメントはGiscus／GitHub Discussionsを利用します。
 
 ビルド時と実行時のデータフロー、コンポーネント境界、設計判断は[アーキテクチャ概要](docs/architecture/overview.md)にまとめています。
