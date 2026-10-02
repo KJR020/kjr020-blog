@@ -1,0 +1,141 @@
+<mxfile host="app.diagrams.net" agent="Codex" version="26.2.2">
+  <diagram id="blog-architecture" name="Architecture">
+    <mxGraphModel adaptiveColors="auto" dx="1400" dy="820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="記事が読者に届くまで" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=32;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="24" width="900" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="delivery-label" value="1  記事を制作・公開" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=19;fontColor=#334155;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="360" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="reader-title" value="2  読者が記事を閲覧" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=19;fontColor=#334155;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="393" width="360" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="dev" value="著者" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#CBD5E1;align=center;verticalAlign=bottom;spacingBottom=13;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="207" width="130" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="developer-icon" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#232F3D;aspect=fixed;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;gradientColor=none;fontColor=#232F3E;fontSize=12;fontStyle=0;shape=mxgraph.aws4.user;" vertex="1" parent="dev">
+          <mxGeometry x="43" y="12" width="45" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="github-panel" value="" style="rounded=1;arcSize=8;html=1;container=1;collapsible=0;fillColor=#F8FAFC;strokeColor=#94A3B8;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="135" width="650" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="github-logo" value="" style="shape=image;imageAspect=1;aspect=fixed;image=data:image/svg+xml,%3Csvg%20width%3D%2298%22%20height%3D%2296%22%20viewBox%3D%220%200%2098%2096%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cg%20clip-path%3D%22url(%23clip0_730_27126)%22%3E%0A%3Cpath%20d%3D%22M41.4395%2069.3848C28.8066%2067.8535%2019.9062%2058.7617%2019.9062%2046.9902C19.9062%2042.2051%2021.6289%2037.0371%2024.5%2033.5918C23.2559%2030.4336%2023.4473%2023.7344%2024.8828%2020.959C28.7109%2020.4805%2033.8789%2022.4902%2036.9414%2025.2656C40.5781%2024.1172%2044.4062%2023.543%2049.0957%2023.543C53.7852%2023.543%2057.6133%2024.1172%2061.0586%2025.1699C64.0254%2022.4902%2069.2891%2020.4805%2073.1172%2020.959C74.457%2023.543%2074.6484%2030.2422%2073.4043%2033.4961C76.4668%2037.1328%2078.0937%2042.0137%2078.0937%2046.9902C78.0937%2058.7617%2069.1934%2067.6621%2056.3691%2069.2891C59.623%2071.3945%2061.8242%2075.9883%2061.8242%2081.252L61.8242%2091.2051C61.8242%2094.0762%2064.2168%2095.7031%2067.0879%2094.5547C84.4102%2087.9512%2098%2070.6289%2098%2049.1914C98%2022.1074%2075.9883%206.69539e-07%2048.9043%204.309e-07C21.8203%201.92261e-07%20-1.9479e-07%2022.1074%20-4.3343e-07%2049.1914C-6.20631e-07%2070.4375%2013.4941%2088.0469%2031.6777%2094.6504C34.2617%2095.6074%2036.75%2093.8848%2036.75%2091.3008L36.75%2083.6445C35.4102%2084.2188%2033.6875%2084.6016%2032.1562%2084.6016C25.8398%2084.6016%2022.1074%2081.1563%2019.4277%2074.7441C18.375%2072.1602%2017.2266%2070.6289%2015.0254%2070.3418C13.877%2070.2461%2013.4941%2069.7676%2013.4941%2069.1934C13.4941%2068.0449%2015.4082%2067.1836%2017.3223%2067.1836C20.0977%2067.1836%2022.4902%2068.9063%2024.9785%2072.4473C26.8926%2075.2227%2028.9023%2076.4668%2031.2949%2076.4668C33.6875%2076.4668%2035.2187%2075.6055%2037.4199%2073.4043C39.0469%2071.7773%2040.291%2070.3418%2041.4395%2069.3848Z%22%20fill%3D%22black%22%2F%3E%0A%3C%2Fg%3E%0A%3Cdefs%3E%0A%3CclipPath%20id%3D%22clip0_730_27126%22%3E%0A%3Crect%20width%3D%2298%22%20height%3D%2296%22%20fill%3D%22white%22%2F%3E%0A%3C%2FclipPath%3E%0A%3C%2Fdefs%3E%0A%3C%2Fsvg%3E;strokeColor=none;fillColor=none;" vertex="1" parent="github-panel">
+          <mxGeometry x="20" y="16" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="github-title" value="GitHub" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=23;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="github-panel">
+          <mxGeometry x="69" y="17" width="180" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="repo" value="Markdown記事&#10;content/posts/" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#CBD5E1;align=center;verticalAlign=bottom;spacingBottom=12;fontSize=17;fontStyle=1;" vertex="1" parent="github-panel">
+          <mxGeometry x="25" y="80" width="160" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="markdown-logo" value="" style="shape=image;imageAspect=1;aspect=fixed;image=data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20role%3D%22img%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%230F172A%22%3E%0A%20%20%3Ctitle%3EMarkdown%3C%2Ftitle%3E%0A%20%20%3Cpath%20d%3D%22M22.27%2019.385H1.73A1.73%201.73%200%20010%2017.655V6.345a1.73%201.73%200%20011.73-1.73h20.54A1.73%201.73%200%200124%206.345v11.308a1.73%201.73%200%2001-1.73%201.731zM5.769%2015.923v-4.5l2.308%202.885%202.307-2.885v4.5h2.308V8.078h-2.308l-2.307%202.885-2.308-2.885H3.46v7.847zM21.232%2012h-2.309V8.077h-2.307V12h-2.308l3.461%204.039z%22%2F%3E%0A%3C%2Fsvg%3E;strokeColor=none;fillColor=none;" vertex="1" parent="repo">
+          <mxGeometry x="69" y="12" width="24" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="ci-note" value="PR: CIで品質検証" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=14;fontColor=#64748B;" vertex="1" parent="github-panel">
+          <mxGeometry x="25" y="195" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="deploy" value="GitHub Actions  /  Deploy workflow" style="rounded=1;arcSize=8;html=1;container=1;collapsible=0;whiteSpace=wrap;fillColor=#F5F3FF;strokeColor=#A78BFA;strokeWidth=1.5;fontFamily=Arial;fontColor=#312E81;align=center;verticalAlign=top;spacingTop=11;fontSize=18;fontStyle=1;" vertex="1" parent="github-panel">
+          <mxGeometry x="205" y="60" width="425" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="actions-logo" value="" style="shape=image;imageAspect=1;aspect=fixed;image=data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20role%3D%22img%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%232088FF%22%3E%0A%20%20%3Ctitle%3EGitHub%20Actions%3C%2Ftitle%3E%0A%20%20%3Cpath%20d%3D%22M10.984%2013.836a.5.5%200%200%201-.353-.146l-.745-.743a.5.5%200%201%201%20.706-.708l.392.391%201.181-1.18a.5.5%200%200%201%20.708.707l-1.535%201.533a.504.504%200%200%201-.354.146zm9.353-.147l1.534-1.532a.5.5%200%200%200-.707-.707l-1.181%201.18-.392-.391a.5.5%200%201%200-.706.708l.746.743a.497.497%200%200%200%20.706-.001zM4.527%207.452l2.557-1.585A1%201%200%200%200%207.09%204.17L4.533%202.56A1%201%200%200%200%203%203.406v3.196a1.001%201.001%200%200%200%201.527.85zm2.03-2.436L4%206.602V3.406l2.557%201.61zM24%2012.5c0%201.93-1.57%203.5-3.5%203.5a3.503%203.503%200%200%201-3.46-3h-2.08a3.503%203.503%200%200%201-3.46%203%203.502%203.502%200%200%201-3.46-3h-.558c-.972%200-1.85-.399-2.482-1.042V17c0%201.654%201.346%203%203%203h.04c.244-1.693%201.7-3%203.46-3%201.93%200%203.5%201.57%203.5%203.5S13.43%2024%2011.5%2024a3.502%203.502%200%200%201-3.46-3H8c-2.206%200-4-1.794-4-4V9.899A5.008%205.008%200%200%201%200%205c0-2.757%202.243-5%205-5s5%202.243%205%205a5.005%205.005%200%200%201-4.952%204.998A2.482%202.482%200%200%200%207.482%2012h.558c.244-1.693%201.7-3%203.46-3a3.502%203.502%200%200%201%203.46%203h2.08a3.503%203.503%200%200%201%203.46-3c1.93%200%203.5%201.57%203.5%203.5zm-15%208c0%201.378%201.122%202.5%202.5%202.5s2.5-1.122%202.5-2.5-1.122-2.5-2.5-2.5S9%2019.122%209%2020.5zM5%209c2.206%200%204-1.794%204-4S7.206%201%205%201%201%202.794%201%205s1.794%204%204%204zm9%203.5c0-1.378-1.122-2.5-2.5-2.5S9%2011.122%209%2012.5s1.122%202.5%202.5%202.5%202.5-1.122%202.5-2.5zm9%200c0-1.378-1.122-2.5-2.5-2.5S18%2011.122%2018%2012.5s1.122%202.5%202.5%202.5%202.5-1.122%202.5-2.5zm-13%208a.5.5%200%201%200%201%200%20.5.5%200%200%200-1%200zm2%200a.5.5%200%201%200%201%200%20.5.5%200%200%200-1%200zm12%200c0%201.93-1.57%203.5-3.5%203.5a3.503%203.503%200%200%201-3.46-3.002c-.007.001-.013.005-.021.005l-.506.017h-.017a.5.5%200%200%201-.016-.999l.506-.017c.018-.002.035.006.052.007A3.503%203.503%200%200%201%2020.5%2017c1.93%200%203.5%201.57%203.5%203.5zm-1%200c0-1.378-1.122-2.5-2.5-2.5S18%2019.122%2018%2020.5s1.122%202.5%202.5%202.5%202.5-1.122%202.5-2.5z%22%2F%3E%0A%3C%2Fsvg%3E;strokeColor=none;fillColor=none;" vertex="1" parent="deploy">
+          <mxGeometry x="16" y="10" width="27" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="article-build" value="Astro Build&#10;静的生成" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#C4B5FD;align=center;verticalAlign=bottom;spacingBottom=8;fontSize=16;fontStyle=1;" vertex="1" parent="deploy">
+          <mxGeometry x="20" y="50" width="105" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="astro-logo" value="" style="shape=image;imageAspect=1;aspect=fixed;image=data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20role%3D%22img%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23BC52EE%22%3E%0A%20%20%3Ctitle%3EAstro%3C%2Ftitle%3E%0A%20%20%3Cpath%20d%3D%22M8.358%2020.162c-1.186-1.07-1.532-3.316-1.038-4.944.856%201.026%202.043%201.352%203.272%201.535%201.897.283%203.76.177%205.522-.678.202-.098.388-.229.608-.36.166.473.209.95.151%201.437-.14%201.185-.738%202.1-1.688%202.794-.38.277-.782.525-1.175.787-1.205.804-1.531%201.747-1.078%203.119l.044.148a3.158%203.158%200%200%201-1.407-1.188%203.31%203.31%200%200%201-.544-1.815c-.004-.32-.004-.642-.048-.958-.106-.769-.472-1.113-1.161-1.133-.707-.02-1.267.411-1.415%201.09-.012.053-.028.104-.045.165h.002zm-5.961-4.445s3.24-1.575%206.49-1.575l2.451-7.565c.092-.366.36-.614.662-.614.302%200%20.57.248.662.614l2.45%207.565c3.85%200%206.491%201.575%206.491%201.575L16.088.727C15.93.285%2015.663%200%2015.303%200H8.697c-.36%200-.615.285-.784.727l-5.516%2014.99z%22%2F%3E%0A%3C%2Fsvg%3E;strokeColor=none;fillColor=none;" vertex="1" parent="article-build">
+          <mxGeometry x="38" y="9" width="27" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="build-output" value="dist/&#10;静的ファイル" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#C4B5FD;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;" vertex="1" parent="deploy">
+          <mxGeometry x="140" y="50" width="120" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="publish" value="wrangler deploy&#10;Worker + dist/" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#C4B5FD;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;" vertex="1" parent="deploy">
+          <mxGeometry x="275" y="50" width="130" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="deploy-sub" value="型検査・テスト後に公開" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=center;verticalAlign=middle;fontSize=13;fontColor=#6D5AA8;" vertex="1" parent="deploy">
+          <mxGeometry x="18" y="134" width="388" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="browser" value="読者のブラウザ" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#3B82F6;strokeWidth=2.5;align=center;verticalAlign=bottom;spacingBottom=12;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="45" y="455" width="210" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="browser-icon" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#434445;aspect=fixed;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.vvd.web_browser;" vertex="1" parent="browser">
+          <mxGeometry x="71" y="23" width="68" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="giscus" value="Giscus&#10;GitHub Discussions" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#CBD5E1;align=center;verticalAlign=bottom;spacingBottom=9;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="45" y="670" width="210" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giscus-logo" value="" style="shape=image;imageAspect=1;aspect=fixed;image=data:image/svg+xml,%3Csvg%20width%3D%2298%22%20height%3D%2296%22%20viewBox%3D%220%200%2098%2096%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cg%20clip-path%3D%22url(%23clip0_730_27126)%22%3E%0A%3Cpath%20d%3D%22M41.4395%2069.3848C28.8066%2067.8535%2019.9062%2058.7617%2019.9062%2046.9902C19.9062%2042.2051%2021.6289%2037.0371%2024.5%2033.5918C23.2559%2030.4336%2023.4473%2023.7344%2024.8828%2020.959C28.7109%2020.4805%2033.8789%2022.4902%2036.9414%2025.2656C40.5781%2024.1172%2044.4062%2023.543%2049.0957%2023.543C53.7852%2023.543%2057.6133%2024.1172%2061.0586%2025.1699C64.0254%2022.4902%2069.2891%2020.4805%2073.1172%2020.959C74.457%2023.543%2074.6484%2030.2422%2073.4043%2033.4961C76.4668%2037.1328%2078.0937%2042.0137%2078.0937%2046.9902C78.0937%2058.7617%2069.1934%2067.6621%2056.3691%2069.2891C59.623%2071.3945%2061.8242%2075.9883%2061.8242%2081.252L61.8242%2091.2051C61.8242%2094.0762%2064.2168%2095.7031%2067.0879%2094.5547C84.4102%2087.9512%2098%2070.6289%2098%2049.1914C98%2022.1074%2075.9883%206.69539e-07%2048.9043%204.309e-07C21.8203%201.92261e-07%20-1.9479e-07%2022.1074%20-4.3343e-07%2049.1914C-6.20631e-07%2070.4375%2013.4941%2088.0469%2031.6777%2094.6504C34.2617%2095.6074%2036.75%2093.8848%2036.75%2091.3008L36.75%2083.6445C35.4102%2084.2188%2033.6875%2084.6016%2032.1562%2084.6016C25.8398%2084.6016%2022.1074%2081.1563%2019.4277%2074.7441C18.375%2072.1602%2017.2266%2070.6289%2015.0254%2070.3418C13.877%2070.2461%2013.4941%2069.7676%2013.4941%2069.1934C13.4941%2068.0449%2015.4082%2067.1836%2017.3223%2067.1836C20.0977%2067.1836%2022.4902%2068.9063%2024.9785%2072.4473C26.8926%2075.2227%2028.9023%2076.4668%2031.2949%2076.4668C33.6875%2076.4668%2035.2187%2075.6055%2037.4199%2073.4043C39.0469%2071.7773%2040.291%2070.3418%2041.4395%2069.3848Z%22%20fill%3D%22black%22%2F%3E%0A%3C%2Fg%3E%0A%3Cdefs%3E%0A%3CclipPath%20id%3D%22clip0_730_27126%22%3E%0A%3Crect%20width%3D%2298%22%20height%3D%2296%22%20fill%3D%22white%22%2F%3E%0A%3C%2FclipPath%3E%0A%3C%2Fdefs%3E%0A%3C%2Fsvg%3E;strokeColor=none;fillColor=none;" vertex="1" parent="giscus">
+          <mxGeometry x="87" y="10" width="36" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="giscus-note" value="外部コメント" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=13;fontColor=#64748B;" vertex="1" parent="1">
+          <mxGeometry x="45" y="775" width="210" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="cloudflare-panel" value="" style="rounded=1;arcSize=8;html=1;container=1;collapsible=0;fillColor=#FFF7E9;strokeColor=#F38020;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="890" y="370" width="280" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="cloudflare-logo" value="" style="shape=image;imageAspect=1;aspect=fixed;image=data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20role%3D%22img%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23F38020%22%3E%0A%20%20%3Ctitle%3ECloudflare%3C%2Ftitle%3E%0A%20%20%3Cpath%20d%3D%22M16.5088%2016.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559%200%200%201-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489%202.1601-.8868%202.5537-1.9136l.499-1.3013c.0215-.0561.0293-.1128.0147-.168-.5625-2.5463-2.835-4.4453-5.5499-4.4453-2.5039%200-4.6284%201.6177-5.3876%203.8614-.4927-.3658-1.1187-.5625-1.794-.499-1.2026.119-2.1665%201.083-2.2861%202.2856-.0283.31-.0069.6128.0635.894C1.5683%2013.171%200%2014.7754%200%2016.752c0%20.1748.0142.3515.0352.5273.0141.083.0844.1475.1689.1475h15.9814c.0909%200%20.1758-.0645.2032-.1553l.12-.4268zm2.7568-5.5634c-.0771%200-.1611%200-.2383.0112-.0566%200-.1054.0415-.127.0976l-.3378%201.1744c-.1475.5068-.0918.9707.1543%201.3164.2256.3164.6055.498%201.0625.5195l1.8437.1133c.0557%200%20.1055.0263.1329.0703.0283.043.0351.1074.0214.1562-.0283.084-.1132.1485-.204.1553l-1.921.1123c-1.041.0488-2.1582.8867-2.5527%201.914l-.1406.3585c-.0283.0713.0215.1416.0986.1416h6.5977c.0771%200%20.1474-.0489.169-.126.1122-.4082.1757-.837.1757-1.2803%200-2.6025-2.125-4.727-4.7344-4.727%22%2F%3E%0A%3C%2Fsvg%3E;strokeColor=none;fillColor=none;" vertex="1" parent="cloudflare-panel">
+          <mxGeometry x="18" y="16" width="56" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cloudflare-title" value="Cloudflare Workers" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=22;fontColor=#0F172A;fontStyle=1;" vertex="1" parent="cloudflare-panel">
+          <mxGeometry x="79" y="18" width="190" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="pages" value="Static Assets&#10;生成済みファイルを配信&#10;通常記事はWorker非実行" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#F38020;strokeWidth=2;align=center;verticalAlign=middle;fontSize=17;fontStyle=1;" vertex="1" parent="cloudflare-panel">
+          <mxGeometry x="25" y="90" width="230" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="functions" value="Worker API Proxy&#10;Cosenseカード用" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#F38020;strokeWidth=2;align=center;verticalAlign=middle;fontSize=17;fontStyle=1;" vertex="1" parent="cloudflare-panel">
+          <mxGeometry x="25" y="280" width="230" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="cosense" value="Cosense API" style="rounded=1;arcSize=8;html=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeWidth=1.5;fontFamily=Arial;fontColor=#0F172A;strokeColor=#CBD5E1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1195" y="650" width="180" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="support-note" value="補助通信は応答を省略" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontFamily=Arial;align=left;verticalAlign=middle;fontSize=14;fontColor=#64748B;" vertex="1" parent="1">
+          <mxGeometry x="380" y="770" width="310" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="e-author-repo" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#334155;strokeWidth=2.2;endArrow=block;endFill=1;fontFamily=Arial;fontSize=15;fontColor=#334155;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="dev" target="repo" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-repo-build" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#334155;strokeWidth=2.2;endArrow=block;endFill=1;fontFamily=Arial;fontSize=15;fontColor=#334155;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="repo" target="article-build" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-build-dist" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#334155;strokeWidth=2.2;endArrow=block;endFill=1;fontFamily=Arial;fontSize=15;fontColor=#334155;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="article-build" target="build-output" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-dist-publish" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#334155;strokeWidth=2.2;endArrow=block;endFill=1;fontFamily=Arial;fontSize=15;fontColor=#334155;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="build-output" target="publish" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-publish-static" value="dist/を公開" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#334155;strokeWidth=2.2;endArrow=block;endFill=1;fontFamily=Arial;fontSize=15;fontColor=#334155;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.75;entryX=0;entryY=0.07;" edge="1" source="publish" target="pages" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="865" y="300" />
+              <mxPoint x="865" y="470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-browser-pages" value="記事URLへアクセス" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2563EB;strokeWidth=3;endArrow=block;endFill=1;fontFamily=Arial;fontSize=17;fontColor=#1D4ED8;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.3;entryX=0;entryY=0.3;" edge="1" source="browser" target="pages" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-pages-browser" value="記事HTML・CSS/JS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2563EB;strokeWidth=3;endArrow=block;endFill=1;fontFamily=Arial;fontSize=17;fontColor=#1D4ED8;labelBackgroundColor=#FFFFFF;exitX=0;exitY=0.75;entryX=1;entryY=0.75;" edge="1" source="pages" target="browser" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-browser-functions" value="/api/*（同一Origin）" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#64748B;strokeWidth=1.8;endArrow=block;endFill=1;fontFamily=Arial;fontSize=14;fontColor=#475569;labelBackgroundColor=#FFFFFF;exitX=1;exitY=1;entryX=0;entryY=0.55;" edge="1" source="browser" target="functions" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="620" />
+              <mxPoint x="860" y="620" />
+              <mxPoint x="860" y="708" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-functions-cosense" value="取得" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#64748B;strokeWidth=1.8;endArrow=block;endFill=1;fontFamily=Arial;fontSize=14;fontColor=#475569;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="functions" target="cosense" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-browser-giscus" value="コメント" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#64748B;strokeWidth=1.8;endArrow=block;endFill=1;fontFamily=Arial;fontSize=14;fontColor=#475569;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="browser" target="giscus" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
