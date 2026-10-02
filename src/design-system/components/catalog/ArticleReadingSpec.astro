@@ -126,14 +126,16 @@ const codeSample = `export function getReadingWidth(viewport: number) {
   <section class="spec article-reading-section" id="reading-typography">
     <h4>Typography</h4>
     <p class="src">
-      Compactでは16px・行高1.90、Medium以上では17px・行高2.00、最大40字を基準とする。Wideで目次を閉じたときは最大48字まで広げる。長文を続けて読める行間を保ち、コードや図と行き来しても本文の位置を見失いにくい行長に制限する。
+      Compactでは16px・行高1.90、Medium以上では17px・行高2.00とし、本文幅の上限を43icとする。長文を続けて読める行間を保ち、コードや図と行き来しても本文の位置を見失いにくい行長に制限する。
     </p>
 
     <article class="demo type-specimen type-candidate" data-reading-lane>
-      <header><span>BODY</span><strong>16–17px / 1.90–2.00 / 40字</strong></header>
-      <p>
-        Pagefindは静的サイト向けの全文検索ライブラリです。ビルド後のHTMLを解析して検索インデックスを生成するため、専用サーバーを必要としません。
-      </p>
+      <header><span>BODY</span><strong>16–17px / 1.90–2.00 / 43ic</strong></header>
+      <div class="article-reading-content">
+        <p>
+          Pagefindは静的サイト向けの全文検索ライブラリです。ビルド後のHTMLを解析して検索インデックスを生成するため、専用サーバーを必要としません。
+        </p>
+      </div>
       <small>本文の連続性を優先し、視線が次の行頭を見失わない幅に制限する。</small>
     </article>
   </section>

@@ -239,10 +239,7 @@
 }
 
 .type-candidate p {
-  max-inline-size: 40ic;
   margin: 0 0 var(--phi-0);
-  font-size: 1.0625rem;
-  line-height: 2;
   text-wrap: pretty;
 }
 
@@ -275,14 +272,6 @@
 
   .object-children::before {
     display: none;
-  }
-}
-
-@media (max-width: 47.999rem) {
-  .type-candidate p {
-    max-inline-size: none;
-    font-size: 1rem;
-    line-height: 1.9;
   }
 }
 
