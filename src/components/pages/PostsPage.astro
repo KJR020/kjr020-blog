@@ -1,5 +1,6 @@
 ---
-import PostCard from "@/components/PostCard.astro";
+import PageHero from "@/components/PageHero.astro";
+import PostListItem from "@/components/PostListItem.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getPostYear } from "@/lib/postDate";
 import { SITE_NAME } from "@/lib/siteCopy";
@@ -8,6 +9,9 @@ import type { PostSummary } from "./types";
 interface Props {
   posts: PostSummary[];
 }
+
+/** 最初から見せるタグの数。残りは開閉領域へ入れる */
+const VISIBLE_TOPIC_COUNT = 14;
 
 const { posts } = Astro.props;
 const postsByYear = posts.reduce<Record<number, PostSummary[]>>((acc, post) => {
@@ -19,83 +23,184 @@ const postsByYear = posts.reduce<Record<number, PostSummary[]>>((acc, post) => {
 const years = Object.keys(postsByYear)
   .map(Number)
   .sort((a, b) => b - a);
+
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags ?? []) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const topics = [...tagCounts.entries()].sort(
+  (a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ja"),
+);
+const visibleTopics = topics.slice(0, VISIBLE_TOPIC_COUNT);
+const moreTopics = topics.slice(VISIBLE_TOPIC_COUNT);
 ---
 
 <BaseLayout title={`Posts - ${SITE_NAME}`} description="すべての記事一覧">
-  <div class="archive-page">
-    <div class="archive-header container mx-auto max-w-6xl px-4 pt-phi-2xl pb-phi-md">
-      <h1
-        class="font-bold font-heading tracking-tight mb-phi-2xs"
-        style="font-size: var(--font-size-title1); line-height: var(--lh-tight);"
-      >
-        Posts
-      </h1>
-      <p class="text-muted-foreground">ブログ記事一覧です。</p>
-    </div>
+  <PageHero title="Posts" description="ブログ記事一覧です。" mascot />
 
-    <div class="archive-body">
-      <div class="archive-scroll">
-        <div class="container mx-auto max-w-6xl px-4 pb-phi-2xl">
-          {
-            years.map((year) => (
-              <section class="year-section">
-                <div class="year-label">
-                  <span class="year-text">{year}</span>
-                </div>
-                <div class="year-cards">
-                  {postsByYear[year].map((post) => (
-                    <PostCard post={post} />
-                  ))}
-                </div>
-              </section>
-            ))
-          }
-        </div>
-      </div>
-    </div>
+  {
+    topics.length > 0 && (
+      <nav class="topics shell" aria-labelledby="topics-title">
+        <h2 id="topics-title" class="topics__title type-meta">タグ</h2>
+        <ul class="topics__list">
+          {visibleTopics.map(([tag]) => (
+            <li>
+              <a href={`/tags/${tag}`} class="topic">
+                {tag}
+              </a>
+            </li>
+          ))}
+        </ul>
+        {moreTopics.length > 0 && (
+          <details class="topics__more">
+            <summary>ほかのタグ</summary>
+            <ul class="topics__list">
+              {moreTopics.map(([tag]) => (
+                <li>
+                  <a href={`/tags/${tag}`} class="topic">
+                    {tag}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </nav>
+    )
+  }
+
+  <div class="archive shell">
+    {
+      years.map((year) => (
+        <section class="year grid-16" aria-labelledby={`year-${year}`}>
+          <div class="year__label">
+            <h2 id={`year-${year}`} class="year__number type-display">
+              {year}
+            </h2>
+          </div>
+          <div class="year__posts">
+            {postsByYear[year].map((post) => (
+              <PostListItem post={post} dateFormat="monthDay" />
+            ))}
+          </div>
+        </section>
+      ))
+    }
   </div>
 </BaseLayout>
 
 <style>
-  .year-section {
+  /* ---------- Topics ---------- */
+  .topics {
     display: grid;
-    grid-template-columns: 5rem 1fr;
-    gap: 1.618rem;
-    margin-bottom: 1.618rem;
+    gap: var(--phi-neg1);
+    padding-block: var(--phi-1) var(--phi-3);
   }
 
-  .year-label {
-    position: sticky;
-    top: 0;
-    align-self: start;
-    padding-top: 0.618rem;
+  .topics__title {
+    margin: 0;
+    font-weight: 400;
   }
 
-  .year-text {
-    font-size: var(--font-size-title3);
-    font-weight: 700;
+  .topics__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--phi-neg2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .topic {
+    display: inline-flex;
+    min-block-size: 2.25rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--foreground);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .topic:is(:hover, :focus-visible) {
+    border-color: var(--foreground);
+    background: var(--secondary);
+    color: var(--foreground);
+  }
+
+  .topics__more summary {
+    display: inline-flex;
+    min-block-size: 2rem;
+    align-items: center;
     color: var(--muted-foreground);
-    border-left: 2px solid var(--link);
-    padding-left: 0.75rem;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
   }
 
-  .year-section:last-child {
-    margin-bottom: 0;
+  .topics__more summary:is(:hover, :focus-visible) {
+    color: var(--foreground);
   }
 
-  .year-cards {
+  .topics__more[open] summary {
+    margin-block-end: var(--phi-neg1);
+  }
+
+  /* ---------- Years ---------- */
+  .archive {
     display: grid;
-    gap: 0.618rem;
+    gap: var(--phi-3);
   }
 
-  @media (max-width: 768px) {
-    .year-section {
-      grid-template-columns: 3.5rem 1fr;
-      gap: 0.618rem;
+  .year {
+    display: grid;
+    gap: var(--phi-0);
+  }
+
+  .year__label {
+    display: flex;
+    align-items: baseline;
+    gap: var(--phi-neg1);
+  }
+
+  .year__number {
+    margin: 0;
+    font-size: var(--font-size-display);
+    line-height: 1;
+  }
+
+  .year__posts {
+    min-inline-size: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .year__label {
+      grid-column: 1 / span 3;
+      position: sticky;
+      inset-block-start: calc(var(--header-height) + var(--phi-1));
+      flex-direction: column;
+      align-self: start;
+      gap: var(--phi-neg2);
+      padding-block-start: var(--phi-0);
+      border-block-start: 1px solid var(--foreground);
     }
 
-    .year-text {
-      font-size: var(--font-size-small);
+    .year__number {
+      font-size: var(--text-page-title);
+    }
+
+    .year__posts {
+      grid-column: 5 / span 12;
     }
   }
 </style>

@@ -5,19 +5,28 @@
 //
 // 使用方法: BaseHead.astroの<head>セクション最上部でインポートして使用
 ---
+<meta name="color-scheme" content="light dark" />
 <script is:inline>
   (function() {
-    try {
-      var stored = localStorage.getItem("theme");
-      var theme = stored === "dark" || stored === "light"
-        ? stored
-        : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-      document.documentElement.classList.toggle("dark", theme === "dark");
-    } catch (e) {
-      // localStorageアクセス不可時（プライベートブラウジング等）はシステム設定を使用
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        document.documentElement.classList.add("dark");
+    var media = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try {
+        var value = localStorage.getItem("theme");
+        return value === "dark" || value === "light" ? value : null;
+      } catch (e) {
+        // localStorageアクセス不可時（プライベートブラウジング等）はシステム設定を使用
+        return null;
       }
     }
+    function apply(theme) {
+      document.documentElement.classList.toggle("dark", theme === "dark");
+      var meta = document.querySelector('meta[name="color-scheme"]');
+      if (meta) meta.setAttribute("content", theme);
+    }
+    apply(stored() || (media.matches ? "dark" : "light"));
+    // 明示的に選んでいない間は、OSの配色変更へ追従する
+    media.addEventListener("change", function(event) {
+      if (!stored()) apply(event.matches ? "dark" : "light");
+    });
   })();
 </script>

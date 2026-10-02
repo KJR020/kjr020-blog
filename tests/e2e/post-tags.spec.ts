@@ -1,90 +1,74 @@
 import { expect, type Page, test } from "playwright/test";
 
 function getAstroTag(page: Page) {
-  return page.locator('a[href="/tags/Astro"]').first();
+  return page.locator('a.tag-link[href="/tags/Astro"]').first();
 }
 
-async function getLinkColor(page: Page) {
-  return page.evaluate(() => {
+async function resolveColor(page: Page, value: string) {
+  return page.evaluate((cssValue) => {
     const probe = document.createElement("span");
-    probe.style.color = "var(--link)";
+    probe.style.color = cssValue;
     document.body.append(probe);
     const color = getComputedStyle(probe).color;
     probe.remove();
     return color;
-  });
+  }, value);
 }
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/__test/posts");
 });
 
-test("記事タグはホバーするとRender面を表示してリンク色になる", async ({ page }) => {
+test("記事タグはHoverしなくても輪郭でリンクと分かる", async ({ page }) => {
   const tag = getAstroTag(page);
-  const label = tag.locator('[data-slot="badge"]');
-  const initialTransform = await tag.evaluate(
-    (element) => getComputedStyle(element, "::before").transform,
-  );
+
+  await expect(tag).toHaveCSS("border-top-style", "solid");
+  await expect(tag).toHaveCSS("border-top-color", await resolveColor(page, "var(--border)"));
+  await expect(tag).toContainText("#");
+});
+
+test("記事タグはHoverすると墨色の輪郭になり、リンクの青を使わない", async ({ page }) => {
+  const tag = getAstroTag(page);
+  const ink = await resolveColor(page, "var(--foreground)");
 
   await tag.hover();
 
-  await expect(label).toHaveCSS("color", await getLinkColor(page));
-  await expect
-    .poll(() => tag.evaluate((element) => getComputedStyle(element, "::before").transform))
-    .not.toBe(initialTransform);
-  await expect
-    .poll(() => tag.evaluate((element) => getComputedStyle(element, "::before").transitionDuration))
-    .toBe("0.22s");
+  await expect(tag).toHaveCSS("color", ink);
+  await expect(tag).toHaveCSS("border-top-color", ink);
+  await expect(tag).not.toHaveCSS("color", await resolveColor(page, "var(--link)"));
 });
 
-test("記事タグ上では記事カードのホバー表現を重ねない", async ({ page }) => {
+test("記事タグ上では記事行のHover表現を重ねない", async ({ page }) => {
   const tag = getAstroTag(page);
-  const card = tag.locator("xpath=ancestor::*[@data-slot='card']");
-  const title = card.locator('[data-slot="card-title"]');
+  const row = tag.locator("xpath=ancestor::article[contains(@class, 'post-row')]");
+  const title = row.locator(".post-row__title-text");
 
   await page.getByRole("heading", { level: 1, name: "Posts" }).hover();
-  const restingStyle = await card.evaluate((element) => ({
-    backgroundColor: getComputedStyle(element).backgroundColor,
-    titleColor: getComputedStyle(element.querySelector('[data-slot="card-title"]') as Element)
-      .color,
-  }));
+  const restingColor = await title.evaluate((element) => getComputedStyle(element).color);
 
   await tag.hover();
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(300);
 
-  await expect(card).toHaveCSS("background-color", restingStyle.backgroundColor);
-  await expect(title).toHaveCSS("color", restingStyle.titleColor);
+  await expect(title).toHaveCSS("color", restingColor);
+  await expect(title).toHaveCSS("background-size", "0% 1px");
 });
 
-test("記事タグはキーボードフォーカスでもRender面とリンク色を表示する", async ({ page }) => {
+test("記事行は行全体を記事へのリンクにし、タグは別のリンクとして操作できる", async ({ page }) => {
   const tag = getAstroTag(page);
-  const label = tag.locator('[data-slot="badge"]');
-  const initialTransform = await tag.evaluate(
-    (element) => getComputedStyle(element, "::before").transform,
-  );
+  const row = tag.locator("xpath=ancestor::article[contains(@class, 'post-row')]");
+  const titleLink = row.locator(".post-row__link");
+
+  await expect(titleLink).toHaveAttribute("href", /^\/posts\//);
+
+  await tag.click();
+  await expect(page).toHaveURL(/\/tags\/Astro\/?$/);
+});
+
+test("記事タグはキーボードフォーカスで輪郭線を表示する", async ({ page }) => {
+  const tag = getAstroTag(page);
 
   await tag.focus();
 
-  await expect(label).toHaveCSS("color", await getLinkColor(page));
-  await expect
-    .poll(() => tag.evaluate((element) => getComputedStyle(element, "::before").transform))
-    .not.toBe(initialTransform);
-});
-
-test("動きを減らす設定では記事タグの遷移時間をなくす", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.reload();
-
-  const tag = getAstroTag(page);
-  await tag.hover();
-
-  await expect
-    .poll(() => tag.evaluate((element) => getComputedStyle(element, "::before").content))
-    .toBe('""');
-  await expect
-    .poll(() => tag.evaluate((element) => getComputedStyle(element, "::before").transform))
-    .not.toBe("none");
-  await expect
-    .poll(() => tag.evaluate((element) => getComputedStyle(element, "::before").transitionDuration))
-    .toBe("0s");
+  await expect(tag).toHaveCSS("outline-style", "solid");
+  await expect(tag).toHaveCSS("outline-color", await resolveColor(page, "var(--foreground)"));
 });

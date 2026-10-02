@@ -3,199 +3,160 @@ import PageHero from "@/components/PageHero.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 const lastUpdated = "2026-03-21";
+
+const relatedLinks = [
+  {
+    href: "https://marketingplatform.google.com/about/analytics/terms/jp/",
+    label: "Google アナリティクス利用規約",
+  },
+  {
+    href: "https://policies.google.com/technologies/partner-sites?hl=ja",
+    label: "Google のサービスを使用するサイトやアプリから収集した情報の Google による使用",
+  },
+  {
+    href: "https://policies.google.com/privacy?hl=ja",
+    label: "Google プライバシーポリシー",
+  },
+];
 ---
 
-<BaseLayout title="Privacy Policy - KJR020 Blog" hideKuri>
-  <PageHero
-    title="Privacy Policy"
-    description="当サイトにおける個人情報の取り扱いについて"
-  />
-
-  <div class="container mx-auto px-4 py-phi-xl max-w-3xl">
-    <p class="text-sm text-muted-foreground mb-phi-lg">
-      最終更新日: {lastUpdated}
+<BaseLayout title="Privacy Policy - KJR020 Blog">
+  <PageHero title="Privacy Policy" description="当サイトにおける個人情報の取り扱いについて">
+    <p class="policy-updated type-meta">
+      最終更新日: <time datetime={lastUpdated}>{lastUpdated}</time>
     </p>
+  </PageHero>
 
-    <div class="space-y-phi-lg">
-      <!-- Google Analytics -->
-      <section class="rounded-lg border border-border bg-card p-phi-lg">
-        <div class="flex items-center gap-phi-xs mb-phi-md">
-          <div
-            class="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              ><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path
-                d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path
-                d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg
-            >
-          </div>
-          <h2
-            class="font-bold font-heading"
-            style="font-size: var(--font-size-title3);"
-          >
-            アクセス解析ツールについて
-          </h2>
-        </div>
-        <ul
-          class="space-y-phi-2xs text-foreground/85 leading-relaxed list-disc list-inside"
-        >
+  <div class="shell grid-16">
+    <div class="policy">
+      <section class="policy-section" aria-labelledby="policy-analytics">
+        <h2 id="policy-analytics" class="type-heading">アクセス解析ツールについて</h2>
+        <ul>
           <li>
-            当サイトでは、Googleによるアクセス解析ツール「Google
-            アナリティクス」を使用しています
+            当サイトでは、Googleによるアクセス解析ツール「Google アナリティクス」を使用しています
           </li>
-          <li>
-            Google アナリティクスはデータの収集のためにCookieを使用しています
-          </li>
-          <li>
-            このデータは匿名で収集しており、個人を特定するものではありません
-          </li>
+          <li>Google アナリティクスはデータの収集のためにCookieを使用しています</li>
+          <li>このデータは匿名で収集しており、個人を特定するものではありません</li>
           <li>
             Cookieを無効にすることで収集を拒否できます。お使いのブラウザの設定をご確認ください
           </li>
         </ul>
-        <div class="mt-phi-md pt-phi-sm border-t border-border">
-          <p class="text-sm text-muted-foreground mb-phi-xs">関連リンク</p>
-          <ul class="space-y-phi-3xs text-sm">
+        <h3 class="policy-related-title type-meta">関連リンク</h3>
+        <ul class="policy-links">
+          {relatedLinks.map((link) => (
             <li>
-              <a
-                href="https://marketingplatform.google.com/about/analytics/terms/jp/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-[var(--link)] hover:text-[var(--link-hover)] transition-colors inline-flex items-center gap-1"
-              >
-                Google アナリティクス利用規約
+              <a href={link.href} target="_blank" rel="noopener noreferrer">
+                {link.label}
                 <svg
+                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
+                  width="11"
+                  height="11"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="2"
+                  stroke-width="2.25"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  ><path
-                    d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-                  ></path><polyline points="15 3 21 3 21 9"></polyline><line
-                    x1="10"
-                    y1="14"
-                    x2="21"
-                    y2="3"></line></svg
                 >
+                  <path d="M7 17 17 7" />
+                  <path d="M8 7h9v9" />
+                </svg>
               </a>
             </li>
-            <li>
-              <a
-                href="https://policies.google.com/technologies/partner-sites?hl=ja"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-[var(--link)] hover:text-[var(--link-hover)] transition-colors inline-flex items-center gap-1"
-              >
-                Google のサービスを使用するサイトやアプリから収集した情報の
-                Google による使用
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  ><path
-                    d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-                  ></path><polyline points="15 3 21 3 21 9"></polyline><line
-                    x1="10"
-                    y1="14"
-                    x2="21"
-                    y2="3"></line></svg
-                >
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://policies.google.com/privacy?hl=ja"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-[var(--link)] hover:text-[var(--link-hover)] transition-colors inline-flex items-center gap-1"
-              >
-                Google プライバシーポリシー
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  ><path
-                    d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-                  ></path><polyline points="15 3 21 3 21 9"></polyline><line
-                    x1="10"
-                    y1="14"
-                    x2="21"
-                    y2="3"></line></svg
-                >
-              </a>
-            </li>
-          </ul>
-        </div>
+          ))}
+        </ul>
       </section>
 
-      <!-- 免責事項 -->
-      <section class="rounded-lg border border-border bg-card p-phi-lg">
-        <div class="flex items-center gap-phi-xs mb-phi-md">
-          <div
-            class="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              ><circle cx="12" cy="12" r="10"></circle><line
-                x1="12"
-                y1="8"
-                x2="12"
-                y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"
-              ></line></svg
-            >
-          </div>
-          <h2
-            class="font-bold font-heading"
-            style="font-size: var(--font-size-title3);"
-          >
-            免責事項
-          </h2>
-        </div>
-        <ul
-          class="space-y-phi-2xs text-foreground/85 leading-relaxed list-disc list-inside"
-        >
-          <li>
-            当サイトに掲載されている情報の正確性について、保証するものではありません
-          </li>
-          <li>
-            当サイトの利用によって生じたいかなる損害についても責任は負いかねます
-          </li>
+      <section class="policy-section" aria-labelledby="policy-disclaimer">
+        <h2 id="policy-disclaimer" class="type-heading">免責事項</h2>
+        <ul>
+          <li>当サイトに掲載されている情報の正確性について、保証するものではありません</li>
+          <li>当サイトの利用によって生じたいかなる損害についても責任は負いかねます</li>
         </ul>
       </section>
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  .policy-updated {
+    margin: var(--phi-0) 0 0;
+  }
+
+  .policy {
+    grid-column: 1 / span 10;
+    counter-reset: policy;
+    max-inline-size: 48rem;
+    padding-block-start: var(--phi-2);
+  }
+
+  .policy-section {
+    counter-increment: policy;
+    display: grid;
+    gap: var(--phi-0);
+    padding-block: var(--phi-2);
+  }
+
+  .policy-section + .policy-section {
+    border-block-start: 1px solid var(--border);
+  }
+
+  .policy-section h2 {
+    margin: 0;
+    font-size: var(--font-size-title2);
+    line-height: var(--lh-tight);
+  }
+
+  .policy-section h2::before {
+    display: block;
+    margin-block-end: var(--phi-neg2);
+    color: var(--brand);
+    font-size: var(--font-size-small);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    content: counter(policy, decimal-leading-zero);
+  }
+
+  .policy-section ul {
+    display: grid;
+    gap: var(--phi-neg2);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+    color: var(--foreground-soft);
+    line-height: 1.9;
+    list-style: disc;
+  }
+
+  .policy-section li::marker {
+    color: var(--muted-foreground);
+  }
+
+  .policy-related-title {
+    margin: var(--phi-0) 0 0;
+    font-weight: 400;
+  }
+
+  .policy-section .policy-links {
+    padding: 0;
+    list-style: none;
+  }
+
+  .policy-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--link);
+    font-size: var(--font-size-small);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--link) 40%, transparent);
+    text-underline-offset: 0.25em;
+  }
+
+  .policy-links a:hover {
+    color: var(--link-hover);
+    text-decoration-color: currentColor;
+  }
+</style>

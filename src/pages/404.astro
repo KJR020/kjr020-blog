@@ -1,59 +1,96 @@
 ---
+import Kuri from "@/components/Kuri.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="404 - ページが見つかりません" hideKuri>
-  <div class="not-found-page">
-    <div class="not-found-content text-center">
-      <div class="kuri-mascot" aria-hidden="true"></div>
-      <h1 class="font-bold mb-phi-md" style="font-size: var(--font-size-display); line-height: var(--lh-tight);">404</h1>
-      <p class="text-muted-foreground mb-phi-lg" style="font-size: var(--font-size-title3);">
-        お探しのページが見つかりませんでした。
-      </p>
-      <a
-        href="/"
-        class="inline-flex items-center justify-center rounded-md bg-primary px-phi-xl py-phi-sm text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-      >
-        トップページへ戻る
+<BaseLayout title="404 - ページが見つかりません">
+  <div class="not-found shell">
+    <!-- 「0」の位置にくりを立たせ、ページの代わりにくりがいる構図にする -->
+    <div class="not-found__code type-display" aria-hidden="true">
+      <span>4</span>
+      <span class="not-found__kuri"><Kuri size="0.72em" /></span>
+      <span>4</span>
+    </div>
+    <h1 class="not-found__title type-heading">お探しのページが見つかりませんでした。</h1>
+    <div class="not-found__actions">
+      <a href="/" class="not-found__primary">トップへ戻る</a>
+      <a href="/posts" class="arrow-link">
+        記事一覧
+        <svg
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12h14" />
+          <path d="m13 6 6 6-6 6" />
+        </svg>
       </a>
     </div>
   </div>
 </BaseLayout>
 
 <style>
-  .not-found-page {
+  .not-found {
+    display: grid;
+    justify-items: center;
+    gap: var(--phi-1);
+    padding-block: clamp(2.618rem, 1rem + 6vw, 6.854rem) var(--phi-2);
+    text-align: center;
+  }
+
+  .not-found__code {
     display: flex;
+    align-items: flex-end;
+    gap: 0.04em;
+    color: var(--foreground);
+    font-size: clamp(8rem, 4rem + 16vw, 17.94rem);
+    letter-spacing: -0.04em;
+    line-height: 0.8;
+  }
+
+  /* 足先を数字のベースラインへ揃える */
+  .not-found__kuri {
+    display: block;
+    margin-block-end: -0.07em;
+    margin-inline: 0.02em;
+  }
+
+  .not-found__title {
+    margin: var(--phi-1) 0 0;
+    font-size: var(--font-size-title3);
+    font-weight: 500;
+  }
+
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    min-height: 60vh;
-    padding: 2rem 1rem;
+    gap: var(--phi-0) var(--phi-1);
   }
 
-  .not-found-content {
-    display: flex;
-    flex-direction: column;
+  .not-found__primary {
+    display: inline-flex;
+    min-block-size: 2.75rem;
     align-items: center;
+    padding-inline: var(--phi-1);
+    border-radius: 999px;
+    background: var(--foreground);
+    color: var(--background);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out);
   }
 
-  .kuri-mascot {
-    width: var(--phi-4);
-    height: var(--phi-4);
-    background-image: url("/images/kuri.svg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    opacity: 0.25;
-    margin-bottom: var(--phi-0);
-  }
-
-  :global(.dark) .kuri-mascot {
-    background-image: url("/images/kuri-dark.svg");
-  }
-
-  @media (max-width: 768px) {
-    .kuri-mascot {
-      width: var(--phi-3);
-      height: var(--phi-3);
-    }
+  .not-found__primary:hover {
+    background: var(--brand);
   }
 </style>

@@ -41,8 +41,10 @@ export function Comments({ repo, repoId, category, categoryId }: CommentsProps) 
   }
 
   return (
-    <div className="mt-12 pt-8 border-t border-border">
-      <h2 className="text-xl font-semibold mb-6">コメント</h2>
+    <section aria-labelledby="comments-title">
+      <h2 id="comments-title" className="mb-6 text-xl font-bold">
+        コメント
+      </h2>
       <Giscus
         repo={repo}
         repoId={repoId}
@@ -57,6 +59,6 @@ export function Comments({ repo, repoId, category, categoryId }: CommentsProps) 
         lang="ja"
         loading="lazy"
       />
-    </div>
+    </section>
   );
 }

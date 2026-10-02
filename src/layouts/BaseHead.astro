@@ -64,9 +64,19 @@ const serializedStructuredData = serializeJsonLd(structuredData);
 const rssFeedURL = new URL("/rss.xml", siteURL);
 ---
 
-<ThemeInit />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<ThemeInit />
+<script is:inline>
+  // 検索ダイアログの準備が整う前に押されたSearchを覚えておき、準備ができたら開く
+  document.addEventListener("click", function (event) {
+    var target = event.target;
+    if (target instanceof Element && target.closest("[data-command-palette-trigger]")) {
+      window.__commandPaletteRequested = true;
+    }
+  });
+</script>
+
 <link rel="icon" type="image/png" href="/images/kuri_photo.png" />
 <link rel="apple-touch-icon" href="/images/kuri_photo.png" />
 <link rel="canonical" href={canonicalURL} />

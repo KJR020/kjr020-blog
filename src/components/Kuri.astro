@@ -1,0 +1,769 @@
+---
+/**
+ * 栗のマスコット「くり」。
+ * public/images/kuri.svg のパスをそのまま使い、元の表現を保ったまま動きだけを加える。
+ *
+ * - ライト: 黒一色のシルエットに、目を背景色で抜く（kuri.svgと同じ）
+ * - ダーク: 白い線画（kuri-dark.svgと同じ）。反転すると目の白黒が逆転するため
+ *
+ * 動きの人格は「体は重く動かず、目だけが素早い」。
+ * 体はジャンプと登場のときだけ動かし、ふだんは目とまばたきだけで反応する。
+ * 罫線を地面に見立て、足先の下端を置きたい線へ合わせて配置する。
+ */
+interface Props {
+  /** 表示幅。高さは元の縦横比から決まる */
+  size?: string;
+  /** sleepy: いつもの半目 / asleep: 眠っていて、ポインターが近づくと目を開ける */
+  mood?: "sleepy" | "asleep";
+  /**
+   * pop: 画面に入ったとき、罫線の下から顔を出す（ページ上部）
+   * none: 登場の演出をしない（フッターで眠っている）
+   */
+  entrance?: "pop" | "none";
+  class?: string;
+}
+
+const { size = "8rem", mood = "sleepy", entrance = "pop", class: className } = Astro.props;
+const uid = `kuri-${Math.random().toString(36).slice(2, 8)}`;
+
+const BODY =
+  "M1021.6,776.6C1020,777.5 1015.9,780.6 1012.6,783.4C1000.7,793.4 997.5,794.9 982.3,797.6C915.8,809.2 862.9,843.1 833.2,893C823,910.1 814.8,932 811.3,951.5C808.9,964.7 808.9,995.6 811.3,1007.5C821.2,1056.2 853,1095.9 901.7,1120.1L911.8,1125.2L901.2,1137.8C888.8,1153.6 850.392,1205.111 849.2,1206C844.253,1209.69 848.037,1242.468 853.9,1245.7C854.5,1246.9 856.506,1248.096 857.4,1249.5C859.273,1252.44 892.481,1262.306 901.5,1260C905.405,1259.002 921.961,1250.703 924.3,1244.1C926.9,1238.2 968.8,1144.8 969.4,1144.3C969.6,1144.1 977.2,1144.8 986.1,1145.9C1010.1,1149 1036.3,1150.1 1054.3,1148.8C1068.3,1147.9 1069.5,1147.9 1070.7,1149.6C1071.096,1150.166 1078.149,1173.256 1093.207,1201.489C1104.761,1223.153 1123.497,1249.079 1132.6,1262.7C1134.003,1264.519 1163.71,1273.997 1181.418,1265.194C1197.79,1257.054 1202.308,1230.673 1202.5,1230C1202.885,1228.185 1184.366,1199.595 1164.923,1174.067C1149.017,1153.184 1131.5,1134.35 1131.5,1133.9C1131.5,1133.4 1135,1131.4 1139.3,1129.6C1159.9,1120.6 1177.5,1108.6 1193.5,1092.5C1210.7,1075.4 1220.1,1061.2 1228.8,1039.3C1235.4,1022.5 1238.8,1007.4 1240.2,987.7C1242.8,953.4 1236.7,926 1220.6,898.6C1207.3,876 1183.7,852.4 1156.9,835C1135.9,821.3 1100.7,806.5 1077.5,801.5C1059.1,797.5 1053.9,795 1041.5,784.1C1038.2,781.2 1034.6,778.2 1033.5,777.5C1030.1,775.2 1024.8,774.9 1021.6,776.6M934.1,860.5C938,861.3 945.1,863.8 949.8,866C957,869.4 959.7,871.4 967.4,879.3C977.7,889.6 981.7,896.3 985,908.3C995.4,946 970.3,987.1 931.3,996.5C920.1,999.2 904.9,998.3 894.5,994.2C874.9,986.5 861,971.8 854.3,951.5C851.9,944.3 851.6,942 851.6,929C851.6,915.6 851.8,913.9 854.4,907.2C858.1,897.2 863,889.2 869.7,881.9C880.8,869.9 893.1,863.1 909.5,859.6C914.3,858.7 927.4,859.1 934.1,860.5M1122.2,886.1C1149.1,890.3 1170.6,908.3 1179.7,934.5C1182.2,941.7 1182.5,943.8 1182.5,956C1182.5,967.4 1182.1,970.7 1180.2,977C1176.1,990 1171.5,997.6 1161.5,1007.5C1147.9,1021.1 1135.1,1026.7 1115.4,1027.7C1101.4,1028.4 1092.3,1026.5 1080.2,1020.5C1064.9,1012.8 1053.7,1000.4 1047,983.7C1042.7,972.9 1041.7,966.4 1042.3,952.5C1042.7,942.5 1043.3,939.1 1045.7,932.3C1049.6,921.4 1054.2,914.1 1062,906.1C1077.8,889.8 1099.6,882.6 1122.2,886.1";
+
+const LEFT_EYE =
+  "M857.3,908.2C855.8,910.1 855.1,913.6 856,915C856.8,916.3 870.8,920 875,920C879.5,920 880.3,921.2 879,926.1C878.3,928.4 877.8,934.2 877.9,938.9C877.9,953.3 882.7,965 891.7,973C898.3,978.8 902.1,980.3 911,980.4C920.8,980.4 927.9,977.1 936.4,968.6C943.4,961.6 947.6,953.9 950,943.7C951.7,936.8 951.8,936.5 954.6,936.6C956.2,936.6 962.1,937.7 967.7,939C979,941.6 981,941.2 981,936C981,931.2 989.8,933.4 881.7,911.4C869.7,909 859.5,907 859,907C858.6,907 857.8,907.6 857.3,908.2";
+
+const RIGHT_EYE =
+  "M1046,946.9C1044.5,949.9 1044.8,952.8 1046.8,953.9C1047.8,954.4 1054.4,955.2 1061.3,955.6L1074,956.3L1074,963.6C1074,977.1 1078,988.8 1085.8,998.7C1090.6,1004.7 1096,1008.1 1104.4,1010.5C1114.8,1013.5 1126.3,1009.9 1134.9,1001.1C1142.8,993 1149,978.6 1149,968.4C1149,960.1 1148.5,960.4 1163.2,960.5C1174.4,960.5 1176.4,960.3 1177.3,958.8C1178.1,957.6 1178,956.5 1177.1,954.6C1175.4,951.5 1175.1,951.5 1144.5,950C1131.9,949.4 1107.6,948.1 1090.5,947C1050.1,944.5 1047.4,944.5 1046,946.9";
+
+/** 目の穴だけのパス（体のパスの一部）。目の中身をこの形で切り抜く */
+const EYE_HOLES =
+  "M934.1,860.5C938,861.3 945.1,863.8 949.8,866C957,869.4 959.7,871.4 967.4,879.3C977.7,889.6 981.7,896.3 985,908.3C995.4,946 970.3,987.1 931.3,996.5C920.1,999.2 904.9,998.3 894.5,994.2C874.9,986.5 861,971.8 854.3,951.5C851.9,944.3 851.6,942 851.6,929C851.6,915.6 851.8,913.9 854.4,907.2C858.1,897.2 863,889.2 869.7,881.9C880.8,869.9 893.1,863.1 909.5,859.6C914.3,858.7 927.4,859.1 934.1,860.5M1122.2,886.1C1149.1,890.3 1170.6,908.3 1179.7,934.5C1182.2,941.7 1182.5,943.8 1182.5,956C1182.5,967.4 1182.1,970.7 1180.2,977C1176.1,990 1171.5,997.6 1161.5,1007.5C1147.9,1021.1 1135.1,1026.7 1115.4,1027.7C1101.4,1028.4 1092.3,1026.5 1080.2,1020.5C1064.9,1012.8 1053.7,1000.4 1047,983.7C1042.7,972.9 1041.7,966.4 1042.3,952.5C1042.7,942.5 1043.3,939.1 1045.7,932.3C1049.6,921.4 1054.2,914.1 1062,906.1C1077.8,889.8 1099.6,882.6 1122.2,886.1";
+const EYE_HOLES_TRANSFORM = "matrix(1.000000,0,0,1.000000,-641.0000,-615.0000)";
+
+/**
+ * 白いまぶた。元の目は「白い上まぶた＋縁の太い線＋その下の黒目」でできている。
+ * まばたきでは、縁の線（元のパスと同じ位置・傾き・太さ）ごとまぶたを下ろし、
+ * 黒目を隠して目の下寄りで閉じる。値はviewBox座標
+ */
+/**
+ * 眠っている目。目の中央に「‿」の弧を置く。
+ * 端は目の中心よりわずかに上（0.1r）で左右0.7r、底は中心から0.5r下
+ */
+const SLEEP_EYES = [
+  { cx: 282, cy: 314, r: 70 },
+  { cx: 471, cy: 341, r: 71 },
+];
+const sleepArc = ({ cx, cy, r }: (typeof SLEEP_EYES)[number]) => {
+  const half = r * 0.7;
+  const top = cy - r * 0.1;
+  const sag = r * 0.6;
+  const radius = (half ** 2 + sag ** 2) / (2 * sag);
+  return `M${cx - half} ${top}A${radius.toFixed(1)} ${radius.toFixed(1)} 0 0 0 ${cx + half} ${top}`;
+};
+
+const EYELIDS = [
+  { cx: 282, y: 307.7, angle: 11, thickness: 8, drop: 55, path: LEFT_EYE },
+  { cx: 471, y: 337.5, angle: 3, thickness: 9, drop: 55, path: RIGHT_EYE },
+];
+---
+
+<svg
+  class:list={["kuri", `kuri--${mood}`, mood === "asleep" && "is-closed", className]}
+  data-kuri
+  data-mood={mood}
+  data-entrance={entrance}
+  viewBox="165 158 437 499"
+  width="437"
+  height="499"
+  style={`--kuri-size: ${size}`}
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    mood === "asleep" && (
+      <g class="kuri__zzz">
+        <text x="560" y="250">z</text>
+        <text x="610" y="170">z</text>
+      </g>
+    )
+  }
+  <!--
+    動きの層を分ける。CSSとWAAPIのtransformが互いを上書きしないよう、
+    元SVGのtransform属性を持つ要素には触れず、属性を持たないgで包む。
+    action: 登場とジャンプ / idle: 呼吸 / gaze: 視線 / lid: まばたき
+  -->
+  <defs>
+    <clipPath id={`${uid}-holes`}>
+      <path transform={EYE_HOLES_TRANSFORM} d={EYE_HOLES} />
+    </clipPath>
+  </defs>
+  <g class="kuri__action">
+    <g class="kuri__idle">
+      <g class="kuri__whole" transform="matrix(0.798337,0,0,0.898246,-445.471933,-532.659649)">
+        <g transform="matrix(1.252604,0,0,1.113281,-244.919271,-91.667969)">
+          <path class="kuri__ink" d={BODY} />
+        </g>
+      </g>
+      <!-- 目。目の穴の形で切り抜き、その中で黒目とまぶたを動かす -->
+      <g clip-path={`url(#${uid}-holes)`}>
+        <g class="kuri__gaze">
+          <g class="kuri__follow">
+            <g class="kuri__pupils">
+              <g transform="matrix(0.798337,0,0,0.898246,-445.471933,-532.659649)">
+                <g transform="matrix(1.252604,0,0,1.113281,-140.953125,-67.175781)">
+                  <g transform="translate(-83,-22)">
+                    <path class="kuri__ink" d={LEFT_EYE} />
+                  </g>
+                  <g transform="translate(-83,-22)">
+                    <path class="kuri__ink" d={RIGHT_EYE} />
+                  </g>
+                </g>
+              </g>
+            </g>
+            {
+              EYELIDS.map((lid, index) => (
+                <g class="kuri__eyelid" data-drop={lid.drop}>
+                  <clipPath id={`${uid}-lid-${index}`}>
+                    <rect
+                      transform={`rotate(${lid.angle} ${lid.cx} ${lid.y})`}
+                      x={lid.cx - 110}
+                      y={lid.y - 40}
+                      width="220"
+                      height={40 + lid.thickness / 2 + 0.5}
+                    />
+                  </clipPath>
+                  <rect
+                    class="kuri__eyelid-skin"
+                    transform={`rotate(${lid.angle} ${lid.cx} ${lid.y})`}
+                    x={lid.cx - 110}
+                    y={lid.y - 220}
+                    width="220"
+                    height="220"
+                  />
+                  <!-- 縁の線は、元の目のパスから線の部分だけを切り出して使い、位置を完全に一致させる -->
+                  <g class="kuri__lid-line" clip-path={`url(#${uid}-lid-${index})`}>
+                    <g transform="matrix(0.798337,0,0,0.898246,-445.471933,-532.659649)">
+                      <g transform="matrix(1.252604,0,0,1.113281,-140.953125,-67.175781)">
+                        <g transform="translate(-83,-22)">
+                          <path class="kuri__ink" d={lid.path} />
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              ))
+            }
+          </g>
+        </g>
+        <!-- 眠っている目は視線やまぶたと一緒に動かさず、目の中央に固定する -->
+        <g class="kuri__sleep-eyes">
+          {SLEEP_EYES.map((eye) => <path class="kuri__sleep-line" d={sleepArc(eye)} />)}
+        </g>
+      </g>
+      <!--
+        ダークの目の縁。線は目の穴の境界をまたいで描かれ、内側の半分はまぶたに隠れる。
+        まぶたの上に描き直し、閉じても縁の太さを一定に保つ
+      -->
+      <path class="kuri__eye-rim" transform={EYE_HOLES_TRANSFORM} d={EYE_HOLES} />
+    </g>
+  </g>
+</svg>
+
+<script>
+  /*
+   * くりの動き。状態ごとに優先度を持たせ、同時に1つの演技だけを見せる。
+   *   登場・ジャンプ（action） > まばたき > 視線 > 呼吸・見回し
+   * 演技中は下位の動きを止める（Staging）。
+   */
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /** デザイントークン（globals.css）を読む。動きの値はトークンを正本にする */
+  const rootStyle = getComputedStyle(document.documentElement);
+  const ease = (name: string) => rootStyle.getPropertyValue(`--ease-${name}`).trim() || "ease";
+  const ms = (name: string) => {
+    const value = rootStyle.getPropertyValue(`--duration-${name}`).trim();
+    return value.endsWith("ms") ? Number.parseFloat(value) : Number.parseFloat(value) * 1000;
+  };
+  const tokenNumber = (name: string, fallback: number) =>
+    Number.parseFloat(rootStyle.getPropertyValue(name)) || fallback;
+
+  /** 目の可動域（viewBox単位）。眼窩の余白の3割程度に留める */
+  const GAZE_X = 12;
+  const GAZE_Y = 6;
+
+  /** ほぼ臨界減衰のばね。目標へ素早く寄り、行き過ぎずに止まる */
+  function createSpring(
+    onChange: (value: number) => void,
+    stiffness = tokenNumber("--spring-gaze-stiffness", 260),
+    damping = tokenNumber("--spring-gaze-damping", 30),
+  ) {
+    let value = 0;
+    let velocity = 0;
+    let target = 0;
+    let frame = 0;
+    let previous = 0;
+
+    const step = (now: number) => {
+      let dt = previous ? Math.min((now - previous) / 1000, 0.032) : 1 / 60;
+      previous = now;
+      while (dt > 0) {
+        const h = Math.min(dt, 1 / 120);
+        velocity += (-stiffness * (value - target) - damping * velocity) * h;
+        value += velocity * h;
+        dt -= h;
+      }
+      if (Math.abs(value - target) > 0.0005 || Math.abs(velocity) > 0.0005) {
+        onChange(value);
+        frame = requestAnimationFrame(step);
+      } else {
+        value = target;
+        velocity = 0;
+        frame = 0;
+        previous = 0;
+        onChange(value);
+      }
+    };
+
+    return (next: number) => {
+      target = next;
+      if (!frame) frame = requestAnimationFrame(step);
+    };
+  }
+
+  const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
+
+  class KuriActor {
+    readonly svg: SVGSVGElement;
+    readonly action: SVGGElement;
+    readonly follow: SVGGElement;
+    readonly pupils: SVGGElement;
+    readonly eyelids: SVGGElement[];
+    readonly lookX: (value: number) => void;
+    readonly lookY: (value: number) => void;
+    acting = false;
+    blinking = false;
+    awake: boolean;
+    sleepTimer = 0;
+
+    constructor(svg: SVGSVGElement) {
+      this.svg = svg;
+      this.action = svg.querySelector(".kuri__action") as SVGGElement;
+      this.follow = svg.querySelector(".kuri__follow") as SVGGElement;
+      this.pupils = svg.querySelector(".kuri__pupils") as SVGGElement;
+      this.eyelids = Array.from(svg.querySelectorAll<SVGGElement>(".kuri__eyelid"));
+      this.awake = svg.dataset.mood !== "asleep";
+      this.lookX = createSpring((x) => svg.style.setProperty("--gaze-x", `${x * GAZE_X}px`));
+      this.lookY = createSpring((y) => svg.style.setProperty("--gaze-y", `${y * GAZE_Y}px`));
+      svg.addEventListener("pointerdown", () => this.jump());
+      // 動きの確認用。外から演技を呼び出せるようにする
+      svg.addEventListener("kuri:enter", () => this.enter());
+      svg.addEventListener("kuri:jump", () => this.jump());
+      svg.addEventListener("kuri:blink", () => void this.blink());
+      svg.addEventListener("kuri:sleep", () => void this.fallAsleep());
+      svg.addEventListener("kuri:wake", () => void this.wake());
+      this.scheduleBlink();
+    }
+
+    get isVisible() {
+      const rect = this.svg.getBoundingClientRect();
+      return rect.bottom > 0 && rect.top < window.innerHeight;
+    }
+
+    look(x: number, y: number) {
+      if (!this.awake) return;
+      this.lookX(x);
+      this.lookY(y);
+    }
+
+    /** 罫線の下から顔を出し、少し行き過ぎてから足を線へ着ける */
+    enter() {
+      if (reducedMotion.matches) return;
+      this.acting = true;
+      this.svg.classList.add("is-entering", "is-acting");
+      const animation = this.action.animate(
+        [
+          { transform: "translateY(101%) scale(1.04, 0.96)", easing: ease("move") },
+          { transform: "translateY(-2%) scale(0.98, 1.03)", offset: 0.68, easing: ease("in-out") },
+          { transform: "translateY(0) scale(1.03, 0.97)", offset: 0.86, easing: ease("enter") },
+          { transform: "translateY(0) scale(1)" },
+        ],
+        { duration: ms("kuri-enter"), fill: "backwards" },
+      );
+      animation.finished
+        .catch(() => undefined)
+        .finally(() => {
+          this.svg.classList.remove("is-entering", "is-acting");
+          this.acting = false;
+        });
+    }
+
+    /**
+     * 予備動作から着地の反動まで跳ねる。
+     * 空中は放物線から直接キーフレームを作り、上昇は減速・下降は加速させて頂点で浮かせない。
+     * 目は体より少し遅れて動かし、重さを出す（フォロースルー）
+     */
+    jump() {
+      if (this.acting) return;
+      // 寝ているところを突かれたら、起きて跳ねる。動きを減らす設定でも、起きることだけは伝える
+      window.clearTimeout(this.sleepTimer);
+      if (!this.awake) {
+        void this.wake();
+        this.scheduleDoze(2600);
+      }
+      if (reducedMotion.matches) return;
+      this.acting = true;
+      this.svg.classList.add("is-acting");
+      const height = 120; // viewBox単位。体の高さの約24%
+      const takeoff = 0.24;
+      const apex = 0.5;
+      const impact = 0.79;
+      const liftOff = height * 0.16;
+      const air: Keyframe[] = [];
+      for (let offset = takeoff + 0.03; offset < impact - 0.001; offset += 0.03) {
+        const rising = offset <= apex;
+        const progress = rising ? (apex - offset) / (apex - takeoff) : (offset - apex) / (impact - apex);
+        const y = rising
+          ? -height + (height - liftOff) * progress ** 2
+          : -height + height * progress ** 2;
+        // 速いところほど縦に伸ばし、頂点では元の形に戻す
+        const stretch = 1 + 0.035 * progress;
+        air.push({
+          transform: `translateY(${y.toFixed(1)}px) scale(${(1 / stretch).toFixed(3)}, ${stretch.toFixed(3)})`,
+          offset,
+          easing: "linear",
+        });
+      }
+      const animation = this.action.animate(
+        [
+          { transform: "translateY(0) scale(1)", easing: ease("anticipate") },
+          // 押し出しは加速させ、離陸の瞬間の速度を空中の初速へつなげる
+          { transform: "translateY(0) scale(1.045, 0.957)", offset: 0.12, easing: ease("push") },
+          { transform: `translateY(${-liftOff}px) scale(0.966, 1.035)`, offset: takeoff, easing: "linear" },
+          ...air,
+          { transform: "translateY(0) scale(1.06, 0.943)", offset: impact, easing: ease("impact") },
+          { transform: "translateY(-8px) scale(0.99, 1.015)", offset: 0.89, easing: ease("settle") },
+          { transform: "translateY(0) scale(1)" },
+        ],
+        { duration: ms("kuri-jump") },
+      );
+      const eyes = [this.follow].map((follow) =>
+        follow.animate(
+          [
+            { transform: "translateY(0)", easing: ease("in-out") },
+            { transform: "translateY(3px)", offset: 0.12 },
+            { transform: "translateY(9px)", offset: 0.3, easing: ease("enter") },
+            { transform: "translateY(-5px)", offset: 0.55, easing: ease("in-out") },
+            { transform: "translateY(-7px)", offset: 0.76, easing: ease("exit") },
+            { transform: "translateY(10px)", offset: 0.84, easing: ease("enter") },
+            { transform: "translateY(-2px)", offset: 0.93, easing: ease("in-out") },
+            { transform: "translateY(0)" },
+          ],
+          { duration: ms("kuri-jump") },
+        ),
+      );
+      Promise.all([animation.finished, ...eyes.map((eye) => eye.finished)])
+        .catch(() => undefined)
+        .finally(() => {
+          this.svg.classList.remove("is-acting");
+          this.acting = false;
+        });
+    }
+
+    /**
+     * 目を閉じる・開くタイムライン。
+     * 白いまぶたが縁の線ごと下り、黒目は少し上へ逃げる（まばたき中に眼球が上を向く動き）。
+     * まぶたは開いているときは元のパスと重なるため、動いている間だけ表示する
+     */
+    animateLids(
+      frames: { progress: number; offset?: number; easing?: string }[],
+      duration: number,
+      fill: FillMode = "none",
+    ) {
+      const lidFrames = (drop: number) =>
+        frames.map(({ progress, offset, easing }) => ({
+          transform: `translateY(${(drop * progress).toFixed(2)}px)`,
+          opacity: 1,
+          ...(offset === undefined ? {} : { offset }),
+          ...(easing ? { easing } : {}),
+        }));
+      return [
+        ...this.eyelids.map((eyelid) =>
+          eyelid.animate(lidFrames(Number(eyelid.dataset.drop)), { duration, fill }),
+        ),
+        this.pupils.animate(
+          frames.map(({ progress, offset, easing }) => ({
+            transform: `translateY(${(-10 * progress).toFixed(2)}px)`,
+            ...(offset === undefined ? {} : { offset }),
+            ...(easing ? { easing } : {}),
+          })),
+          { duration, fill },
+        ),
+      ];
+    }
+
+    static async settle(animations: Animation[]) {
+      await Promise.all(animations.map((animation) => animation.finished)).catch(() => undefined);
+    }
+
+    /** 閉じるのは速く、開くのはゆっくり。閉じる65ms・閉じたまま25ms・開く140ms */
+    async blink() {
+      if (this.blinking || this.acting || !this.awake || !this.isVisible) return;
+      this.blinking = true;
+      const close = ms("blink-close");
+      const hold = ms("blink-hold");
+      const open = ms("blink-open");
+      const total = close + hold + open;
+      if (reducedMotion.matches) {
+        this.svg.classList.add("is-closed");
+        await wait(120);
+        this.svg.classList.remove("is-closed");
+      } else {
+        await KuriActor.settle(
+          this.animateLids(
+          [
+            { progress: 0, easing: ease("blink-close") },
+            { progress: 1, offset: close / total },
+            { progress: 1, offset: (close + hold) / total, easing: ease("blink-open") },
+            { progress: 0 },
+          ],
+          total,
+          ),
+        );
+      }
+      this.blinking = false;
+    }
+
+    /** 閉じた姿勢で止めてから眠りの表示へ切り替え、1フレームでも開いた目が見えないようにする */
+    async closeEyes(frames: { progress: number; offset?: number; easing?: string }[], duration: number) {
+      if (duration) {
+        const animations = this.animateLids(frames, duration, "forwards");
+        await KuriActor.settle(animations);
+        this.svg.classList.add("is-closed");
+        for (const animation of animations) animation.cancel();
+      } else {
+        this.svg.classList.add("is-closed");
+      }
+    }
+
+    async openEyes(duration: number) {
+      this.svg.classList.remove("is-closed");
+      if (duration) {
+        await KuriActor.settle(
+          this.animateLids([{ progress: 1, easing: ease("blink-open") }, { progress: 0 }], duration),
+        );
+      }
+    }
+
+    /** 起きるのは速い */
+    async wake() {
+      if (this.awake) return;
+      this.awake = true;
+      await this.openEyes(reducedMotion.matches ? 0 : ms("kuri-wake"));
+    }
+
+    /** うとうとしてから眠る。まぶたが重くなり、一度持ち直してから閉じる */
+    async fallAsleep() {
+      if (!this.awake) return;
+      // 眠るときは正面を向き、寝ている間は視線を動かさない
+      this.lookX(0);
+      this.lookY(0);
+      this.awake = false;
+      if (reducedMotion.matches) {
+        await this.closeEyes([], 0);
+        return;
+      }
+      await this.closeEyes(
+        [
+          { progress: 0, easing: ease("in-out") },
+          { progress: 0.55, offset: 0.4, easing: ease("in-out") },
+          { progress: 0.2, offset: 0.6, easing: ease("push") },
+          { progress: 1 },
+        ],
+        ms("kuri-doze"),
+      );
+      // 寝入ると体の力が抜ける
+      this.action.animate(
+        [{ transform: "scale(1)" }, { transform: "scale(1.02, 0.98)" }, { transform: "scale(1.01, 0.99)" }],
+        { duration: ms("kuri-doze") / 2, easing: ease("enter"), fill: "forwards" },
+      );
+    }
+
+    /** 起こされたあと、しばらくしてまた眠る */
+    scheduleDoze(delay: number) {
+      window.clearTimeout(this.sleepTimer);
+      this.sleepTimer = window.setTimeout(() => {
+        this.sleepTimer = 0;
+        if (this.acting) {
+          this.scheduleDoze(delay);
+          return;
+        }
+        void this.fallAsleep();
+      }, delay);
+    }
+
+    /** 間隔は短めを中心に、ときどき長く空ける。たまに二度まばたきする */
+    scheduleBlink() {
+      const delay = Math.min(9500, 2200 - Math.log(1 - Math.random()) * 2700);
+      window.setTimeout(async () => {
+        if (!this.svg.isConnected) return;
+        await this.blink();
+        if (Math.random() < 0.12) {
+          await wait(140 + Math.random() * 80);
+          await this.blink();
+        }
+        this.scheduleBlink();
+      }, delay);
+    }
+  }
+
+  const actors = Array.from(document.querySelectorAll<SVGSVGElement>("[data-kuri]")).map(
+    (svg) => new KuriActor(svg),
+  );
+
+  // 眠っている子は最初から目を閉じておく
+  for (const actor of actors) {
+    if (!actor.awake) actor.svg.classList.add("is-closed");
+  }
+
+  // 画面に入ったときに一度だけ登場させる
+  const entrance = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entrance.unobserve(entry.target);
+        actors.find((actor) => actor.svg === entry.target)?.enter();
+      }
+    },
+    { threshold: 0.6 },
+  );
+  for (const actor of actors) {
+    if (actor.svg.dataset.entrance === "pop") entrance.observe(actor.svg);
+  }
+
+  let pointerX = 0;
+  let pointerY = 0;
+  let frame = 0;
+  let lastPointerAt = 0;
+
+  function followPointer() {
+    frame = 0;
+    for (const actor of actors) {
+      // 眠っている間は、ポインターを追わない
+      if (!actor.isVisible || !actor.awake) continue;
+      const rect = actor.svg.getBoundingClientRect();
+      const dx = pointerX - (rect.left + rect.width / 2);
+      const dy = pointerY - (rect.top + rect.height * 0.4);
+      const distance = Math.hypot(dx, dy) || 1;
+      // 近いほど控えめに、遠いほど目いっぱい寄せる
+      const reach = Math.min(1, distance / (rect.width * 1.6));
+      actor.look((dx / distance) * reach, (dy / distance) * reach);
+    }
+  }
+
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      // 動きを減らす設定では、視線の追従そのものを行わない
+      if (event.pointerType === "touch" || reducedMotion.matches) return;
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      lastPointerAt = performance.now();
+      if (!frame) frame = requestAnimationFrame(followPointer);
+    },
+    { passive: true },
+  );
+
+  // ポインターが止まっている間は、間をおいて辺りを見回す
+  function scheduleGlance() {
+    window.setTimeout(
+      () => {
+        const idle = performance.now() - lastPointerAt > 3000;
+        if (idle && !reducedMotion.matches) {
+          for (const actor of actors) {
+            if (actor.acting || !actor.isVisible) continue;
+            // 正面へ戻る視線を多めに混ぜ、落ち着きを残す
+            const center = Math.random() < 0.35;
+            actor.look(
+              center ? 0 : Math.random() * 2 - 1,
+              center ? 0 : Math.random() * 1.1 - 0.3,
+            );
+          }
+        }
+        scheduleGlance();
+      },
+      1800 - Math.log(1 - Math.random()) * 2200,
+    );
+  }
+  scheduleGlance();
+</script>
+
+<style>
+  .kuri {
+    --gaze-x: 0px;
+    --gaze-y: 0px;
+
+    display: block;
+    inline-size: var(--kuri-size);
+    block-size: auto;
+    overflow: visible;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* 登場の間だけ、足元の罫線より下を隠す */
+  .kuri.is-entering {
+    clip-path: inset(-60% -40% -1% -40%);
+  }
+
+  /* ライト: kuri.svgと同じ塗りつぶし。目は穴なので背景色が見える */
+  .kuri__ink {
+    fill: var(--foreground);
+  }
+
+  /* ダーク: kuri-dark.svgと同じ線画 */
+  :global(.dark) .kuri__ink {
+    fill: none;
+    stroke: var(--foreground);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .kuri__action,
+  .kuri__idle {
+    transform-box: view-box;
+    transform-origin: 383px 657px;
+  }
+
+  /* 呼吸。吸って少し止まり、長めに吐く。88px表示で0.5px程度の振れ幅 */
+  .kuri__idle {
+    animation: kuri-breathe var(--duration-kuri-breathe) linear infinite;
+  }
+
+  .kuri.is-acting .kuri__idle {
+    animation-play-state: paused;
+  }
+
+  .kuri__gaze {
+    transform: translate(var(--gaze-x), var(--gaze-y));
+  }
+
+  /* まぶたは開いているときは元のパスと重なるため隠し、動くときと閉じているときだけ見せる */
+  .kuri__eyelid {
+    opacity: 0;
+  }
+
+  /* まぶたは白い。目の穴から見える背景と同じ色で塗り、縁の線ごと下ろす */
+  .kuri__eyelid-skin {
+    fill: var(--background);
+  }
+
+  .kuri__eye-rim {
+    display: none;
+  }
+
+  :global(.dark) .kuri__eye-rim {
+    display: inline;
+    fill: none;
+    stroke: var(--foreground);
+    stroke-width: 6;
+  }
+
+  .kuri__sleep-line {
+    fill: none;
+    stroke: var(--foreground);
+    stroke-linecap: round;
+    stroke-width: 11;
+    opacity: 0;
+  }
+
+  :global(.dark) .kuri__sleep-line {
+    stroke-width: 7;
+  }
+
+  /* 眠ると、まっすぐな縁から湾曲した太い縁へ切り替える */
+  .kuri__lid-line,
+  .kuri__sleep-line {
+    transition: opacity var(--duration-base) var(--ease-in-out);
+  }
+
+  .kuri.is-closed .kuri__lid-line {
+    opacity: 0;
+  }
+
+  .kuri.is-closed .kuri__sleep-line {
+    opacity: 1;
+  }
+
+  .kuri.is-closed .kuri__eyelid {
+    opacity: 1;
+  }
+
+  .kuri.is-closed .kuri__eyelid[data-drop="55"] {
+    transform: translateY(55px);
+  }
+
+  .kuri.is-closed .kuri__pupils {
+    transform: translateY(-10px);
+  }
+
+  .kuri__zzz {
+    fill: var(--muted-foreground);
+    font-size: 110px;
+    font-weight: 700;
+    transition: opacity var(--duration-fast) var(--ease-exit);
+  }
+
+  .kuri__zzz text {
+    animation: kuri-zzz 3.2s var(--ease-move) infinite;
+  }
+
+  .kuri__zzz text:last-child {
+    font-size: 76px;
+    animation-delay: 1.6s;
+  }
+
+  .kuri:not(.is-closed) .kuri__zzz {
+    opacity: 0;
+  }
+
+  @keyframes kuri-breathe {
+    0%,
+    100% {
+      transform: scale(1);
+      animation-timing-function: var(--ease-settle);
+    }
+    34%,
+    44% {
+      transform: scale(0.998, 1.006);
+      animation-timing-function: var(--ease-settle);
+    }
+    72% {
+      transform: scale(1.001, 0.999);
+      animation-timing-function: var(--ease-settle);
+    }
+  }
+
+  @keyframes kuri-zzz {
+    0% {
+      opacity: 0;
+      transform: translate(-14px, 20px);
+    }
+    30%,
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(14px, -26px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kuri__idle,
+    .kuri__zzz text {
+      animation: none;
+    }
+  }
+</style>

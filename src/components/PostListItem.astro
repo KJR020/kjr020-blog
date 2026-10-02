@@ -1,0 +1,169 @@
+---
+/**
+ * 記事一覧の1行。カードではなく罫線で区切った索引として並べる。
+ * タイトルのリンクを行全体へ広げ、タグは前面に置いて別のリンクとして扱う。
+ */
+import TagList from "@/components/TagList.astro";
+import { formatPostDate, formatPostMonthDay } from "@/lib/postDate";
+
+interface Props {
+  post: {
+    id: string;
+    data: {
+      title: string;
+      date: Date;
+      tags?: string[];
+    };
+  };
+  headingLevel?: 2 | 3;
+  /** 年ごとの一覧では年が見出しにあるため、月日だけを表示する */
+  dateFormat?: "full" | "monthDay";
+}
+
+const { post, headingLevel = 3, dateFormat = "full" } = Astro.props;
+const Heading = `h${headingLevel}` as "h2" | "h3";
+const href = `/posts/${post.id}`;
+const visibleDate =
+  dateFormat === "monthDay" ? formatPostMonthDay(post.data.date) : formatPostDate(post.data.date);
+---
+
+<article class:list={["post-row", dateFormat === "monthDay" && "post-row--month-day"]}>
+  <time class="post-row__date" datetime={post.data.date.toISOString()}>{visibleDate}</time>
+  <div class="post-row__body">
+    <Heading class="post-row__title type-heading">
+      <a href={href} class="post-row__link">
+        <span class="post-row__title-text">{post.data.title}</span>
+      </a>
+    </Heading>
+    <TagList tags={post.data.tags ?? []} />
+  </div>
+  <svg
+    class="post-row__arrow"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M5 12h14" />
+    <path d="m13 6 6 6-6 6" />
+  </svg>
+</article>
+
+<style>
+  .post-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--phi-neg2) var(--phi-1);
+    padding-block: var(--phi-1);
+    border-block-start: 1px solid var(--border);
+  }
+
+  .post-row:last-child {
+    border-block-end: 1px solid var(--border);
+  }
+
+  @media (min-width: 48rem) {
+    .post-row {
+      grid-template-columns: 7.5rem minmax(0, 1fr) 1.5rem;
+      align-items: baseline;
+    }
+
+    .post-row--month-day {
+      grid-template-columns: 4.5rem minmax(0, 1fr) 1.5rem;
+    }
+  }
+
+  .post-row__date {
+    color: var(--muted-foreground);
+    font-size: var(--font-size-caption);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  .post-row__body {
+    display: grid;
+    gap: var(--phi-neg1);
+    min-inline-size: 0;
+  }
+
+  .post-row__title {
+    margin: 0;
+    font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.272rem);
+    line-height: var(--lh-snug);
+  }
+
+  .post-row__link {
+    color: var(--foreground);
+    text-decoration: none;
+  }
+
+  /* 行全体をタイトルのリンクの操作領域にする */
+  .post-row__link::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+  }
+
+  .post-row__link:focus-visible {
+    outline: none;
+  }
+
+  .post-row__link:focus-visible::after {
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+    border-radius: var(--radius-sm, 4px);
+  }
+
+  /* 下線を左から引く。文字の折り返しにも追従するよう背景で描く */
+  .post-row__title-text {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition:
+      background-size var(--duration-base) var(--ease-move),
+      color var(--duration-fast) var(--ease-move);
+  }
+
+  .post-row__arrow {
+    display: none;
+    align-self: center;
+    color: var(--muted-foreground);
+    transition:
+      transform var(--duration-fast) var(--ease-move),
+      color var(--duration-fast) var(--ease-move);
+  }
+
+  @media (min-width: 48rem) {
+    .post-row__arrow {
+      display: block;
+    }
+  }
+
+  /* タグにポインターがあるときは、行のHoverを重ねない */
+  .post-row:not(:has(.tag-list:hover)):hover .post-row__title-text,
+  .post-row__link:focus-visible .post-row__title-text {
+    background-size: 100% 1px;
+    color: var(--link);
+  }
+
+  .post-row:not(:has(.tag-list:hover)):hover .post-row__arrow,
+  .post-row:has(.post-row__link:focus-visible) .post-row__arrow {
+    color: var(--link);
+    transform: translateX(4px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post-row__title-text,
+    .post-row__arrow {
+      transition-duration: 0s;
+    }
+  }
+</style>

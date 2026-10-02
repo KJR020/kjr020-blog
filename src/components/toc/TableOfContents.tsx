@@ -35,7 +35,7 @@ export function TableOfContents({
       {/* デスクトップ表示: スティッキーサイドバー */}
       {showsDesktop && (
         <div className={cn("hidden lg:block", "sticky top-24", className)}>
-          <h2 className="mb-4 pl-8 text-sm font-semibold text-foreground">目次</h2>
+          <h2 className="mb-4 pl-12 text-xs font-bold text-muted-foreground">目次</h2>
 
           <nav
             className="max-h-[calc(100vh-11rem)] overflow-y-auto pl-8"

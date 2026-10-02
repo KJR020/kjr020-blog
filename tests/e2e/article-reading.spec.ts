@@ -132,21 +132,11 @@ test("デスクトップでは記事ヘッダーの下に本文と目次を並�
   expect(tocBox?.x ?? 0).toBeGreaterThan((mainBox?.x ?? 0) + (mainBox?.width ?? 0));
 });
 
-test("デスクトップでは記事タイトルをキャラクター領域に重ねない", async ({ page }) => {
-  await page.setViewportSize({ width: 1051, height: 900 });
+test("記事ヘッダーにはキャラクターを置かない", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto(articlePath);
 
-  const title = page.getByRole("heading", { level: 1 });
-  const character = page.locator(".post-header-mascot");
-  const [titleBox, characterBox] = await Promise.all([
-    title.boundingBox(),
-    character.boundingBox(),
-  ]);
-
-  expect(titleBox).not.toBeNull();
-  expect(characterBox).not.toBeNull();
-  expect(titleBox?.x ?? 0).toBeLessThan(characterBox?.x ?? 0);
-  expect((titleBox?.x ?? 0) + (titleBox?.width ?? 0)).toBeLessThanOrEqual(characterBox?.x ?? 0);
+  await expect(page.getByRole("article").locator("[data-kuri]")).toHaveCount(0);
 });
 
 test("モバイルでは記事ヘッダー直後に折りたたみ目次を表示する", async ({ page }) => {
@@ -157,7 +147,6 @@ test("モバイルでは記事ヘッダー直後に折りたたみ目次を表�
   const mobileToc = article.locator(".post-mobile-toc");
   const trigger = mobileToc.getByRole("button", { name: "目次を開く" });
 
-  await expect(page.locator(".kuri-watermark")).toBeHidden();
   await expect(mobileToc).toBeVisible();
   await expect(trigger).toHaveAttribute("aria-expanded", "false");
   await trigger.click();
@@ -175,7 +164,9 @@ test("デスクトップ目次の現在位置アイコンをスクロール領�
 
   const desktopToc = page.locator(".post-desktop-toc");
   const navigation = desktopToc.getByRole("navigation", { name: "目次" });
-  const currentLocationIcon = desktopToc.getByRole("img", { name: "KJR020" });
+  // 現在位置の写真は装飾なので、代替テキストを持たない
+  const currentLocationIcon = desktopToc.locator('li:has([aria-current="location"]) img');
+  await expect(currentLocationIcon).toHaveAttribute("alt", "");
   const [navigationBox, iconBox] = await Promise.all([
     navigation.boundingBox(),
     currentLocationIcon.boundingBox(),
@@ -234,6 +225,15 @@ test("見出しへの直接リンクを開いても目次の更新でページ�
   await page.waitForTimeout(1_000);
 
   await expect(heading).toBeInViewport();
+});
+
+test("記事の末尾に著者と前後の記事への導線を置く", async ({ page }) => {
+  await page.goto(articlePath);
+
+  const end = page.locator(".post-end");
+  await expect(end.getByRole("heading", { level: 2, name: "KJR020" })).toBeVisible();
+  const pager = end.getByRole("navigation", { name: "前後の記事" });
+  await expect(pager.getByRole("link").first()).toHaveAttribute("href", /^\/posts\//);
 });
 
 test("記事画像を拡大表示し、閉じると画像リンクへフォーカスを戻す", async ({ page }) => {

@@ -16,71 +16,234 @@ const isActive = (href: string) => {
 };
 ---
 
-<header class="sticky top-0 z-50 w-full border-b border-border bg-background/95 font-sans backdrop-blur supports-backdrop-filter:bg-background/80">
-  <div class="container mx-auto flex h-phi-2xl max-w-6xl items-center justify-between px-4">
-    <a
-      href="/"
-      class="flex items-center gap-2 rounded-md font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      style="font-size: var(--font-size-title3);"
-    >
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a href="/" class="site-brand">
       <img
-        src="/images/kjr020-eyes.svg"
+        src="/images/kuri_photo.png"
         alt=""
-        width="50"
-        height="32"
-        class="brand-mark h-8 w-auto shrink-0"
+        width="500"
+        height="500"
+        class="brand-mark site-brand__mark"
       />
-      KJR020's Blog
+      <span class="site-brand__name">KJR020's Blog</span>
     </a>
-    <div class="flex items-center gap-phi-3xs">
-      {/* デスクトップナビゲーション */}
-      <nav class="hidden items-center gap-phi-3xs md:flex">
-        {navItems.map((item) => (
+    <div class="site-header__actions">
+      <nav class="site-nav" aria-label="サイト">
+        {navItems.map((item) =>
           item.action === "search" ? (
-            <button
-              type="button"
-              data-command-palette-trigger
-              class="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
+            <button type="button" data-command-palette-trigger class="site-search">
+              <svg
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
               Search
-              <kbd class="ml-2 hidden rounded border border-border bg-muted/60 px-1.5 py-0.5 font-sans text-[0.6875rem] leading-none text-muted-foreground md:inline-flex">⌘K</kbd>
+              <kbd class="site-search__kbd">⌘K</kbd>
             </button>
           ) : (
             <a
               href={item.href}
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noopener noreferrer" : undefined}
-              aria-current={isActive(item.href) ? "page" : undefined}
-              class="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[current=page]:font-semibold aria-[current=page]:text-link"
+              aria-current={!item.external && isActive(item.href) ? "page" : undefined}
+              class="site-nav__link"
             >
               {item.label}
               {item.external && (
                 <svg
+                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
+                  width="11"
+                  height="11"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="ml-1 text-muted-foreground"
-                  aria-hidden="true"
                 >
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  <polyline points="15 3 21 3 21 9" />
-                  <line x1="10" x2="21" y1="14" y2="3" />
+                  <path d="M7 17 17 7" />
+                  <path d="M8 7h9v9" />
                 </svg>
               )}
             </a>
-          )
-        ))}
+          ),
+        )}
       </nav>
-      {/* モバイルメニュー */}
       <MobileMenu navItems={navItems} currentPath={currentPath} client:load />
       <ThemeToggleAnimated client:load />
     </div>
   </div>
 </header>
 
+<style>
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+    inline-size: 100%;
+    border-block-end: 1px solid transparent;
+    background: color-mix(in oklch, var(--background) 82%, transparent);
+    font-family: var(--font-ui);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    view-transition-name: site-header;
+  }
+
+  /* スクロールを始めたら境界線を出す。非対応ブラウザでは常に表示する */
+  @supports not (animation-timeline: scroll()) {
+    .site-header {
+      border-block-end-color: var(--border);
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .site-header {
+      animation: header-edge linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 64px;
+    }
+  }
+
+  @keyframes header-edge {
+    to {
+      border-block-end-color: var(--border);
+    }
+  }
+
+  .site-header__inner {
+    display: flex;
+    block-size: var(--header-height);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--phi-0);
+  }
+
+  .site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.618rem;
+    color: var(--foreground);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+  }
+
+  /* 著者の写真をブランドの印にする。ブログ名が名前を担うため、写真は装飾として扱う */
+  .site-brand__mark {
+    block-size: 2rem;
+    inline-size: 2rem;
+    flex: none;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px var(--border);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .site-brand:hover .site-brand__mark {
+    transform: rotate(-6deg) scale(1.06);
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--phi-neg2);
+  }
+
+  .site-nav {
+    display: none;
+    align-items: center;
+    gap: var(--phi-neg3);
+  }
+
+  @media (min-width: 48rem) {
+    .site-nav {
+      display: flex;
+    }
+  }
+
+  .site-nav__link {
+    position: relative;
+    display: inline-flex;
+    block-size: 2.25rem;
+    align-items: center;
+    gap: 0.25rem;
+    padding-inline: 0.75rem;
+    border-radius: 999px;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .site-nav__link:hover {
+    color: var(--foreground);
+  }
+
+  /* 現在地はリンク色・太さと、下の点で示す */
+  .site-nav__link[aria-current="page"] {
+    color: var(--link);
+    font-weight: 600;
+  }
+
+  .site-nav__link[aria-current="page"]::after {
+    position: absolute;
+    inset-block-end: 0.15rem;
+    inset-inline-start: 50%;
+    inline-size: 4px;
+    block-size: 4px;
+    border-radius: 50%;
+    background: var(--brand);
+    content: "";
+    transform: translateX(-50%);
+  }
+
+  .site-search {
+    display: inline-flex;
+    block-size: 2.25rem;
+    align-items: center;
+    gap: 0.5rem;
+    margin-inline: 0.382rem;
+    padding-inline: 0.75rem 0.382rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--muted-foreground);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition:
+      color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .site-search:hover {
+    border-color: var(--border-strong);
+    color: var(--foreground);
+  }
+
+  .site-search__kbd {
+    display: inline-flex;
+    block-size: 1.5rem;
+    align-items: center;
+    margin-inline-start: 0.5rem;
+    padding-inline: 0.45rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    color: var(--muted-foreground);
+    font-size: 0.6875rem;
+  }
+</style>

@@ -14,7 +14,7 @@ interface ScrapboxCardListProps {
   pages?: ScrapboxPageData[];
 }
 
-/** 記事メタ情報（PostMeta）と同じ表記にする */
+/** 記事の日付（formatPostDate）と同じ表記にする */
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString("ja-JP", {
@@ -82,22 +82,22 @@ function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCar
   }
 
   return (
-    <ul className={cn("flex flex-col", className)}>
+    <ul className={cn("flex flex-col border-t border-foreground", className)}>
       {data.map((page) => {
         const description = cleanScrapboxDescription(page.description);
         return (
-          <li key={page.id} className="border-b border-border last:border-b-0">
+          <li key={page.id} className="border-b border-border">
             <a
               href={page.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group/note block rounded-sm py-phi-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="group/note block rounded-sm py-phi-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              <span className="line-clamp-2 text-base leading-snug text-foreground transition-colors group-hover/note:text-link">
+              <span className="line-clamp-2 text-[0.9375rem] font-medium leading-snug text-foreground transition-colors group-hover/note:text-link">
                 {page.title}
               </span>
               {description && (
-                <span className="mt-phi-3xs line-clamp-2 text-sm leading-normal text-muted-foreground">
+                <span className="mt-phi-2xs line-clamp-2 text-[0.8125rem] leading-relaxed text-muted-foreground">
                   {description}
                 </span>
               )}

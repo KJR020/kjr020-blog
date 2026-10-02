@@ -30,6 +30,18 @@ export function ThemeToggleAnimated() {
   const toggleTheme = useCallback(() => {
     if (isAnimating) return;
 
+    // 動きを減らす設定では、波と大きなアイコンを出さずにそのまま切り替える
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const newDark = !isDark;
+      setIsDark(newDark);
+      document.documentElement.classList.toggle("dark", newDark);
+      document
+        .querySelector('meta[name="color-scheme"]')
+        ?.setAttribute("content", newDark ? "dark" : "light");
+      localStorage.setItem("theme", newDark ? "dark" : "light");
+      return;
+    }
+
     // 波の起点を決定
     // ダーク→ライト: 左下から右上へ
     // ライト→ダーク: 右上から左下へ
@@ -65,6 +77,9 @@ export function ThemeToggleAnimated() {
     setTimeout(() => {
       const newDark = !isDark;
       setIsDark(newDark);
+      document
+        .querySelector('meta[name="color-scheme"]')
+        ?.setAttribute("content", newDark ? "dark" : "light");
       if (newDark) {
         document.documentElement.classList.add("dark");
         localStorage.setItem("theme", "dark");
@@ -114,7 +129,8 @@ export function ThemeToggleAnimated() {
             className="absolute rounded-full opacity-80"
             style={{
               ...waveStyle,
-              backgroundColor: isDark ? "rgb(250, 250, 250)" : "rgb(10, 10, 10)",
+              // 切り替え先の紙色で塗る（globals.cssの--paperと同じ値）
+              backgroundColor: isDark ? "oklch(98.4% 0.006 85)" : "oklch(16.8% 0.008 60)",
             }}
           />
         </div>,

@@ -1,13 +1,97 @@
 ---
+import Kuri from "@/components/Kuri.astro";
+
+/**
+ * 一覧ページとポリシーページの見出し領域。
+ * 欧文の大見出しと日本語の説明を組み、右下へ件数などの補足を置く。
+ */
 interface Props {
   title: string;
   description?: string;
+  /** 見出しの上に置く分類名。Tagページの`Tag`など */
+  eyebrow?: string;
+  /** 見出しをInstrument Serifで組む。日本語を含む見出しではfalseにする */
+  display?: boolean;
+  /** 下端の罫線の右端に、くりを立たせる */
+  mascot?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, eyebrow, display = true, mascot = false } = Astro.props;
 ---
 
-<div class="container mx-auto max-w-6xl px-4 pt-phi-2xl pb-phi-md">
-  <h1 class="font-bold font-heading tracking-tight text-balance mb-phi-2xs" style="font-size: var(--font-size-title1); line-height: var(--lh-tight);">{title}</h1>
-  {description && <p class="text-muted-foreground">{description}</p>}
-</div>
+<header class="page-hero shell">
+  <div class="page-hero__content">
+    {eyebrow && <p class="page-hero__eyebrow type-meta">{eyebrow}</p>}
+    <h1 class:list={["page-hero__title", display ? "type-display" : "type-heading"]}>
+      <span class="page-hero__title-mask"><span class="animate-rise-in">{title}</span></span>
+    </h1>
+    {description && <p class="page-hero__description">{description}</p>}
+    <slot />
+  </div>
+  {
+    mascot && (
+      <div class="page-hero__kuri">
+        <Kuri size="clamp(4.5rem, 3rem + 4vw, 7rem)" />
+      </div>
+    )
+  }
+</header>
+
+<style>
+  .page-hero {
+    position: relative;
+    padding-block: clamp(2.618rem, 1.5rem + 4vw, 4.236rem) var(--phi-2);
+  }
+
+  /* 下端の罫線。シェルの内側余白に合わせて引き、くりの地面にする */
+  .page-hero::after {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: var(--shell-pad);
+    border-block-end: 1px solid var(--foreground);
+    content: "";
+  }
+
+  .page-hero__content {
+    min-inline-size: 0;
+  }
+
+  /* くりと文字が重ならないよう、右側にくりの幅を空ける */
+  .page-hero:has(.page-hero__kuri) .page-hero__content {
+    padding-inline-end: clamp(5rem, 3.5rem + 4vw, 8rem);
+  }
+
+  .page-hero__eyebrow {
+    margin: 0 0 var(--phi-neg1);
+  }
+
+  .page-hero__title {
+    margin: 0;
+    font-size: var(--text-page-title);
+  }
+
+  .page-hero__title.type-heading {
+    line-height: var(--lh-tight);
+  }
+
+  .page-hero__title-mask {
+    display: block;
+    overflow: clip;
+    overflow-clip-margin: 0.12em;
+    padding-block-end: 0.06em;
+  }
+
+  .page-hero__description {
+    max-inline-size: 36rem;
+    margin: var(--phi-0) 0 0;
+    color: var(--muted-foreground);
+    line-height: var(--lh-body);
+    text-wrap: pretty;
+  }
+
+  .page-hero__kuri {
+    position: absolute;
+    inset-block-end: 1px;
+    inset-inline-end: var(--shell-pad);
+  }
+</style>

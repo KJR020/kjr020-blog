@@ -6,21 +6,19 @@ test.describe("トップページのブランド表現", () => {
 
     const header = page.locator("header");
     await expect(header.getByRole("link", { name: "KJR020's Blog", exact: true })).toBeVisible();
-    await expect(header.locator("a[href='/'] img")).toHaveAttribute(
-      "src",
-      "/images/kjr020-eyes.svg",
-    );
+    // 著者の写真をブランドの印にする。ブログ名がリンク名を担うため、写真は装飾として扱う
+    const brandMark = header.locator("a[href='/'] img");
+    await expect(brandMark).toHaveAttribute("src", "/images/kuri_photo.png");
+    await expect(brandMark).toHaveAttribute("alt", "");
+    await expect(brandMark).toBeVisible();
     await expect(
       page.getByRole("heading", {
         level: 1,
         name: "KJR020's Blog",
       }),
     ).toBeVisible();
-    const heroImage = page.locator("main img[alt='KJR020']");
-    await expect(heroImage).toHaveCount(1);
-    await expect(heroImage).toHaveAttribute("src", "/images/kuri_photo.png");
-    // 著者を示す役割があるため、画面幅によらず表示する
-    await expect(heroImage).toBeVisible();
+    // 紹介文には画像を添えない
+    await expect(page.locator(".home-hero img")).toHaveCount(0);
   });
 
   test("ライトテーマではOSの配色設定に関係なくロゴを反転しない", async ({ page }) => {
@@ -35,19 +33,6 @@ test.describe("トップページのブランド表現", () => {
     await expect(headerLogo).toHaveCSS("opacity", "1");
   });
 
-  test("ロゴの黒目を透明背景から独立したpathで描画する", async ({ page }) => {
-    await page.goto("/__test/home");
-
-    const logoSvg = await page.evaluate(async () => {
-      const response = await fetch("/images/kjr020-eyes.svg");
-      return response.text();
-    });
-
-    expect(logoSvg).toContain('data-part="eye"');
-    expect(logoSvg).toContain('data-part="pupil"');
-    expect(logoSvg).not.toContain('d="M0 0h1400v700H0z"');
-  });
-
   test("気取らない紹介文を2行で表示する", async ({ page }) => {
     await page.goto("/__test/home");
 
@@ -56,46 +41,57 @@ test.describe("トップページのブランド表現", () => {
     await expect(page.locator("main")).not.toContainText("技術ブログ兼思考ログ");
   });
 
-  test("写真の上下をタイトルと紹介文へ揃える", async ({ page }) => {
+  test("ブログ名の下の区切り線へキャラクターを立たせる", async ({ page }) => {
+    // 登場アニメーションの移動量を含めずに、静止位置を測る
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto("/__test/home");
 
-    const heroImage = page.locator("main img[alt='KJR020']");
-    const heroText = page.getByRole("heading", { level: 1, name: "KJR020's Blog" }).locator("..");
-    const [imageBox, textBox] = await Promise.all([
-      heroImage.boundingBox(),
-      heroText.boundingBox(),
+    const hero = page.locator("main section").first();
+    const base = hero.locator(".home-hero__base");
+    const character = hero.locator("[data-kuri]");
+    await expect(character).toHaveAttribute("aria-hidden", "true");
+
+    const [baseBox, characterBox] = await Promise.all([
+      base.boundingBox(),
+      character.boundingBox(),
     ]);
+    const characterBottom = (characterBox?.y ?? 0) + (characterBox?.height ?? 0);
 
-    if (!imageBox || !textBox) {
-      throw new Error("ヒーロー画像または紹介テキストの領域を取得できませんでした");
-    }
-
-    expect(Math.abs(imageBox.y - textBox.y)).toBeLessThanOrEqual(1);
-    expect(Math.abs(imageBox.height - textBox.height)).toBeLessThanOrEqual(1);
+    expect(characterBottom).toBeCloseTo(baseBox?.y ?? 0, 0);
   });
 
-  test("プロフィール領域を上下対称の余白で配置する", async ({ page }) => {
+  test("動きを減らす設定でも、眠っているフッターのキャラクターは押すと目を開ける", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/__test/home");
 
-    const hero = page
-      .getByRole("heading", { level: 1, name: "KJR020's Blog" })
-      .locator("xpath=ancestor::section");
-    const container = hero.locator("..");
-    const [heroSpacing, containerSpacing] = await Promise.all([
-      hero.evaluate((element) => {
-        const styles = getComputedStyle(element);
+    const sleeper = page.locator("footer [data-kuri]");
+    await sleeper.scrollIntoViewIfNeeded();
+    await expect(sleeper).toHaveClass(/is-closed/);
 
-        return {
-          paddingBottom: styles.paddingBottom,
-          paddingTop: styles.paddingTop,
-        };
-      }),
-      container.evaluate((element) => getComputedStyle(element).paddingTop),
+    await sleeper.click();
+
+    await expect(sleeper).not.toHaveClass(/is-closed/);
+  });
+
+  test("狭い画面ではブログ名を2行に組み、キャラクターと重ねない", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/__test/home");
+
+    const lines = page.locator(".home-hero__line");
+    const character = page.locator(".home-hero [data-kuri]");
+    const [firstLine, secondLine, characterBox] = await Promise.all([
+      lines.nth(0).boundingBox(),
+      lines.nth(1).locator("span").boundingBox(),
+      character.boundingBox(),
     ]);
 
-    expect(heroSpacing.paddingTop).toBe(heroSpacing.paddingBottom);
-    expect(containerSpacing).toBe("0px");
+    expect(secondLine?.y ?? 0).toBeGreaterThan(firstLine?.y ?? 0);
+    expect((secondLine?.x ?? 0) + (secondLine?.width ?? 0)).toBeLessThanOrEqual(
+      characterBox?.x ?? 0,
+    );
   });
 });
 
@@ -106,6 +102,7 @@ test.describe("トップページの記事探索", () => {
     const sections = page.locator("main section");
     await expect(sections).toHaveCount(2);
     await expect(sections.nth(1)).toHaveAttribute("id", "latest-posts");
+    await expect(sections.nth(1).locator(".feature")).toHaveCount(1);
     await expect(page.locator("aside#scrapbox")).toHaveCount(1);
     await expect(page.locator("section#search")).toHaveCount(0);
     await expect(page.locator("section#tags")).toHaveCount(0);

@@ -1,9 +1,8 @@
 ---
-import { getCollection } from "astro:content";
 import PostsPage from "@/components/pages/PostsPage.astro";
-import { isPublishedPost, sortPostsByNewest } from "@/lib/posts";
+import { getPublishedPostSummaries } from "@/lib/getPublishedPosts";
 
-const posts = sortPostsByNewest(await getCollection("posts", isPublishedPost));
+const posts = await getPublishedPostSummaries();
 ---
 
 <PostsPage posts={posts} />
