@@ -271,10 +271,6 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     --tw-prose-code: var(--foreground);
   }
 
-  .article-reading-content {
-    counter-reset: article-section;
-  }
-
   .prose h2 {
     margin-top: var(--phi-3);
     margin-bottom: var(--phi-1);
@@ -287,23 +283,10 @@ const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
     text-wrap: balance;
   }
 
-  /* 本文の大見出しに通し番号を振る。脚注の見出しは対象外 */
+  /* 本文の大見出しの上に区切り線を引く。脚注の見出しは対象外 */
   .article-reading-content > h2 {
-    counter-increment: article-section;
     padding-block-start: var(--phi-1);
     border-block-start: 1px solid var(--border);
-  }
-
-  .article-reading-content > h2::before {
-    display: block;
-    margin-block-end: var(--phi-neg2);
-    color: var(--brand);
-    font-size: var(--font-size-small);
-    font-variant-numeric: tabular-nums;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    content: counter(article-section, decimal-leading-zero);
   }
 
   .prose h3 {
