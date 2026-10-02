@@ -177,26 +177,26 @@ const EYELIDS = [
    */
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  /** デザイントークン（globals.css）を読む。動きの値はトークンを正本にする */
-  const rootStyle = getComputedStyle(document.documentElement);
-  const ease = (name: string) => rootStyle.getPropertyValue(`--ease-${name}`).trim() || "ease";
-  const ms = (name: string) => {
-    const value = rootStyle.getPropertyValue(`--duration-${name}`).trim();
-    return value.endsWith("ms") ? Number.parseFloat(value) : Number.parseFloat(value) * 1000;
-  };
-  const tokenNumber = (name: string, fallback: number) =>
-    Number.parseFloat(rootStyle.getPropertyValue(name)) || fallback;
+  /** 動きの値を読む。値は下の<style>で.kuriに定義したトークンを正本にする */
+  function readMotion(svg: SVGSVGElement) {
+    const style = getComputedStyle(svg);
+    return {
+      ease: (name: string) => style.getPropertyValue(`--ease-${name}`).trim() || "ease",
+      ms: (name: string) => {
+        const value = style.getPropertyValue(`--duration-${name}`).trim();
+        return value.endsWith("ms") ? Number.parseFloat(value) : Number.parseFloat(value) * 1000;
+      },
+      number: (name: string, fallback: number) =>
+        Number.parseFloat(style.getPropertyValue(name)) || fallback,
+    };
+  }
 
   /** 目の可動域（viewBox単位）。眼窩の余白の3割程度に留める */
   const GAZE_X = 12;
   const GAZE_Y = 6;
 
   /** ほぼ臨界減衰のばね。目標へ素早く寄り、行き過ぎずに止まる */
-  function createSpring(
-    onChange: (value: number) => void,
-    stiffness = tokenNumber("--spring-gaze-stiffness", 260),
-    damping = tokenNumber("--spring-gaze-damping", 30),
-  ) {
+  function createSpring(onChange: (value: number) => void, stiffness: number, damping: number) {
     let value = 0;
     let velocity = 0;
     let target = 0;
@@ -234,6 +234,7 @@ const EYELIDS = [
 
   class KuriActor {
     readonly svg: SVGSVGElement;
+    readonly motion: ReturnType<typeof readMotion>;
     readonly action: SVGGElement;
     readonly follow: SVGGElement;
     readonly pupils: SVGGElement;
@@ -247,13 +248,24 @@ const EYELIDS = [
 
     constructor(svg: SVGSVGElement) {
       this.svg = svg;
+      this.motion = readMotion(svg);
       this.action = svg.querySelector(".kuri__action") as SVGGElement;
       this.follow = svg.querySelector(".kuri__follow") as SVGGElement;
       this.pupils = svg.querySelector(".kuri__pupils") as SVGGElement;
       this.eyelids = Array.from(svg.querySelectorAll<SVGGElement>(".kuri__eyelid"));
       this.awake = svg.dataset.mood !== "asleep";
-      this.lookX = createSpring((x) => svg.style.setProperty("--gaze-x", `${x * GAZE_X}px`));
-      this.lookY = createSpring((y) => svg.style.setProperty("--gaze-y", `${y * GAZE_Y}px`));
+      const stiffness = this.motion.number("--spring-gaze-stiffness", 260);
+      const damping = this.motion.number("--spring-gaze-damping", 30);
+      this.lookX = createSpring(
+        (x) => svg.style.setProperty("--gaze-x", `${x * GAZE_X}px`),
+        stiffness,
+        damping,
+      );
+      this.lookY = createSpring(
+        (y) => svg.style.setProperty("--gaze-y", `${y * GAZE_Y}px`),
+        stiffness,
+        damping,
+      );
       svg.addEventListener("pointerdown", () => this.jump());
       // 動きの確認用。外からアクションを呼び出せるようにする
       svg.addEventListener("kuri:enter", () => this.enter());
@@ -278,13 +290,14 @@ const EYELIDS = [
     /** 罫線の下から顔を出し、少し行き過ぎてから足を線へ着ける */
     enter() {
       if (reducedMotion.matches) return;
+      const { ease, ms } = this.motion;
       this.acting = true;
       this.svg.classList.add("is-entering", "is-acting");
       const animation = this.action.animate(
         [
-          { transform: "translateY(101%) scale(1.04, 0.96)", easing: ease("move") },
-          { transform: "translateY(-2%) scale(0.98, 1.03)", offset: 0.68, easing: ease("in-out") },
-          { transform: "translateY(0) scale(1.03, 0.97)", offset: 0.86, easing: ease("enter") },
+          { transform: "translateY(101%) scale(1.04, 0.96)", easing: ease("emerge") },
+          { transform: "translateY(-2%) scale(0.98, 1.03)", offset: 0.68, easing: ease("touchdown") },
+          { transform: "translateY(0) scale(1.03, 0.97)", offset: 0.86, easing: ease("recover") },
           { transform: "translateY(0) scale(1)" },
         ],
         { duration: ms("kuri-enter"), fill: "backwards" },
@@ -311,6 +324,7 @@ const EYELIDS = [
         this.scheduleDoze(2600);
       }
       if (reducedMotion.matches) return;
+      const { ease, ms } = this.motion;
       this.acting = true;
       this.svg.classList.add("is-acting");
       const height = 120; // viewBox単位。体の高さの約24%
@@ -350,13 +364,13 @@ const EYELIDS = [
       const eyes = [this.follow].map((follow) =>
         follow.animate(
           [
-            { transform: "translateY(0)", easing: ease("in-out") },
+            { transform: "translateY(0)", easing: ease("eye-lag") },
             { transform: "translateY(3px)", offset: 0.12 },
-            { transform: "translateY(9px)", offset: 0.3, easing: ease("enter") },
-            { transform: "translateY(-5px)", offset: 0.55, easing: ease("in-out") },
-            { transform: "translateY(-7px)", offset: 0.76, easing: ease("exit") },
-            { transform: "translateY(10px)", offset: 0.84, easing: ease("enter") },
-            { transform: "translateY(-2px)", offset: 0.93, easing: ease("in-out") },
+            { transform: "translateY(9px)", offset: 0.3, easing: ease("eye-catch-up") },
+            { transform: "translateY(-5px)", offset: 0.55, easing: ease("eye-lag") },
+            { transform: "translateY(-7px)", offset: 0.76, easing: ease("eye-drop") },
+            { transform: "translateY(10px)", offset: 0.84, easing: ease("eye-catch-up") },
+            { transform: "translateY(-2px)", offset: 0.93, easing: ease("eye-lag") },
             { transform: "translateY(0)" },
           ],
           { duration: ms("kuri-jump") },
@@ -410,6 +424,7 @@ const EYELIDS = [
     async blink() {
       if (this.blinking || this.acting || !this.awake || !this.isVisible) return;
       this.blinking = true;
+      const { ease, ms } = this.motion;
       const close = ms("blink-close");
       const hold = ms("blink-hold");
       const open = ms("blink-open");
@@ -450,7 +465,10 @@ const EYELIDS = [
       this.svg.classList.remove("is-closed");
       if (duration) {
         await KuriActor.settle(
-          this.animateLids([{ progress: 1, easing: ease("blink-open") }, { progress: 0 }], duration),
+          this.animateLids(
+            [{ progress: 1, easing: this.motion.ease("blink-open") }, { progress: 0 }],
+            duration,
+          ),
         );
       }
     }
@@ -459,7 +477,7 @@ const EYELIDS = [
     async wake() {
       if (this.awake) return;
       this.awake = true;
-      await this.openEyes(reducedMotion.matches ? 0 : ms("kuri-wake"));
+      await this.openEyes(reducedMotion.matches ? 0 : this.motion.ms("kuri-wake"));
     }
 
     /** うとうとしてから眠る。まぶたが重くなり、一度持ち直してから閉じる */
@@ -473,11 +491,12 @@ const EYELIDS = [
         await this.closeEyes([], 0);
         return;
       }
+      const { ease, ms } = this.motion;
       await this.closeEyes(
         [
-          { progress: 0, easing: ease("in-out") },
-          { progress: 0.55, offset: 0.4, easing: ease("in-out") },
-          { progress: 0.2, offset: 0.6, easing: ease("push") },
+          { progress: 0, easing: ease("doze") },
+          { progress: 0.55, offset: 0.4, easing: ease("doze") },
+          { progress: 0.2, offset: 0.6, easing: ease("drift-off") },
           { progress: 1 },
         ],
         ms("kuri-doze"),
@@ -485,7 +504,7 @@ const EYELIDS = [
       // 寝入ると体の力が抜ける
       this.action.animate(
         [{ transform: "scale(1)" }, { transform: "scale(1.02, 0.98)" }, { transform: "scale(1.01, 0.99)" }],
-        { duration: ms("kuri-doze") / 2, easing: ease("enter"), fill: "forwards" },
+        { duration: ms("kuri-doze") / 2, easing: ease("relax"), fill: "forwards" },
       );
     }
 
@@ -600,6 +619,44 @@ const EYELIDS = [
 
 <style>
   .kuri {
+    /*
+     * くりの動きの値。UIの動きとは分け、重さ・接地・間を表す値として管理する。
+     * くりだけが使うため、globals.cssではなくこの要素に置く。
+     * スクリプトと確認用カタログは、くりのSVG要素からこの値を読む。
+     */
+    --ease-anticipate: cubic-bezier(0.45, 0, 0.55, 1); /* 予備動作で沈む */
+    --ease-push: cubic-bezier(0.6, 0, 0.75, 0.31); /* 押し出し。離陸の瞬間の速度を空中の初速へつなぐ */
+    --ease-impact: cubic-bezier(0.16, 1, 0.3, 1); /* 着地の反動。すぐに止まる */
+    --ease-settle: cubic-bezier(0.4, 0, 0.6, 1); /* 反動から静止へ。呼吸 */
+    --ease-emerge: cubic-bezier(0.2, 0, 0, 1); /* 罫線の下から勢いよく出て、行き過ぎた位置で止まる */
+    --ease-touchdown: cubic-bezier(0.65, 0, 0.35, 1); /* 行き過ぎた位置から足を罫線へ下ろす */
+    --ease-recover: cubic-bezier(0, 0, 0.2, 1); /* 着地でつぶれた形から戻る */
+    --ease-eye-lag: cubic-bezier(0.65, 0, 0.35, 1); /* 目が体に遅れて動く */
+    --ease-eye-catch-up: cubic-bezier(0, 0, 0.2, 1); /* 遅れた目が体に追いつく */
+    --ease-eye-drop: cubic-bezier(0.4, 0, 1, 1); /* 着地の衝撃で目が落ちる */
+    --ease-blink-close: cubic-bezier(0.4, 0, 1, 1); /* まぶたは速く閉じる */
+    --ease-blink-open: cubic-bezier(0, 0, 0.2, 1); /* ゆっくり開く */
+    --ease-doze: cubic-bezier(0.65, 0, 0.35, 1); /* まぶたが重くなり、一度持ち直す */
+    --ease-drift-off: cubic-bezier(0.6, 0, 0.75, 0.31); /* 持ち直したまぶたが力尽きて閉じきる */
+    --ease-relax: cubic-bezier(0, 0, 0.2, 1); /* 寝入って体の力が抜ける */
+    --ease-eye-swap: cubic-bezier(0.65, 0, 0.35, 1); /* 開いた目の縁と眠った目の弧を入れ替える */
+    --ease-zzz-fade: cubic-bezier(0.4, 0, 1, 1); /* 起きるとzzzが消える */
+    --ease-zzz-float: cubic-bezier(0.2, 0, 0, 1); /* zzzが浮かんで消える */
+    --duration-kuri-enter: 540ms;
+    --duration-kuri-jump: 620ms;
+    --duration-blink-close: 65ms;
+    --duration-blink-hold: 25ms;
+    --duration-blink-open: 140ms;
+    --duration-kuri-wake: 160ms;
+    --duration-kuri-doze: 1700ms;
+    --duration-kuri-eye-swap: 220ms;
+    --duration-kuri-zzz-fade: 150ms;
+    --duration-kuri-zzz-float: 3.2s;
+    --duration-kuri-breathe: 4.8s;
+    /* 視線のばね。ほぼ臨界減衰（減衰比≈0.93）で、約300msで止まる */
+    --spring-gaze-stiffness: 260;
+    --spring-gaze-damping: 30;
+
     --gaze-x: 0px;
     --gaze-y: 0px;
 
@@ -686,7 +743,7 @@ const EYELIDS = [
   /* 眠ると、まっすぐな縁から湾曲した太い縁へ切り替える */
   .kuri__lid-line,
   .kuri__sleep-line {
-    transition: opacity var(--duration-base) var(--ease-in-out);
+    transition: opacity var(--duration-kuri-eye-swap) var(--ease-eye-swap);
   }
 
   .kuri.is-closed .kuri__lid-line {
@@ -713,16 +770,16 @@ const EYELIDS = [
     fill: var(--muted-foreground);
     font-size: 110px;
     font-weight: 700;
-    transition: opacity var(--duration-fast) var(--ease-exit);
+    transition: opacity var(--duration-kuri-zzz-fade) var(--ease-zzz-fade);
   }
 
   .kuri__zzz text {
-    animation: kuri-zzz 3.2s var(--ease-move) infinite;
+    animation: kuri-zzz var(--duration-kuri-zzz-float) var(--ease-zzz-float) infinite;
   }
 
   .kuri__zzz text:last-child {
     font-size: 76px;
-    animation-delay: 1.6s;
+    animation-delay: calc(var(--duration-kuri-zzz-float) / 2);
   }
 
   .kuri:not(.is-closed) .kuri__zzz {

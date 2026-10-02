@@ -120,6 +120,7 @@
    *   quick: ポインターへの即時反応 / fast: Hover・下線・矢印 /
    *   base: 部品の状態変化 / slow: 内容の入場 / hero: ヒーローとテーマ
    * 入場はease-enterで減速し、退場はease-exitで加速して短く消す。
+   * くりの動きの値はUIと分け、Kuri.astroに置く。
    */
   --duration-quick: 90ms;
   --duration-fast: 150ms;
@@ -132,30 +133,6 @@
   --ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out: var(--ease-emphasis);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-
-  /*
-   * ---------- Character motion（くり） ----------
-   * UIの動きとは分け、重さ・接地・間を表す値として管理する。
-   * Kuri.astroはこの値を実行時に読み込んで使う。
-   */
-  --ease-anticipate: cubic-bezier(0.45, 0, 0.55, 1); /* 予備動作で沈む */
-  --ease-push: cubic-bezier(0.6, 0, 0.75, 0.31); /* 押し出し。離陸の瞬間の速度を空中の初速へつなぐ */
-  --ease-fall: cubic-bezier(0.55, 0, 1, 0.45); /* 落下。加速したまま接地する */
-  --ease-impact: cubic-bezier(0.16, 1, 0.3, 1); /* 着地の反動。すぐに止まる */
-  --ease-settle: cubic-bezier(0.4, 0, 0.6, 1); /* 反動から静止へ */
-  --ease-blink-close: cubic-bezier(0.4, 0, 1, 1); /* まぶたは速く閉じる */
-  --ease-blink-open: cubic-bezier(0, 0, 0.2, 1); /* ゆっくり開く */
-  --duration-kuri-enter: 540ms;
-  --duration-kuri-jump: 620ms;
-  --duration-blink-close: 65ms;
-  --duration-blink-hold: 25ms;
-  --duration-blink-open: 140ms;
-  --duration-kuri-wake: 160ms;
-  --duration-kuri-doze: 1700ms;
-  --duration-kuri-breathe: 4.8s;
-  /* 視線のばね。ほぼ臨界減衰（減衰比≈0.93）で、約300msで止まる */
-  --spring-gaze-stiffness: 260;
-  --spring-gaze-damping: 30;
 
   /* Callout colors */
   --callout-note: oklch(52% 0.12 245);
