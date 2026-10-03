@@ -84,7 +84,9 @@ sequenceDiagram
     CI->>CF: wrangler deployでAPIコードとdistをデプロイ
 ```
 
-MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラグインがコールアウト、リンクカード、Mermaid、記事画像のfigure化を担当する。リンクカードは通常ビルド時に外部ページのメタデータを取得するため、テストでは`LINK_CARD_FETCH_MODE=offline`にして外部通信を切り離す。
+Astro Content CollectionsはMarkdownのfrontmatterを型検証する。RemarkとRehypeのプラグインは、コールアウト、リンクカード、Mermaid、記事画像のfigure化を担当する。
+
+通常のビルドでは、リンクカードの生成時に外部ページのメタデータを取得する。テストでは`LINK_CARD_FETCH_MODE=offline`を指定し、外部通信を切り離す。
 
 ## ブラウザ実行と外部サービス
 
@@ -97,7 +99,9 @@ MarkdownはAstro Content Collectionsで型検証する。Remark／Rehypeプラ�
 | コメント | ブラウザ | Giscus / GitHub Discussions |
 | Cosenseカード | ブラウザ＋Cosense API Proxy | Cosense API |
 
-Cosense(旧Scrapbox)連携では、ブラウザが同一Originの`/api/pages/:project`を呼び出す。Cosense API Proxyはプロジェクト名を検証し、Cloudflare側の`SCRAPBOX_SID`を使ってCosense APIへ接続する。レスポンスは表示に必要な項目だけへ変換し、Browserで300秒、Cloudflare Cache APIで600秒キャッシュする。エラーは保存しない。cross-originのBrowser JavaScriptからの読み取りは許可しない。詳細は[Cosense API Proxy](cosense-api-proxy.md)に定義する。
+Cosense連携では、ブラウザが同一オリジンの`/api/pages/:project`を呼び出す。Cosense API Proxyはプロジェクト名を検証する。検証後、Cloudflare Workersの`SCRAPBOX_SID`を使ってCosense APIへ接続する。
+
+Cosense API Proxyはレスポンスを表示に必要な項目だけへ変換する。成功レスポンスはブラウザで300秒、Cloudflare Cache APIで600秒キャッシュする。エラーレスポンスは保存しない。別オリジンのブラウザJavaScriptからの読み取りは許可しない。詳細は[Cosense API Proxy](cosense-api-proxy.md)に定義する。
 
 ## 設計上の判断
 
@@ -117,13 +121,15 @@ Cosenseのセッション情報は公開バンドルへ含めない。Proxyは�
 
 ここでWorkerとは、Cloudflare Workersにデプロイするリクエスト処理プログラム(`worker/index.ts`)を指す。
 
-`wrangler.toml`の`run_worker_first = ["/api/*"]`によりAPIだけをWorkerで先に処理する。通常の静的ページはStatic Assetsが配信し、Worker側へ届いた未一致リクエストは`env.ASSETS.fetch`へ委譲する。`true`にすると静的閲覧にもWorkerの実行コストと障害の影響が及ぶため使用しない。
+Workerを先に実行する範囲は、[Wrangler設定](../../wrangler.toml)の`run_worker_first`でAPIに限定する。通常の静的ページはStatic Assetsが配信する。Workerへ届いたリクエストがAPIのルートに一致しない場合は、`env.ASSETS.fetch`へ委譲する。
 
-`compatibility_date`は移行前と同じ`2025-03-01`を維持し、ランタイムの挙動変更と配信基盤の移行を分離する。navigationリクエストの静的404配信は`assets_navigation_prefers_asset_serving`フラグで有効化する。
+`run_worker_first`に`true`を指定しない。静的ページの閲覧にも、Workerの実行コストと障害の影響が及ぶためである。
+
+ランタイムの互換性は、[Wrangler設定](../../wrangler.toml)の`compatibility_date`で指定する。ページへの移動時に静的404を配信するため、`assets_navigation_prefers_asset_serving`フラグを有効にする。
 
 ## CI/CDと品質境界
 
-Pull Requestでは以下を独立したGitHub Actionsジョブとして実行する。
+Pull Requestでは、CI workflowが次の検査を独立したGitHub Actionsジョブとして実行する。
 
 - BiomeによるLintとフォーマット確認
 - lycheeによるドキュメントのリポジトリ内リンク検査

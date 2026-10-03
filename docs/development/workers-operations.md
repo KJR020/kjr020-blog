@@ -1,6 +1,8 @@
 # Cloudflare Workers運用手順
 
-Cloudflare Workersのデプロイ先`kjr020-blog`に、Cosense API ProxyとStatic Assetsを一緒にデプロイする。設定の正は[Wranglerの設定ファイル](../../wrangler.toml)、配信する静的ファイルは`dist/`、APIの入口は[Workerのエントリーポイント](../../worker/index.ts)。
+Cloudflare Workersへのデプロイと、配信・APIの確認手順を定義する。
+
+デプロイ先は`kjr020-blog`とする。Cosense API Proxyと`dist/`の静的ファイルを一緒にデプロイする。設定の正本は[Wrangler設定](../../wrangler.toml)、APIの入口は[Workerのエントリーポイント](../../worker/index.ts)とする。
 
 ## ローカル確認
 
@@ -25,11 +27,17 @@ Cloudflare Workers上に`kjr020-blog`を作成した後に、認証済みのWran
 pnpm exec wrangler secret put SCRAPBOX_SID
 ```
 
-ダッシュボードではWorkers & Pages → `kjr020-blog`(Cloudflare Workers) → 設定 → Runtime variables and secrets → プロダクションに、タイプSecret、名前`SCRAPBOX_SID`で登録してデプロイする。暗号化済みの値は後から読み出せないため、元の値を別途保管する。
+ダッシュボードから登録する場合は、次の手順を使う。
+
+1. Workers & Pages → `kjr020-blog`(Cloudflare Workers) → 設定 → Runtime variables and secrets → プロダクションを開く
+2. タイプをSecret、名前を`SCRAPBOX_SID`として、値を登録する
+3. 登録した設定をデプロイする
+
+暗号化済みの値は後から読み出せない。元の値は別途保管する。
 
 ## デプロイ
 
-`main`へのpushで[deploy workflow](../../.github/workflows/deploy.yml)がビルド・型チェック・テストを行い、`wrangler deploy`とHTTP smoke testを実行する。PRからの自動Previewデプロイは行わない。
+`main`へのpushで[Deploy workflow](../../.github/workflows/deploy.yml)がビルド、型検査、テストを実行する。検査の成功後、`wrangler deploy`でデプロイする。デプロイ後はHTTPの疎通確認を実行する。Pull Requestからの自動Previewデプロイは行わない。
 
 手動デプロイが必要な場合も、同じ確認を行う。
 
@@ -40,16 +48,39 @@ pnpm test:run
 pnpm exec wrangler deploy
 ```
 
-デプロイ後は本番`https://kjr020.dev`と`https://kjr020-blog.johnjiro1114.workers.dev`を確認する。CIのsmoke testはSecret非依存の項目なので、Cosense APIの200とJSON配列、画面上のNotesも別途確認する。
+デプロイ後は、本番サイト`https://kjr020.dev`とworkers.devの`https://kjr020-blog.johnjiro1114.workers.dev`を確認する。
+
+- CIの疎通確認が成功したことを確認する
+- Cosense APIが200とJSON配列を返すことを確認する
+- 画面上のNotesを確認する
+
+CIの疎通確認はSecretに依存しない項目だけを検査する。Cosense APIとNotesは別途確認する。
 
 ## カスタムドメイン
 
 `kjr020.dev`はダッシュボードのWorkers & Pages → `kjr020-blog` → ドメインで管理する。`wrangler.toml`にドメインは定義していない。この運用ではCDトークンにZone権限を追加しない。
 
-変更後はHTTPS、トップ・記事、画像・CSS・JS、検索、404、旧記事リダイレクト、Cosense APIを確認する。`/posts`は307で`/posts/`へ転送される。APIのGETは200、HEADは静的404、POSTは405と`Allow: GET`を返す。
+ドメインの変更後は、次を確認する。
+
+- HTTPSで接続できる
+- ホームと記事を表示できる
+- 画像、CSS、JavaScriptを取得できる
+- 検索を利用できる
+- 存在しないページには404を表示する
+- 旧記事URLからリダイレクトできる
+- `/posts`は307で`/posts/`へ転送する
+- Cosense APIのGETは200を返す
+- Cosense APIのHEADは静的404を返す
+- Cosense APIのPOSTは405と`Allow: GET`を返す
 
 ## キャッシュ
 
-静的ファイルはStatic Assetsが配信する。Cosense API ProxyはCloudflare WorkersのCache APIを使い、成功した公開用JSONをデータセンター単位で600秒保存する。ブラウザ向けは300秒。ホスト名が異なればキャッシュも別になる。エラーは保存しない。詳細は[Cosense API Proxy](../architecture/cosense-api-proxy.md)を参照する。
+静的ファイルはStatic Assetsが配信する。Cosense API ProxyはCloudflare Cache APIを使う。成功した公開用JSONは、データセンター単位で600秒保存する。ブラウザ向けのキャッシュ期間は300秒とする。ホスト名が異なる場合は、別のキャッシュを使う。エラーレスポンスは保存しない。詳細は[Cosense API Proxy](../architecture/cosense-api-proxy.md)を参照する。
 
-`CF-Cache-Status`だけではCosense API Proxy内の`caches.default.match`のHIT/MISSを断定しない。実装は診断用ヘッダを公開しておらず、応答時間だけでも判定できない。
+`CF-Cache-Status`だけではCosense API Proxy内の`caches.default.match`のHIT/MISSを断定しない。実装は診断用ヘッダーを公開していない。応答時間だけでもHIT/MISSを判定できない。
+
+## 関連ファイル
+
+- [Wrangler設定](../../wrangler.toml) - デプロイ先とStatic Assetsの配信設定
+- [Deploy workflow](../../.github/workflows/deploy.yml) - デプロイと疎通確認
+- [Cosense API Proxy](../architecture/cosense-api-proxy.md) - APIの入力、応答、キャッシュ仕様

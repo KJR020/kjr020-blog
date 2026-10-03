@@ -4,7 +4,7 @@
 
 ## 構成
 
-記事ページはReactコンポーネントの`Comments`をブラウザで描画し、`@giscus/react`を通じてコメント欄を表示する。コメントはGitHub Discussionsに保存し、ブログ側にはコメント保存用のAPIやデータベースを持たない。
+記事ページはReactコンポーネントの`Comments`をブラウザで描画する。`Comments`は`@giscus/react`を通じてコメント欄を表示する。GiscusはコメントをGitHub Discussionsに保存する。ブログ側にはコメント保存用のAPIやデータベースを持たない。
 
 ```mermaid
 flowchart LR
@@ -36,7 +36,7 @@ Giscusへ渡す設定値は[コメントコンポーネント](../../src/compone
 - コメントの閲覧・投稿はGiscusとGitHub Discussionsの稼働状況に依存する
 - 記事のパスを変更する場合、既存のDiscussionとの対応を確認する必要がある
   - 対応づけに`pathname`を使用するため
-- 不適切な投稿への対応は運営者がGitHub上で行う
+- 不適切なコメントは運営者がGitHub Discussions上で管理する
 
 ## 関連ファイル
 

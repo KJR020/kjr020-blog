@@ -36,21 +36,24 @@ test("カテゴリカードはカード全体をリンクにして補助ラベ�
     "情報表示と操作を一貫して実装するための再利用可能なUI部品",
     "状態、記事、ページを読者の目的に沿って組み立てる方法",
     "操作と状態を自然で具体的な言葉で伝えるUIライティング",
-    "正規仕様と実装を一致させて保つための管理・更新ルール",
+    "仕様書、実装、確認用カタログを同じ仕様へ揃える管理・更新ルール",
   ]);
 });
 
 test("公開ページは仕様の目的と使い方を説明する", async ({ page }) => {
   const pageDescriptions = [
-    { path: "/design-system", description: "同じ役割に同じ表現を使うための判断基準" },
+    { path: "/design-system", description: "要件と判断基準はデザイン仕様書で定めます" },
     {
       path: "/design-system/foundations",
-      description: "画面幅やテーマが変わっても情報の意味と優先順位を保つ",
+      description: "情報の意味と優先順位が保たれることを確認します",
     },
-    { path: "/design-system/components", description: "同じ役割のUIを同じ構造で実装する" },
-    { path: "/design-system/patterns", description: "探す・読む・移動する流れを保つ" },
-    { path: "/design-system/content", description: "起きたこと、次にできることを自然な日本語" },
-    { path: "/design-system/governance", description: "採用済みの仕様だけを正規情報として保つ" },
+    { path: "/design-system/components", description: "用途と使い分けを確認できます" },
+    { path: "/design-system/patterns", description: "記事を探す、読む、移動する操作" },
+    {
+      path: "/design-system/content",
+      description: "現在地、起きたこと、次の操作を具体的に伝えます",
+    },
+    { path: "/design-system/governance", description: "要件はデザイン仕様書で確認します" },
   ] as const;
 
   for (const pageDescription of pageDescriptions) {
@@ -60,7 +63,7 @@ test("公開ページは仕様の目的と使い方を説明する", async ({ pa
 
   await page.goto("/design-system/foundations");
   await expect(page.locator("#tokens > .src")).toContainText("用途を表す名前");
-  await expect(page.locator("#layout > .src")).toContainText("読む順序");
+  await expect(page.locator("#layout > .src")).toContainText("読み順");
 });
 
 test("説明はルールの見出しを親に、説明を子にした箇条書きで書き、項目末尾に句点を付けない", async ({
@@ -173,7 +176,7 @@ test("記事ページの仕様をパターンページに統合して表示す�
   await expect(page.locator("#reading-layout")).toBeVisible();
   await expect(page.locator("#reading-layout .lane-header")).toContainText("記事ヘッダー");
   await expect(page.locator("#reading-layout .lane-character-area")).toContainText(
-    "キャラクター領域",
+    "記事ヘッダー右側の余白",
   );
   await expect(page.locator("#reading-typography")).toBeVisible();
   await expect(page.locator("#figure-pattern")).toBeVisible();
@@ -636,7 +639,9 @@ test("Tag interactionの正規仕様を実装された標本とともに表示�
 
   await expect(page.getByRole("heading", { name: "Tag interaction" })).toBeVisible();
   await expect(specification.locator('a[href="/tags/Astro"]')).toBeVisible();
-  await expect(specification).toContainText("160ms");
+  await expect(specification).toContainText("--foreground");
+  await expect(specification).toContainText("--secondary");
+  await expect(specification).toContainText("--duration-fast");
   await expect(specification).toContainText("#記号");
   await expect(specification).toContainText("PostListItem");
   await expect(specification).toContainText("Reduced motion");
@@ -692,7 +697,9 @@ test("記事ページの読書設計をパターンの共通レイアウト内�
   await expect(page.locator("#figure-pattern figure img")).toHaveAttribute("width", "1078");
   await expect(page.locator("#figure-pattern figcaption")).toBeVisible();
   await expect(page.locator("#figure-pattern figcaption")).not.toContainText(/FIGURE \d+/);
-  await expect(page.locator("#figure-pattern")).toContainText("本文と同じ8 columnsへ揃える");
+  await expect(page.locator("#figure-pattern")).toContainText(
+    "本文と同じReading lane(8 / 9)へ揃える",
+  );
   const imageTrigger = page.locator("#figure-pattern").getByRole("link", { name: /画像を拡大/ });
   await imageTrigger.click();
   const imageDialog = page.getByRole("dialog", { name: "画像を拡大表示" });

@@ -195,7 +195,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="typography">
     <h3>1-3. 文字階層</h3>
-    <p class="src">書体、サイズ、ウェイト、行高で、ページ内の情報階層と読み方を伝えます。</p>
+    <p class="src">書体、サイズ、太さ、行高で、情報の階層を伝えます。下の標本は固定段のトークンです。ページタイトルと記事タイトルには、それぞれ専用の可変サイズを使います。</p>
     <ul class="src rule-list">
       <li>
         <strong>書体</strong>
@@ -407,7 +407,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 <section class="spec" id="layout">
   <h2>2. レイアウト原則</h2>
   <p class="src">
-    ページ全体の幅、列、余白、読む順序を定義します。コンテンツの種類と画面幅に応じて配置を変えても、情報の優先順位とDOM順を保つための基準です。
+    ページの幅、列、余白、読み順を示します。画面幅に合わせて配置を変えます。情報の優先順位とDOM順は保ちます。
   </p>
 
   <div class="spec-item" id="page-shell">
@@ -420,15 +420,15 @@ const shows = (section: FoundationSection) => sections.includes(section);
         </ul>
       </li>
       <li>
-        <strong>栗マスコット</strong>
+        <strong>くりの配置</strong>
         <ul>
-          <li>Mainでは、本文の操作を妨げない背景要素として扱う</li>
+          <li>ホームと記事一覧では、見出し下の罫線上へ置く。記事詳細には置かない</li>
         </ul>
       </li>
     </ul>
     <div class="demo layout-stack">
       <div class="layout-bar"><strong>Sticky Header</strong><span>border-bottom · backdrop blur</span></div>
-      <div class="layout-bar layout-main"><strong>Main</strong><span>flex: 1 · Kuri watermark</span></div>
+      <div class="layout-bar layout-main"><strong>Main</strong><span>ページの主な内容を置く</span></div>
       <div class="layout-bar"><strong>Footer</strong><span>border-top · privacy / social links</span></div>
     </div>
     <p class="source-row"><strong>Source</strong><code>src/layouts/BaseLayout.astro</code></p>
@@ -440,7 +440,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>列</strong>
         <ul>
-          <li>Wideでは、シェルの内容幅を16列とgutter 16pxへ分割する</li>
+          <li>Wideでは、シェルの内容幅を16列と列間の余白へ分割する。列間の余白は<code>--grid-gutter</code>で16〜24pxに補間する</li>
           <li>主要領域の幅と位置を列で決める</li>
           <li>列は配置をそろえる座標系で、CSS Gridの使用は要件にしない</li>
         </ul>
@@ -454,15 +454,15 @@ const shows = (section: FoundationSection) => sections.includes(section);
     </ul>
     <div class="demo">
       <div class="shell-anatomy" aria-label="シェルと内部配置の見本">
-        <span class="shell-margin">16px</span>
+        <span class="shell-margin">16〜40px</span>
         <div class="shell-inner">
-          <div class="shell-container">主領域 1〜12列（1120pxのとき836px）</div>
+          <div class="shell-container">主領域 1〜12列(内容幅1200px・列間24pxのとき894px)</div>
           <div class="shell-part">
             <strong>補助領域 13〜16列</strong>
-            <span>1120pxのとき268px。補助情報がなければ余白として残す</span>
+            <span>内容幅1200px・列間24pxのとき282px。補助情報がなければ余白として残す</span>
           </div>
         </div>
-        <span class="shell-margin">16px</span>
+        <span class="shell-margin">16〜40px</span>
       </div>
     </div>
     <p class="source-row"><strong>Specification</strong><code>docs/design/grid-system.md</code></p>
@@ -488,21 +488,21 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <table class="map">
         <thead><tr><th>Mode</th><th>Viewport</th><th>Tailwind</th><th>左右余白</th><th>主要領域</th></tr></thead>
         <tbody>
-          <tr><td>Compact</td><td>767px以下</td><td>既定</td><td>16px</td><td>縦積み</td></tr>
-          <tr><td>Medium</td><td>768px以上</td><td>md</td><td>16px</td><td>縦積み</td></tr>
-          <tr><td>Wide</td><td>1024px以上</td><td>lg</td><td>16px</td><td>主領域＋補助領域</td></tr>
+          <tr><td>Compact</td><td>48rem未満</td><td>既定</td><td><code>--shell-pad</code></td><td>縦積み</td></tr>
+          <tr><td>Medium</td><td>48rem以上・64rem未満</td><td>md</td><td><code>--shell-pad</code></td><td>縦積み</td></tr>
+          <tr><td>Wide</td><td>64rem以上</td><td>lg</td><td><code>--shell-pad</code></td><td>主領域＋補助領域</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
   <div class="spec-item" id="grid-types">
-    <h3>2-4. ページ別の最大幅</h3>
+    <h3>2-4. 共通のページシェル</h3>
     <ul class="src rule-list">
       <li>
         <strong>最大幅</strong>
         <ul>
-          <li>ページごとに定める</li>
+          <li>全ページで同じシェルを使う。最大幅は左右の内側余白を含めて1280pxとする</li>
         </ul>
       </li>
       <li>
@@ -514,12 +514,12 @@ const shows = (section: FoundationSection) => sections.includes(section);
     </ul>
     <div class="demo table-scroll">
       <table class="map">
-        <thead><tr><th>ページ</th><th>最大幅</th><th>指定</th></tr></thead>
+        <thead><tr><th>対象</th><th>決めること</th><th>指定</th></tr></thead>
         <tbody>
-          <tr><td>記事詳細</td><td>1152px / 72rem</td><td>max-w-6xl</td></tr>
-          <tr><td>ホーム</td><td>1152px / 72rem</td><td>max-w-6xl</td></tr>
-          <tr><td>Privacy Policy</td><td>768px / 48rem</td><td>max-w-3xl</td></tr>
-          <tr><td>記事一覧、タグ別一覧、検索</td><td>Breakpoint連動</td><td>container</td></tr>
+          <tr><td>全ページ</td><td>外側の最大幅</td><td><code>--shell-max</code></td></tr>
+          <tr><td>全ページ</td><td>左右の内側余白。画面幅に合わせて16〜40pxに補間する</td><td><code>--shell-pad</code></td></tr>
+          <tr><td>Privacy Policy</td><td>シェル幅を保ち、本文の行長を抑える</td><td>主領域の列数とmax-inline-size</td></tr>
+          <tr><td>検索</td><td>シェルとは独立した重なり領域</td><td>Command Paletteの実装</td></tr>
         </tbody>
       </table>
     </div>
@@ -531,7 +531,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>Wide</strong>
         <ul>
-          <li>主領域は1〜12列</li>
+          <li>記事詳細の本文は1〜12列、ホームの記事一覧は1〜11列へ置く</li>
           <li>補助領域は13〜16列</li>
         </ul>
       </li>
@@ -544,8 +544,8 @@ const shows = (section: FoundationSection) => sections.includes(section);
       </li>
     </ul>
     <div class="demo grid-composition">
-      <div class="grid-region grid-region-header"><strong>記事ヘッダー</strong><span>タイトル 1〜12列 / マスコット 14〜16列</span></div>
-      <div class="grid-region grid-region-main"><strong>本文 / 記事一覧</strong><span>Wide: 1〜12列</span></div>
+      <div class="grid-region grid-region-header"><strong>記事ヘッダー</strong><span>タイトルとメタ情報 1〜12列。マスコットは置かない</span></div>
+      <div class="grid-region grid-region-main"><strong>本文 / 記事一覧</strong><span>Wide: 本文1〜12列 / ホームの記事一覧1〜11列</span></div>
       <div class="grid-region grid-region-aside"><strong>目次 / メモ</strong><span>Wide: 13〜16列</span></div>
     </div>
   </div>
@@ -556,20 +556,20 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>指定方法</strong>
         <ul>
-          <li>Tailwindのユーティリティで指定する</li>
+          <li>ページシェルは共通のCSS変数で指定する。重なり領域の幅は対応する部品で指定する</li>
         </ul>
       </li>
       <li>
         <strong>採用値</strong>
         <ul>
-          <li>ページごとの値は<code>docs/design/grid-system.md</code>を参照する</li>
+          <li>シェルと列の配置は<code>docs/design/grid-system.md</code>を参照する</li>
         </ul>
       </li>
     </ul>
     <div class="demo layout-stack width-stack">
-      <div class="layout-bar width-wide"><strong>max-w-6xl</strong><span>1152px · 記事詳細</span></div>
-      <div class="layout-bar width-narrow"><strong>max-w-3xl</strong><span>768px · Privacy Policy</span></div>
-      <div class="layout-bar width-overlay"><strong>max-w-lg</strong><span>512px · Command Palette</span></div>
+      <div class="layout-bar width-wide"><strong>--shell-max</strong><span>全ページで共有する最大幅</span></div>
+      <div class="layout-bar width-narrow"><strong>本文の行長</strong><span>シェル内で読みやすい幅に制限する</span></div>
+      <div class="layout-bar width-overlay"><strong>Command Palette</strong><span>シェルと独立した幅を指定する</span></div>
     </div>
   </div>
 
@@ -583,7 +583,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
           <tr><td>同一要素内</td><td>φ⁻³〜φ⁻¹</td><td>ナビ間隔、タイトルと補足、カード行間</td></tr>
           <tr><td>関連要素間</td><td>φ⁰〜φ¹</td><td>カードpadding、見出しと一覧</td></tr>
           <tr><td>セクション間</td><td>φ¹〜φ²</td><td>Posts / Notes、記事header</td></tr>
-          <tr><td>ページ外周</td><td>px-4 + py-φ²</td><td>一覧・記事詳細・ヒーロー</td></tr>
+          <tr><td>ページ外周</td><td>左右は--shell-pad、上下は用途別のspacing token</td><td>一覧・記事詳細・ヒーロー</td></tr>
         </tbody>
       </table>
     </div>
@@ -593,9 +593,9 @@ const shows = (section: FoundationSection) => sections.includes(section);
     <h3>2-8. 見出しと強調の階層</h3>
     <p class="src">ページタイトル → セクション見出し → カードタイトル → メタ情報の順に、サイズ・太さ・色を弱めます。</p>
     <div class="demo emphasis-demo">
-      <div class="emphasis-level emphasis-page"><strong>Page title</strong><span>title1 / bold / tracking-tight</span></div>
-      <div class="emphasis-level emphasis-section"><strong>Section heading</strong><span>title3 / 左にlink色2px線</span></div>
-      <div class="emphasis-level"><strong>Item title</strong><span>body / semibold / hoverでlink色</span></div>
+      <div class="emphasis-level emphasis-page"><strong>Page title</strong><span>ページタイトルは--text-page-title、記事タイトルは--text-article-title</span></div>
+      <div class="emphasis-level emphasis-section"><strong>Section heading</strong><span>罫線と余白で節の区切りを示す</span></div>
+      <div class="emphasis-level"><strong>Item title</strong><span>項目名を強調する。操作対象であることを下線や色で示す</span></div>
       <div class="emphasis-level"><strong>Metadata</strong><span>small / muted foreground</span></div>
     </div>
   </div>
@@ -605,7 +605,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 {shows("states") && (
 <section class="spec" id="states">
   <h2>3. 状態の体系</h2>
-  <p class="src">操作中、非同期データ、現在位置と選択を、部品が変わっても同じ意味で伝えるための規則です。見た目だけでなく、文言とARIAを組み合わせて状態を識別できるようにします。</p>
+    <p class="src">操作中、取得中、現在地、選択を区別します。同じ状態には、部品が変わっても一貫した表現を使います。表示、文言、ARIAで状態を伝えます。</p>
 
   <div class="spec-item" id="interaction-states">
     <h3>3-1. 操作状態</h3>
@@ -647,9 +647,9 @@ const shows = (section: FoundationSection) => sections.includes(section);
     <h3>3-3. 現在地と選択</h3>
     <ul class="src rule-list">
       <li>
-        <strong>Headerとサイドバー</strong>
+        <strong>現在のページ</strong>
         <ul>
-          <li>現在ページはlink色＋semibold</li>
+          <li>Headerでは文字の下の青い点で示す。カタログのサイドバーではlink色とsemiboldで示す</li>
           <li>見出しのアクセントラインは、現在地の表示へ転用しない</li>
         </ul>
       </li>

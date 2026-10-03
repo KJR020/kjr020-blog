@@ -52,7 +52,7 @@ export const designSystemPages = [
     id: "governance",
     label: "ガバナンス",
     href: "/design-system/governance",
-    description: "正規仕様と実装を一致させて保つための管理・更新ルール",
+    description: "仕様書、実装、確認用カタログを同じ仕様へ揃える管理・更新ルール",
   },
 ] as const satisfies readonly (DesignSystemNavigationLink & {
   id: DesignSystemPageId;
@@ -84,7 +84,7 @@ export const designSystemPageGroups: Record<
         { label: "ページシェル", href: "/design-system/foundations#page-shell" },
         { label: "整列の基本方針", href: "/design-system/foundations#grid" },
         { label: "Breakpoints", href: "/design-system/foundations#grid-breakpoints" },
-        { label: "ページ別の最大幅", href: "/design-system/foundations#grid-types" },
+        { label: "共通のページシェル", href: "/design-system/foundations#grid-types" },
         { label: "配置パターン", href: "/design-system/foundations#grid-composition" },
         { label: "幅トークン", href: "/design-system/foundations#width-tokens" },
         { label: "余白の階層", href: "/design-system/foundations#spacing-hierarchy" },

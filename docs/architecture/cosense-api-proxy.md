@@ -1,12 +1,12 @@
 # Cosense API Proxy
 
-Cosenseの記事情報を、秘密情報をBrowserへ公開せずブログに提供するための構成を定義する。
+Cosenseの記事情報を、秘密情報をブラウザへ公開せずブログに提供するための構成を定義する。
 
 ## 概要
 
-ブログはAstroで静的生成し、Cosenseの記事情報だけをBrowserから動的に取得する。
+ブログはAstroで静的生成し、Cosenseの記事情報だけをブラウザから動的に取得する。
 
-- BrowserはCosense APIを直接呼び出さず、同一OriginのCosense API Proxy(Cloudflare Workers上で実行)を介する
+- ブラウザはCosense APIを直接呼び出さず、同一オリジンのCosense API Proxy(Cloudflare Workers上で実行)を介する
 - Cosense API Proxyは入力検証、認証付きの上流取得、公開用データへの変換、共有キャッシュを担当する
   - ブログの再ビルドなしで記事情報を更新し、Cosense APIへの呼び出しと上流待ち時間を抑える
   - 更新の即時反映やデータセンター間でのキャッシュ同期は要求しない
@@ -16,7 +16,7 @@ Cosenseの記事情報を、秘密情報をBrowserへ公開せずブログに提
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Browser
+    participant Browser as ブラウザ
     participant Function as Cosense API Proxy
     participant Cache as Cache API
     participant Cosense as Cosense API
@@ -39,11 +39,11 @@ sequenceDiagram
 ## コンポーネントと責務
 
 - React Query
-  - Browser内のデータ取得状態と再取得を管理する
-- Browser HTTP cache
-  - 同じBrowserからの再取得を抑制する
+  - ブラウザ内のデータ取得状態と再取得を管理する
+- ブラウザHTTPキャッシュ
+  - 同じブラウザからの再取得を抑制する
 - Cosense API Proxy
-  - 入力検証、上流取得、レスポンス変換、エラー制御を行う
+  - 入力を検証し、上流APIからデータを取得する。取得したレスポンスを変換し、エラー応答を制御する
 - Cloudflare Cache API
   - 変換済みレスポンスをデータセンター単位で共有する
 - Cosense API
@@ -55,27 +55,28 @@ sequenceDiagram
 GET /api/pages/KJR020?limit=100
 ```
 
-- Methodは`GET`、projectは`KJR020`のみを受け付ける
+- HTTPメソッドは`GET`だけを受け付ける
+- `project`は`KJR020`だけを受け付ける
 - Cosenseからの取得件数は100件に固定する
-  - Browserから受け取るquery parameterはすべて無視する
+  - ブラウザから受け取るクエリパラメーターはすべて無視する
   - 上流へ送る取得条件とキャッシュキーには、Cosense API Proxy側で固定した`limit=100`を使用する
-- 応答は公開用ページデータの配列とし、[PageData](../../worker/_lib/cms-proxy.ts)を型の正とする
+- 応答は公開用ページデータの配列とし、[PageData](../../worker/_lib/cms-proxy.ts)を型の正本とする
   - `KJR020`から取得したページはすべて公開対象とし、`PageData`に定義した項目だけを返す
   - 0件なら空配列を返し、順序はCosense APIの取得順を維持する
   - 変換に必要な項目の型が不正なページが1件でもあれば、部分的な成功にはせず全体をエラーとする
 
 ## キャッシュ
 
-- React Query: `staleTime: 300秒`
-  - 同じQueryClientとquery keyを使うBrowser内でデータをfreshとみなす期間
+- React Query: `staleTime`は300秒
+  - 同じQueryClientとクエリキーを使うブラウザ内でデータをfreshとみなす期間
   - 期限切れや定期更新の設定ではなく、画面を開いたままにしても自動更新は保証しない
   - ウィンドウ復帰時の再取得は無効とする
-- Browser HTTP cache: `max-age=300`
-  - 各Browserで再利用する
+- ブラウザHTTPキャッシュ: `max-age=300`
+  - 各ブラウザで再利用する
 - Cloudflare Cache API: `s-maxage=600`
   - Cloudflareの各データセンターで共有する
 
-成功レスポンスは、Browser向けの`max-age`と共有キャッシュ向けの`s-maxage`を分けて指定する。
+成功レスポンスは、ブラウザ向けの`max-age`と共有キャッシュ向けの`s-maxage`を分けて指定する。
 
 ```http
 Cache-Control: public, max-age=300, s-maxage=600
@@ -87,7 +88,7 @@ Cache APIのキーは次のURLに正規化する。
 https://<deployment-host>/api/pages/KJR020?limit=100
 ```
 
-- Browserから受け取った不要なquery parameterはキーに含めない
+- ブラウザから受け取った不要なクエリパラメーターはキーに含めない
 - ProductionとPreviewはホスト名ごとに別のキャッシュを使用する
 - HIT時は保存済みのJSONを返し、Cosense APIを呼び出さない
 - MISS時はCosense APIから取得し、公開用JSONへの変換に成功した200レスポンスだけを保存する
@@ -99,7 +100,7 @@ https://<deployment-host>/api/pages/KJR020?limit=100
   - キャッシュ操作の失敗は秘密情報を含めずに記録する
 - Cache APIのHITでもCosense API Proxyは実行される
   - 削減するのはCosenseへの通信と変換処理であり、Cloudflare Workersへの呼び出し回数ではない
-- 更新は各キャッシュの状態とBrowserの再取得契機に応じて反映される
+- 更新は各キャッシュの状態とブラウザの再取得契機に応じて反映される
   - 更新反映までの厳密な上限時間は保証しない
 
 ## エラー処理
@@ -112,36 +113,36 @@ https://<deployment-host>/api/pages/KJR020?limit=100
 - 504: Cosense APIが5秒以内に応答しない
   - 上流への接続開始からJSON本文の読み取り完了までを制限する
 - エラーレスポンスは保存せず、`Cache-Control: no-store`を付与する
-  - Cosenseの応答本文、内部エラー、`SCRAPBOX_SID`をBrowserへ返さない
+  - Cosenseの応答本文、内部エラー、`SCRAPBOX_SID`をブラウザへ返さない
 
 ## セキュリティ境界
 
 ### 秘密情報
 
 - `SCRAPBOX_SID`はCloudflare Workersのsecretとして管理し、Cosense APIへの接続だけに使う
-- 本APIは呼び出し元の認証を行わない公開APIであり、閲覧者によらず同じレスポンスを返す
+- 本APIは公開APIとし、呼び出し元を認証しない。閲覧者によらず同じレスポンスを返す
   - Cosense APIのレスポンスはそのまま返さず、第三者に公開してよいページデータだけへ変換する
 
 ### CORS
 
-- Browserはページと同じOriginの相対URL`/api/pages/...`を呼び出す
-- APIレスポンスに`Access-Control-Allow-Origin`は付与せず、cross-originのBrowser JavaScriptからの読み取りを許可しない
+- ブラウザはページと同じオリジンの相対URL`/api/pages/...`を呼び出す
+- APIレスポンスに`Access-Control-Allow-Origin`は付与せず、別オリジンのブラウザJavaScriptからの読み取りを許可しない
   - CORSはAPI自体へのアクセスを制限する認証・認可の仕組みではない
 
 ## 環境設定
 
 - Production
-  - 公開Origin: `https://kjr020.dev`
+  - 公開オリジン: `https://kjr020.dev`
   - `SCRAPBOX_SID`: Cloudflare Workers secret
   - 実行経路: Cloudflare Workers上のCosense API Proxy
 - workers.dev
-  - 公開Origin: `https://kjr020-blog.johnjiro1114.workers.dev`
+  - 公開オリジン: `https://kjr020-blog.johnjiro1114.workers.dev`
   - 本番と同じデプロイ先`kjr020-blog`とSecretを使用する。PRごとの自動Previewデプロイは行っていない
 - Local
-  - 公開Origin: `http://localhost:8788`
+  - 公開オリジン: `http://localhost:8788`
   - `SCRAPBOX_SID`: `.dev.vars`
   - `pnpm build`後に`pnpm exec wrangler dev --port 8788`を実行する
-  - WranglerのOriginから開き、`/api/*`はCosense API Proxy、それ以外はビルド済み`dist/`を配信する
+  - Wranglerのオリジンから開き、`/api/*`はCosense API Proxy、それ以外はビルド済み`dist/`を配信する
 
 設定方法は[Cloudflare Workers運用手順](../development/workers-operations.md)を参照する。
 
@@ -151,8 +152,8 @@ https://<deployment-host>/api/pages/KJR020?limit=100
 - [Cosense APIエンドポイント](../../worker/api/pages.ts) - Cosense API Proxyのハンドラ
 - [Cosense Proxy](../../worker/_lib/cms-proxy.ts) - Cosense API接続とレスポンス変換
 - [HTTPレスポンス](../../worker/_lib/http.ts) - Cache-Controlとエラーレスポンス
-- [Cosenseデータ取得](../../src/components/scrapbox/useScrapboxData.ts) - BrowserからのAPI呼び出し
-- [React Query設定](../../src/components/scrapbox/queryClient.ts) - Browser内の再取得ポリシー
+- [Cosenseデータ取得](../../src/components/scrapbox/useScrapboxData.ts) - ブラウザからのAPI呼び出し
+- [React Query設定](../../src/components/scrapbox/queryClient.ts) - ブラウザ内の再取得ポリシー
 
 ## 参考資料
 

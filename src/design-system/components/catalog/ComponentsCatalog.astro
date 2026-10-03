@@ -61,7 +61,7 @@ const scrapboxPages = [
 
 <section class="spec" id="primitives">
   <h2>4. 基本部品</h2>
-  <p class="src">ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUIです。用途・構造・状態を共通化し、ページごとの独自実装を増やさないために使います。</p>
+  <p class="src">ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUIです。同じ用途では、同じ部品を使います。部品ごとの状態と操作も確認できます。</p>
 
   <div class="spec-item" id="button">
     <h3>4-1. Button</h3>
@@ -76,7 +76,7 @@ const scrapboxPages = [
       <li>
         <strong>variantとsize</strong>
         <ul>
-          <li>6 variantsと用途別のsizeを、同じprimitiveで扱う</li>
+          <li>用途に合うvariantとsizeを、同じButtonコンポーネントから選ぶ</li>
         </ul>
       </li>
     </ul>
@@ -141,7 +141,7 @@ const scrapboxPages = [
             <thead><tr><th>状態</th><th>正規仕様</th></tr></thead>
             <tbody>
               <tr><td>Rest</td><td>細い輪郭と<code>#</code>記号で、記事リンクとは別のリンクであることを示す</td></tr>
-              <tr><td>Hover / Focus</td><td>輪郭・文字をBrandへ、面をBrand washへ160msで変える。Focusでは輪郭線も表示する</td></tr>
+              <tr><td>Hover / Focus</td><td>輪郭と文字を墨色(<code>--foreground</code>)へ、面を<code>--secondary</code>へ変える。変化の時間は実装の<code>--duration-fast</code>を使う。Focusではフォーカスの輪郭線も表示する</td></tr>
               <tr><td>Row coordination</td><td>Tag上では親PostListItemのタイトル下線と矢印のhoverを重ねない</td></tr>
               <tr><td>Reduced motion</td><td>移動を伴う演出を持たない。色の変化だけで状態を示す</td></tr>
             </tbody>
@@ -154,15 +154,15 @@ const scrapboxPages = [
 
   <div class="spec-item" id="card">
     <h3>4-3. Card</h3>
-    <p class="src">関連する情報と操作を1つの単位にまとめる部品です。Card / Header / Title / Description / Content / Footerの合成部品として扱います。</p>
+    <p class="src">関連する情報と操作を1つの単位にまとめる部品です。Card、Header、Title、Description、Content、Footerを組み合わせて構成します。</p>
     <div class="demo card-demo">
       <Card className="specimen-card">
         <CardHeader>
           <CardTitle>デザインシステム</CardTitle>
-          <CardDescription>実装と同じ部品を確認できる形で並べる。</CardDescription>
+          <CardDescription>ブログと同じ部品の表示と操作を確認できます。</CardDescription>
           <CardAction><Badge variant="outline">Connected</Badge></CardAction>
         </CardHeader>
-        <CardContent><p>カード内ではspacing tokenで情報の関係を表す。</p></CardContent>
+        <CardContent><p>カード内の余白は、情報どうしの関係に合わせて選びます。</p></CardContent>
         <CardFooter className="border-t"><Button variant="outline" size="sm">詳細を見る</Button></CardFooter>
       </Card>
     </div>
@@ -206,7 +206,7 @@ const scrapboxPages = [
 
 <section class="spec" id="navigation">
   <h2>5. ナビゲーション・検索部品</h2>
-  <p class="src">サイト内の現在地、移動先、検索手段を読者へ伝える部品です。Pointer・Touch・Keyboardのいずれでも同じ場所と操作へ到達できることを基準とします。</p>
+  <p class="src">サイト内の現在地、移動先、検索手段を読者へ伝える部品です。ポインター、タッチ、キーボードで、同じ移動先と操作へ到達できることを確認します。</p>
 
   <div class="spec-item" id="global-navigation">
     <h3>5-1. Header / Global Navigation</h3>
@@ -214,8 +214,8 @@ const scrapboxPages = [
       <li>
         <strong>外観</strong>
         <ul>
-          <li>高さ4rem、sticky</li>
-          <li>背景は紙色82%＋backdrop blur</li>
+          <li>高さは4remとし、画面上部に追従させる</li>
+          <li>背景は紙色を82%で重ね、背後をぼかす</li>
         </ul>
       </li>
       <li>
@@ -234,7 +234,7 @@ const scrapboxPages = [
       <li>
         <strong>幅による切り替え</strong>
         <ul>
-          <li>Desktopは水平ナビ、MobileはMenu button</li>
+          <li>48rem以上では水平ナビゲーションを表示する。48rem未満ではメニューボタンを表示する</li>
           <li>水平ナビは項目を折り返さない</li>
           <li>60rem未満では、Searchの<kbd>⌘K</kbd>表示を省く</li>
         </ul>
@@ -259,14 +259,14 @@ const scrapboxPages = [
       <li>
         <strong>開き方</strong>
         <ul>
-          <li>HeaderのSearch、または<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>でnative dialogを開く</li>
+          <li>HeaderのSearchを押すか、<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>を押すと、Command Paletteを開く</li>
         </ul>
       </li>
       <li>
         <strong>操作</strong>
         <ul>
-          <li>Arrow Up/Downで選択する</li>
-          <li>Enterで遷移する</li>
+          <li>Arrow Up / Downで検索結果を選択する</li>
+          <li>Enterで選択した記事へ移動する</li>
           <li>Escapeまたは背景クリックで閉じる</li>
         </ul>
       </li>
@@ -277,7 +277,7 @@ const scrapboxPages = [
         <div class="command-option is-selected" role="option" aria-selected="true">Astroブログに全文検索を導入した<small>Pagefindを使った検索UIの実装</small></div>
         <div class="command-option" role="option" aria-selected="false">Astroブログにコールアウト機能を追加した<small>記事表現を拡張する</small></div>
       </div>
-      <p class="demo-instruction">このページでも <kbd>⌘K</kbd> / <kbd>Ctrl K</kbd> で実装されたdialogを確認できます。</p>
+      <p class="demo-instruction">このページでも<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>でCommand Paletteを開けます。</p>
       <CommandPalette client:load />
     </div>
     <p class="source-row"><strong>Source</strong><code>src/components/search/CommandPalette.tsx</code></p>
@@ -295,7 +295,7 @@ const scrapboxPages = [
       <li>
         <strong>Mobile Menu</strong>
         <ul>
-          <li>右上からfixed dropdownで開く</li>
+          <li>メニューボタンを押すと、画面右上にメニューを重ねて表示する</li>
           <li>外側クリックとEscapeで閉じる</li>
         </ul>
       </li>
@@ -304,7 +304,7 @@ const scrapboxPages = [
       <div><span>Theme Toggle</span><ThemeToggleAnimated client:load /></div>
       <div><span>Mobile Menu</span><button type="button" aria-label="メニューを開く" aria-expanded="false">☰</button></div>
       <dl>
-        <div><dt>Theme state</dt><dd>localStorageとdocument classを同期</dd></div>
+        <div><dt>Theme state</dt><dd>選んだテーマをlocalStorageとhtml要素のclassへ反映する</dd></div>
         <div><dt>Menu dismissal</dt><dd>Escape / 外側クリック / リンク選択</dd></div>
       </dl>
     </div>
@@ -318,7 +318,7 @@ const scrapboxPages = [
 
   <div class="spec-item" id="page-hero">
     <h3>6-1. PageHero</h3>
-    <p class="src">欧文の大見出しと日本語の説明で、ページの目的を一覧本文より先に伝えます。下端の罫線を地面にして、任意でくりを立たせます。</p>
+    <p class="src">欧文の大見出しと日本語の説明で、ページの目的を一覧本文より先に伝えます。mascotを指定した場合は、下端の罫線上にくりを立たせます。</p>
     <div class="demo page-demo"><PageHero title="Posts" description="ブログ記事一覧です。" mascot /></div>
     <p class="source-row"><strong>Source</strong><code>src/components/PageHero.astro</code></p>
   </div>
@@ -359,7 +359,7 @@ const scrapboxPages = [
       <li>
         <strong>描画</strong>
         <ul>
-          <li>public/images/kuri.svgのパスをそのまま使う</li>
+          <li><code>public/images/kuri.svg</code>のパスをそのまま使う</li>
           <li>ライトは塗り、ダークは線画で描く</li>
         </ul>
       </li>
@@ -369,7 +369,7 @@ const scrapboxPages = [
           <li>視線がポインターを追う</li>
           <li>まばたきする</li>
           <li>クリックで跳ねる</li>
-          <li>動きを減らす設定では静止する</li>
+          <li>prefers-reduced-motion: reduceでは、移動を伴う動きを省く。まばたきの切り替えは残す</li>
         </ul>
       </li>
     </ul>
@@ -384,13 +384,13 @@ const scrapboxPages = [
     <h3>6-3. Table of Contents</h3>
     <ul class="src rule-list">
       <li>
-        <strong>Desktop</strong>
+        <strong>Wide</strong>
         <ul>
-          <li>右4列に置き、stickyと内部scrollで常時表示する</li>
+          <li>13〜16列に置き、画面内に追従させる。内部でスクロールでき、常時表示する</li>
         </ul>
       </li>
       <li>
-        <strong>Mobile</strong>
+        <strong>CompactとMedium</strong>
         <ul>
           <li>記事ヘッダーの直後に置く</li>
           <li>Radix Collapsibleで開閉する</li>
@@ -400,7 +400,7 @@ const scrapboxPages = [
     </ul>
     <div class="demo toc-specimen">
       <TableOfContents headings={tocHeadings} variant="responsive" client:load />
-      <div class="toc-specimen-summary"><strong>Desktop</strong><span>sticky · internal scroll · always visible</span><strong>Mobile</strong><span>Inline · Collapsible · aria-expanded</span></div>
+      <div class="toc-specimen-summary"><strong>Wide</strong><span>画面内に追従・内部スクロール・常時表示</span><strong>CompactとMedium</strong><span>記事ヘッダー直後・折りたたみ・aria-expanded</span></div>
     </div>
     <p class="source-row"><strong>Source</strong><code>src/components/toc/TableOfContents.tsx</code><code>src/components/toc/MobileTOC.tsx</code></p>
   </div>
@@ -418,7 +418,7 @@ const scrapboxPages = [
       <li>
         <strong>0件のとき</strong>
         <ul>
-          <li>親が領域ごと畳めるよう、印だけを出す</li>
+          <li>非表示のdata-notes-empty要素を出力する。親のレイアウトはこの要素を検出して、空のNotes領域を畳む</li>
         </ul>
       </li>
     </ul>
