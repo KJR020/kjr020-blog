@@ -11,12 +11,12 @@ npmパッケージとGitHub Actionsの依存関係を追加・更新するとき
 
 ## pnpm install時の防御
 
-- `minimumReleaseAge: 1440`で、公開直後のnpmパッケージを即時導入しない
-- `blockExoticSubdeps: true`で、間接依存の特殊な指定方法(exotic specifier)をブロックする
-- `strictDepBuilds: true`と`allowBuilds`で、未審査のインストールスクリプトを失敗扱いにする
+- `minimumReleaseAge`で、公開直後のnpmパッケージを即時導入しない
+- `blockExoticSubdeps`で、間接依存の特殊な指定方法(exotic specifier)をブロックする
+- `strictDepBuilds`と`allowBuilds`で、未審査のインストールスクリプトを失敗扱いにする
 - ビルドスクリプトを許可するパッケージは`pnpm-workspace.yaml`の`allowBuilds`に明示する
 
-パッケージごとの許可・禁止は[pnpm設定](../../pnpm-workspace.yaml)の`allowBuilds`を正本とする。文書には一覧を複製せず、変更時は対象パッケージの必要性とインストールスクリプトの内容をレビューする。
+各防御設定の値と、パッケージごとの許可・禁止は[pnpm設定](../../pnpm-workspace.yaml)を正本とする。文書には値や一覧を複製せず、変更時は対象パッケージの必要性とインストールスクリプトの内容をレビューする。
 
 依存を追加・更新した後は、次のコマンドを実行する。
 

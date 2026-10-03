@@ -2,7 +2,7 @@
 
 Cloudflare Workersへのデプロイと、配信・APIの確認手順を定義する。
 
-デプロイ先は`kjr020-blog`とする。Cosense API Proxyと`dist/`の静的ファイルを一緒にデプロイする。設定の正本は[Wrangler設定](../../wrangler.toml)、APIの入口は[Workerのエントリーポイント](../../worker/index.ts)とする。
+Cosense API Proxyとビルドした静的ファイルを一緒にデプロイする。デプロイ先のWorker名と静的ファイルの配信設定は[Wrangler設定](../../wrangler.toml)を正本とする。APIの入口は[Workerのエントリーポイント](../../worker/index.ts)とする。
 
 ## ローカル確認
 
