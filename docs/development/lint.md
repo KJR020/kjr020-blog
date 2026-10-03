@@ -12,15 +12,15 @@
 | コマンド | 内容 | 検査対象 | 設定 | CIジョブ |
 | --- | --- | --- | --- | --- |
 | `pnpm lint` | Biomeによるリント | `src/` `tests/` `worker/` `scripts/`配下のTypeScriptと`.astro` | `biome.json` | `lint` |
-| `pnpm format:check` | Biomeによる整形チェック | 同上 | `biome.json` | `format` |
+| `pnpm format:check` | Biomeによる整形チェック | TypeScriptと`.astro` | `biome.json` | `format` |
 | `pnpm typecheck` | TypeScriptの型検査 | 各`tsconfig`の対象 | `tsconfig.json`、`tsconfig.worker.json` | `typecheck` |
 | `pnpm check:links` | ドキュメントのリポジトリ内リンク検査 | `README.md`、`docs/**/*.md` | `lychee.toml` | `links` |
 
-いずれも`.github/workflows/ci.yml`が各Pull Requestで実行し、検査に失敗すると該当するCIジョブが失敗する。
+[CI workflow](../../.github/workflows/ci.yml)は、各Pull Requestで表の検査を実行する。検査に失敗すると、該当するCIジョブが失敗する。
 
 ## Biomeによるリント
 
-[Biome](https://biomejs.dev/)でリントと整形を行う。リンターと整形の設定はどちらも`biome.json`にまとめている。
+[Biome](https://biomejs.dev/)でリントと整形を実行する。リンターと整形の設定はどちらも`biome.json`にまとめている。
 
 ```shell
 pnpm lint      # 検査のみ

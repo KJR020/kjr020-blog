@@ -17,7 +17,7 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
 <div class="spec-item article-reading-spec" id="article-reading">
   <h3>8-3. 記事ページ</h3>
-  <p class="src">技術記事の読書体験を定義します。</p>
+  <p class="src">記事の本文、画像、コード、目次の配置と操作を確認できます。</p>
   <ul class="src rule-list">
     <li>
       <strong>情報構造</strong>
@@ -43,8 +43,8 @@ const codeSample = `export function getReadingWidth(viewport: number) {
       <li>
         <strong>Article</strong>
         <ul>
-          <li>キーオブジェクトとする</li>
-          <li>Sectionから目次を導出する</li>
+          <li>記事を情報構造の中心とする</li>
+          <li>記事の見出しから目次を生成する</li>
         </ul>
       </li>
       <li>
@@ -102,8 +102,8 @@ const codeSample = `export function getReadingWidth(viewport: number) {
       <li>
         <strong>記事ヘッダー</strong>
         <ul>
-          <li>全幅に置く</li>
-          <li>Wideでは右側をキャラクター領域として空ける</li>
+          <li>本文と目次より上に置く</li>
+          <li>Wideではタイトルとメタ情報をシェルの1〜12列へ置く。マスコットは置かない</li>
         </ul>
       </li>
       <li>
@@ -115,13 +115,13 @@ const codeSample = `export function getReadingWidth(viewport: number) {
       <li>
         <strong>コード・表</strong>
         <ul>
-          <li>必要に応じてWide laneへ広げる</li>
+          <li>Wide lane(記事内部の9 / 9)へ置く</li>
         </ul>
       </li>
       <li>
         <strong>目次</strong>
         <ul>
-          <li>現在位置を示しながら、画面内に追従するRailへ置く</li>
+          <li>Wideでは13〜16列へ置き、現在位置を示す。CompactとMediumでは記事ヘッダー直後の折りたたみ領域へ置く</li>
         </ul>
       </li>
     </ul>
@@ -136,14 +136,14 @@ const codeSample = `export function getReadingWidth(viewport: number) {
       <div class="lane-map">
         <div class="lane lane-header">
           <div class="lane-header-content">
-            <span>ARTICLE HEADER · 全幅</span>
+            <span>ARTICLE HEADER · シェルの1〜12列</span>
             <strong>記事ヘッダー</strong>
             <p>タイトルとメタ情報を本文・目次の上に置く。</p>
           </div>
           <div class="lane-character-area">
-            <span>CHARACTER</span>
-            <strong>キャラクター領域</strong>
-            <p>タイトルを重ねない。</p>
+            <span>13〜16列</span>
+            <strong>記事ヘッダー右側の余白</strong>
+            <p>本文横の目次と位置を揃える。</p>
           </div>
         </div>
         <div class="lane lane-reading">
@@ -154,7 +154,7 @@ const codeSample = `export function getReadingWidth(viewport: number) {
         <div class="lane lane-wide">
           <span>WIDE LANE · 9 / 9</span>
           <strong>コード・表</strong>
-          <p>情報量が必要なコンテンツだけを広げる。</p>
+          <p>コードと表には、記事内部の全幅を使う。</p>
         </div>
         <aside class="lane lane-rail">
           <span>RAIL · 13〜16列</span>
@@ -165,9 +165,9 @@ const codeSample = `export function getReadingWidth(viewport: number) {
     </div>
 
     <div class="responsive-rule">
-      <div><strong>Desktop</strong><span>Reading + Wide + Rail</span></div>
-      <div><strong>Tablet</strong><span>Reading + Wide、目次は記事ヘッダー直後</span></div>
-      <div><strong>Mobile</strong><span>Single column、目次は記事ヘッダー直後</span></div>
+      <div><strong>Wide</strong><span>Reading lane + Wide lane + 目次</span></div>
+      <div><strong>Medium</strong><span>目次は記事ヘッダー直後の折りたたみ領域</span></div>
+      <div><strong>Compact</strong><span>1カラム。目次は記事ヘッダー直後の折りたたみ領域</span></div>
     </div>
   </section>
 
@@ -214,7 +214,7 @@ const codeSample = `export function getReadingWidth(viewport: number) {
       <li>
         <strong>画像リンク</strong>
         <ul>
-          <li>原寸表示へフォールバックする</li>
+          <li>JavaScriptを利用できない場合は、原寸画像へ移動する</li>
           <li>JavaScript利用時はDialogで拡大する</li>
         </ul>
       </li>
@@ -249,9 +249,9 @@ const codeSample = `export function getReadingWidth(viewport: number) {
     </figure>
 
     <div class="pattern-rules">
-      <div><strong>Alignment</strong><span>本文と同じ8 columnsへ揃える</span></div>
+      <div><strong>Alignment</strong><span>本文と同じReading lane(8 / 9)へ揃える</span></div>
       <div><strong>Detail</strong><span>小さな文字や細部は原寸画像で確認できる</span></div>
-      <div><strong>Zoom</strong><span>画像リンクをDialogへ拡張し、閉じた後はリンクへ戻る</span></div>
+      <div><strong>Zoom</strong><span>JavaScript利用時はDialogで拡大する。閉じた後は元の画像リンクへフォーカスを戻す</span></div>
     </div>
   </section>
 
@@ -261,14 +261,14 @@ const codeSample = `export function getReadingWidth(viewport: number) {
       <li>
         <strong>言語</strong>
         <ul>
-          <li>Shikiのdata-languageから示す</li>
+          <li>Shikiが生成するdata-languageから言語名を表示する</li>
         </ul>
       </li>
       <li>
         <strong>Copy操作</strong>
         <ul>
-          <li>コード上の定位置へ置く</li>
-          <li>完了結果はアイコンとpolite通知で伝える</li>
+          <li>コード領域の右上へ置く</li>
+          <li>コピー結果は表示とAccessible name、aria-live="polite"で伝える</li>
         </ul>
       </li>
       <li>

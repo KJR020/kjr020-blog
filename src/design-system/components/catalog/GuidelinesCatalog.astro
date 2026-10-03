@@ -12,7 +12,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 {shows("writing") && (
 <section class="spec" id="writing">
   <h2>9. UIライティング</h2>
-  <p class="src">UIに表示する言葉の役割、声、表記、状態メッセージを定義します。見た目の文言とAccessible Nameを同時に設計し、読者が次の行動を判断できるようにします。</p>
+  <p class="src">UI文言の役割、表記、状態メッセージの書き方を示します。表示する文言とAccessible nameを一緒に決めます。読者が次の操作を判断できることを確認します。</p>
 
   <div class="spec-item" id="voice">
     <h3>9-1. 声の性格</h3>
@@ -52,7 +52,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
       <li><strong>操作後を予測できるラベルにする</strong><span>文法を機械的に揃えず、自然な言葉を選ぶ</span></li>
       <li><strong>読者が知っている言葉を使う</strong><span>内部実装語ではなく画面上の対象を示す</span></li>
       <li><strong>状態は事実を先に伝える</strong><span>役に立つ場合だけ次の手段を続ける</span></li>
-      <li><strong>Visible textとAccessible nameを一緒に決める</strong><span>見た目と読み上げの意味を揃える</span></li>
+      <li><strong>Visible textとAccessible nameを一緒に決める</strong><span>表示ラベルがある場合は、その文言をAccessible nameに含める</span></li>
     </ol>
   </div>
 
@@ -69,7 +69,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
           <tr><td>Empty</td><td>状態 + 必要な次の手段</td><td>記事が見つかりません</td></tr>
           <tr><td>Error</td><td>完了できなかったこと</td><td>検索できません</td></tr>
           <tr><td>Success</td><td>完了した操作</td><td>コードをコピーしました</td></tr>
-          <tr><td>External link</td><td>移動先 + 操作</td><td>Cosenseで見る</td></tr>
+          <tr><td>External link</td><td>移動先 + 操作</td><td>Cosense / すべて見る</td></tr>
         </tbody>
       </table>
     </div>
@@ -77,14 +77,20 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 
   <div class="spec-item" id="notation">
     <h3>9-4. 表記</h3>
+    <p class="src">読者が操作対象、条件、結果を判断できるように書きます。短くするときも、判断に必要な情報を残します。</p>
     <ul class="demo rule-list">
+      <li>同じ対象と操作には同じ言葉を使う</li>
+      <li>一文では1つの内容を伝え、状態と次の操作は文を分ける</li>
+      <li>操作に条件がある場合は、操作より先に条件を書く</li>
+      <li>「適切に」だけで済ませず、判断できる条件や結果を示す</li>
       <li>Navigationのカテゴリ名とサービス固有名は英語を使用でき、説明・操作・状態は日本語を基本とする</li>
       <li>ボタンやリンクは短く、説明文と状態メッセージは「です・ます」で書く</li>
       <li>ボタン、見出し、タグに句点を付けず、完全文には「。」を付ける</li>
       <li>進行中は全角の「…」を1つ使う</li>
       <li>数字は算用数字、記事日付は「2026年3月21日」、件数は対象と隣接させる</li>
-      <li>Pagefind index、API、proxyなどの実装語は記事本文やlogに置き、読者向け状態文には出さない</li>
+      <li>Pagefind、API、proxyなどの実装語は記事本文や開発者向けログで使う。読者向けの状態文には出さない</li>
     </ul>
+    <p class="src">「検索条件の変更を行ってください」は「キーワードを変えて検索してください」と書きます。短くしても、操作対象や条件は残します。</p>
   </div>
 
   <div class="spec-item" id="state-messages">
@@ -99,7 +105,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
       <li>
         <strong>一貫性</strong>
         <ul>
-          <li>同じ状態には同じ文言を使う</li>
+          <li>同じ対象と状態には同じ文言を使う。検索結果0件とCosenseの取得結果0件は区別する</li>
         </ul>
       </li>
     </ul>
@@ -109,14 +115,14 @@ const shows = (section: GuidelineSection) => sections.includes(section);
         <tbody>
           <tr><td>検索中</td><td>検索しています…</td><td>追加説明なし</td></tr>
           <tr><td>検索結果0件</td><td>記事が見つかりません</td><td>キーワードを変えて検索してください。</td></tr>
-          <tr><td>検索エラー</td><td>検索できません</td><td>しばらくしてから、もう一度お試しください。</td></tr>
-          <tr><td>Cosense 0件</td><td>Cosenseのページがありません</td><td>追加説明なし</td></tr>
+          <tr><td>検索エラー</td><td>完了できなかったことを伝える</td><td>再試行または記事一覧への導線がある場合だけ案内する</td></tr>
+          <tr><td>Cosense 0件</td><td>表示対象がないことを伝える</td><td>補助領域では、空のNotes領域を畳む</td></tr>
           <tr><td>Cosenseエラー</td><td>Cosenseを読み込めませんでした</td><td>再読み込み</td></tr>
           <tr><td>コピー完了</td><td>コードをコピーしました</td><td><code>aria-live="polite"</code></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="source-row"><strong>Specification</strong><code>docs/ui-writing-guidelines.md</code></p>
+    <p class="source-row"><strong>Specification</strong><code>docs/design/ui-writing-guidelines.md</code></p>
   </div>
 </section>
 )}
@@ -129,9 +135,9 @@ const shows = (section: GuidelineSection) => sections.includes(section);
   <div class="spec-item" id="responsive-rules">
     <h3>10-1. レスポンシブ規則</h3>
     <ul class="demo rule-list">
-      <li>768px未満ではHeader navigationをMobileMenuへ置換する</li>
-      <li>1024px未満では記事目次をCollapsibleへ置換し、検索のサイドバーを本文下へ移す</li>
-      <li>画像・コード・表は親幅を超えた場合に縮小または内部scrollする</li>
+      <li>48rem未満では、水平ナビゲーションをMobileMenuへ切り替える</li>
+      <li>64rem未満では、記事目次を記事ヘッダー直後の折りたたみ領域へ置く</li>
+      <li>画像は親の領域幅に収める。コードと表が親幅を超える場合は、その領域内で横スクロールできるようにする</li>
       <li>リンクカードは60chを境にOG画像の幅とaspect-ratioを切り替える</li>
     </ul>
     <div class="responsive-summary" aria-label="レスポンシブレイアウトの要約">
@@ -145,7 +151,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
     <h3>10-2. キーボード・ARIA</h3>
     <ul class="demo rule-list">
       <li>Button / Input / Navigationは視認可能なfocus ringを表示する</li>
-      <li>Command Paletteはnative <code>dialog</code>、検索候補はcombobox / listbox / optionを使用する</li>
+      <li>Command PaletteはHTMLの<code>dialog</code>要素を使う。入力はcombobox、結果一覧はlistbox、各結果はoptionで表す</li>
       <li>Mobile MenuとTOCは <code>aria-expanded</code>、目次現在地は <code>aria-current="location"</code> を使用する</li>
       <li>icon-only buttonはaria-label、装飾iconはaria-hiddenを付ける</li>
     </ul>
@@ -157,7 +163,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
       <li>
         <strong>役割</strong>
         <ul>
-          <li>関係や状態の変化を補助する</li>
+          <li>動きで要素の関係と状態の変化を伝える</li>
         </ul>
       </li>
       <li>
@@ -183,15 +189,16 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 {shows("governance") && (
 <section class="spec" id="governance">
   <h2>11. ガバナンス</h2>
-  <p class="src">値・部品・原則の正規な置き場所と、変更を反映する順序を定義します。デザインシステムを一時的な検討メモではなく、採用済み仕様のSource of Truthとして保つための規則です。</p>
+  <p class="src">原則、仕様、トークン、部品ごとに正本を定めます。変更時は、仕様書、実装、確認用カタログを同じ仕様へ揃えます。検討中の案と対応状況はIssueで管理します。</p>
 
   <div class="spec-item" id="source-of-truth">
     <h3>11-1. Source of Truth</h3>
-    <p class="src">値・構造・原則の正規な置き場所を分け、デザインシステムはそれらを直接読み込んで確認します。</p>
+    <p class="src">要件と判断基準はデザイン仕様書で確認します。確認用カタログは、トークンと実コンポーネントから標本を描画します。</p>
     <div class="demo table-scroll">
       <table class="map">
-        <thead><tr><th>対象</th><th>正規ファイル</th><th>更新時の確認</th></tr></thead>
+        <thead><tr><th>対象</th><th>正本</th><th>更新時の確認</th></tr></thead>
         <tbody>
+          <tr><td>原則・要件・標準仕様</td><td><code>docs/design/</code></td><td>実装と標本が要件を満たすこと</td></tr>
           <tr><td>Color / Type / Spacing</td><td><code>src/styles/globals.css</code></td><td>ライト/ダークの標本</td></tr>
           <tr><td>UI components</td><td><code>src/components/ui/</code></td><td>variant・size・状態</td></tr>
           <tr><td>Blog patterns</td><td><code>src/components/</code></td><td>実データに近い標本</td></tr>
@@ -202,14 +209,14 @@ const shows = (section: GuidelineSection) => sections.includes(section);
     <ul class="rule-list governance-principles">
       <li>採用済みのトークン、部品、パターン、ライティングだけを記載する</li>
       <li>改善候補、優先度、移行状況、実装との差分はIssueで管理する</li>
-      <li>実装とテストはデザインシステムへ適合させる</li>
+      <li>実装とテストは、デザイン仕様書に記載した要件へ適合させる</li>
     </ul>
   </div>
 
   <div class="spec-item" id="conformance-rules">
     <h3>11-2. 適合ルール</h3>
     <ul class="demo rule-list conformance-list">
-      <li><strong>未定義の視覚表現を先に実装しない</strong><span>新しい表現はオーナーと合意し、デザインシステムへ正規仕様として定義してから使用する</span></li>
+      <li><strong>未定義の視覚表現を先に実装しない</strong><span>新しい視覚表現はオーナーと合意する。デザイン仕様書で定義してから使用する</span></li>
       <li><strong>新しい色を直接追加しない</strong><span>まずsemantic tokenで表せるか確認する</span></li>
       <li><strong>記事本文に独自フォントを持ち込まない</strong><span>見出しはNoto Sans JP、コードはJetBrains Monoを使う</span></li>
       <li><strong>同じ役割のカードを別の見た目で増やさない</strong><span>Card primitiveかPost / Scrapbox patternを使う</span></li>
@@ -221,12 +228,14 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 
   <div class="spec-item" id="update-method">
     <h3>11-3. 更新方法</h3>
-    <p class="src">新しい表現は、次の順序で正規仕様と実装へ反映します。</p>
-    <ul class="rule-list">
-      <li>変更理由と適用範囲をオーナーと合意する</li>
-      <li>合意した内容をデザインシステムへ正規仕様として定義する</li>
-      <li>正規ファイル・関連ガイド・実装・テストを同じ仕様へ揃える</li>
-    </ul>
+    <p class="src">仕様を変更するときは、次の順序で更新します。</p>
+    <ol class="rule-list">
+      <li>変更理由と適用範囲を決める。原則、共通トークン、新しい視覚表現を変更する場合は、オーナーと合意する</li>
+      <li>デザイン仕様書に、変更後の要件と標準仕様を書く</li>
+      <li>正本、関連ガイド、実装、確認用カタログを同じ仕様へ揃える</li>
+      <li>影響する画面幅、テーマ、入力方法、状態で要件を確認する</li>
+      <li>カタログのテストとビルドを実行する。公開成果物の検査が通ることを確認する</li>
+    </ol>
   </div>
 </section>
 )}

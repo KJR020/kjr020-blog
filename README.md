@@ -7,7 +7,7 @@
   </a>
 </h1>
 
-[kjr020.dev](https://kjr020.dev/) で公開している、Astroで開発した個人技術ブログです。<br />
+[kjr020.dev](https://kjr020.dev/)で公開している、Astroで開発した個人技術ブログです。<br />
 Cloudflare Workersでホスティングし、記事や主要ページはStatic Assetsとして配信しています。
 
 
@@ -27,17 +27,19 @@ Cloudflare Workersでホスティングし、記事や主要ページはStatic A
 
 ブログとしての表示速度とシンプルな配信構成を重視し、基本的にはAstroによる静的生成を採用しています。
 
-クライアントサイドJavaScriptは検索やメニューなどインタラクションが必要な箇所に限定し、Reactコンポーネントとして実装しています。また、認証情報を扱う外部API通信はCloudflare Workers上のCosense API Proxyへ分離しています。
+ブラウザで実行するJavaScriptは、検索やメニューなどの操作に使います。対話的なUIはReactコンポーネントで実装します。認証情報を使うCosense APIへの通信は、Cloudflare Workers上のCosense API Proxyが担当します。
 
 機能追加時には、静的生成で完結できるか、ブラウザでの実行が必要か、サーバー側へ分離すべきかを基準に実装場所を決めています。
 
 ## アーキテクチャ
 
-`content/posts/`のMarkdownをAstroで静的生成し、`dist/`に出力した記事HTMLや関連ファイルをCloudflare Workers Static Assetsから配信します。`dist/`にはCSS／JS、OGP画像、RSS、sitemap、Pagefindインデックスも含まれます。通常の記事配信ではWorkerコードを実行しません。
+Astroは、`content/posts/`のMarkdownから記事HTMLを静的生成します。生成した記事HTMLと関連ファイルは`dist/`に出力します。Cloudflare Workers Static Assetsが`dist/`を配信します。
+
+`dist/`にはCSS、JavaScript、OGP画像、RSS、sitemap、Pagefindインデックスも含まれます。通常の記事配信ではWorkerコードを実行しません。
 
 [![Markdown記事の公開と配信の流れ](docs/architecture/blog-architecture.drawio.svg)](docs/architecture/blog-architecture.drawio.svg)
 
-Cosenseカードは同一Originの`/api/*`からWorker API Proxyを利用します。Cosense用の認証情報とCache APIによるキャッシュはWorker側で扱います。コメントはGiscus／GitHub Discussionsを利用します。
+Cosenseカードは、同一オリジンの`/api/*`でCosense API Proxyを呼び出します。Cosense API Proxyは、Cosense用の認証情報とCloudflare Cache APIのキャッシュを管理します。GiscusはコメントをGitHub Discussionsに保存します。
 
 ビルド時と実行時のデータフロー、コンポーネント境界、設計判断は[アーキテクチャ概要](docs/architecture/overview.md)にまとめています。
 
@@ -86,7 +88,9 @@ tests/
 docs/                  設計、開発・運用資料
 ```
 
-テストコードは `tests/` へ集約し、実装と検証を分離してテスト全体を一か所から確認できるようにしています。`tests/src/` と `tests/worker/` は対象実装のディレクトリ構成とファイル名を引き継ぐため、実装側のパスから対応するテストの配置先を判断できます。
+テストコードは`tests/`へ集約します。実装と検証を分け、テスト全体を一か所から確認するためです。
+
+`tests/src/`と`tests/worker/`は、対象実装のディレクトリ構成とファイル名を引き継ぎます。実装側のパスから、対応するテストの配置先を判断できます。
 
 ## ローカル開発
 
@@ -97,16 +101,20 @@ pnpm install
 pnpm dev
 ```
 
-開発サーバーは通常 `http://localhost:4321` で起動します。
+開発サーバーは通常`http://localhost:4321`で起動します。
 
-Cosense（旧Scrapbox）API連携もローカルで動かす場合は、`.dev.vars.example` を参考に `.dev.vars` へ `SCRAPBOX_SID` を設定し、ビルド後にWranglerでAPIと静的ファイルの配信をまとめて起動します。
+Cosense API連携をローカルで確認する場合は、次の手順を使います。
+
+1. [ローカル環境変数のサンプル](.dev.vars.example)を参考に、`.dev.vars`へ`SCRAPBOX_SID`を設定する
+2. `pnpm build`で静的ファイルを生成する
+3. `pnpm exec wrangler dev --port 8788`でAPIと静的ファイルの配信を起動する
 
 ```shell
 pnpm build
 pnpm exec wrangler dev --port 8788
 ```
 
-`http://localhost:8788` から開くと、APIと静的ページを同一Originで確認できます。静的ページを変更した場合は再ビルドしてください。`pnpm dev` 単独ではCosense API Proxyは動作しません。
+`http://localhost:8788`から開くと、APIと静的ページを同一オリジンで確認できます。静的ページを変更した場合は再ビルドしてください。`pnpm dev`単独ではCosense API Proxyは動作しません。
 
 ### 主なコマンド
 
@@ -124,13 +132,24 @@ pnpm exec wrangler dev --port 8788
 
 ### Visual Regressionスナップショット
 
-Dockerを起動した状態で `pnpm test:e2e:update-snapshots` を実行すると、CIと同じPlaywright Linuxコンテナで基準画像を更新します。Playwright用のCompose構成は開発サーバーを含まず、E2EとVRTだけを対象にします。更新された `*-linux.png` を確認してコミットします。GitHub Actionsの `CI` workflowを `update_snapshots=true` で手動実行して更新することもできます。
+ローカルで基準画像を更新する場合は、次の手順を使います。
+
+1. Dockerを起動する
+2. `pnpm test:e2e:update-snapshots`を実行する
+3. 更新された`*-linux.png`を確認する
+4. 意図した差分だけであることを確認してコミットする
+
+このコマンドは、CIと同じPlaywright Linuxコンテナを使います。Compose構成はE2EとVRTを対象とし、Astro開発サーバーを含みません。
+
+GitHub Actionsで更新する場合は、`CI` workflowを`update_snapshots=true`で手動実行します。
 
 VRTのfixture、外部依存、E2Eとの責務分担は[テストアーキテクチャ](docs/architecture/test-architecture.md)で定義しています。
 
 ## デプロイ
 
-`main`へのpushを契機にDeploy workflowがビルド・型検査・テストを行い、`wrangler deploy`でWorkerコードと`dist/`をまとめてデプロイします。デプロイ後は疎通確認を実行します。Pull Requestでは独立したCI workflowがLint、フォーマット、型、Unit／Component、カバレッジ、ビルド、E2Eを検証します。
+`main`へのpushで、Deploy workflowがビルド、型検査、テストを実行します。検査の成功後、`wrangler deploy`でWorkerコードと`dist/`をデプロイします。デプロイ後は疎通確認を実行します。
+
+Pull Requestでは、CI workflowがリント、整形、型、UnitとComponent、カバレッジ、ビルド、E2Eを検証します。
 
 Secret、CD用トークン、カスタムドメインの管理は[Cloudflare Workers運用手順](docs/development/workers-operations.md)を参照してください。
 
@@ -146,7 +165,13 @@ curl -i "$BASE_URL/api/pages/KJR020"
 curl -i "$BASE_URL/api/pages/invalid-project"
 ```
 
-正常系のJSON・ステータス・キャッシュヘッダー、不正な入力への400応答を[Cosense API Proxy仕様](docs/architecture/cosense-api-proxy.md#api仕様)と照合します。APIレスポンスに`Access-Control-Allow-Origin`が付かないことも確認します。失敗時はworkflowと実行環境のログ、接続先、`SCRAPBOX_SID`の設定を確認します。
+APIの応答では、次を確認します。
+
+- 正常系のJSON、ステータス、キャッシュヘッダーが[Cosense API Proxy仕様](docs/architecture/cosense-api-proxy.md#api仕様)と一致する
+- 不正な入力に400を返す
+- APIレスポンスに`Access-Control-Allow-Origin`が付かない
+
+確認に失敗した場合は、workflowと実行環境のログ、接続先、`SCRAPBOX_SID`の設定を確認します。
 
 ## ドキュメント
 

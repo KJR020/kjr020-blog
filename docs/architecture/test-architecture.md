@@ -1,29 +1,31 @@
 # テストアーキテクチャ
 
-このドキュメントは、プロジェクトのテスト戦略と方針を定義する。
+テストの検証対象、配置、実行環境を定義する。
 具体的なコマンドと設定値は、各設定ファイルと`package.json`をSource of Truthとする。
 
 ## 概要
 
 ### 目的
-- コード品質の継続的な検証
-- リファクタリング時の回帰バグ防止
-- CI/CDパイプラインでの自動テスト実行
+
+- コードの振る舞いが仕様を満たすことを継続的に検証する
+- リファクタリングによる回帰バグを検出する
+- CI/CDパイプラインでテストを自動実行する
 
 ### テストフレームワーク
+
 - **Vitest**: Unit / Componentテスト用のViteネイティブテストランナー
-- **Playwright**: E2E / Visual regressionテスト用のブラウザテストランナー
+- **Playwright**: E2E / Visual Regressionテスト用のブラウザテストランナー
 
 ### テストの責務
 
 | テスト種別 | 主な検証対象 | 検証方法 |
-|------|------|------|
+| --- | --- | --- |
 | Unit | 純粋関数、変換、分類 | 入出力の比較 |
 | Component | UIの状態と操作 | DOMとユーザー操作の検証 |
-| Browser E2E | ページの導線、操作、レイアウト | DOMまたはスクリーンショットの検証 |
+| ブラウザE2E | ページの導線、操作、レイアウト | DOMまたはスクリーンショットの検証 |
 | Integration | 外部データの取得、ビルド時変換 | 境界を固定した入出力の比較 |
 
-Browser E2Eは固定fixtureを入力に使う。通常ページのDOM検証とスクリーンショットによる
+ブラウザE2Eは固定fixtureを入力に使う。通常ページのDOM検証とスクリーンショットによる
 Visual Regression Test(VRT)は同じfixtureページを使い、記事ページのDOM検証は固定fixture記事を使う。
 
 ### ファイル配置
@@ -34,7 +36,7 @@ Visual Regression Test(VRT)は同じfixtureページを使い、記事ページ�
 `tests/src/`と`tests/worker/`は対象実装のディレクトリ構成とファイル名を引き継ぐ。
 テスト種別ごとの階層を増やさず、実装側のパスから対応するテストの配置先を判断できるようにする。
 
-```
+```text
 tests/
 ├── setup.ts                        # Vitest共通セットアップ
 ├── src/                            # src/ を対象とするUnit / Componentテスト
@@ -63,10 +65,10 @@ tests/
 
 ## テスト対象の評価基準
 
-新しいテストを追加する際は、以下の観点で評価する。
+テストを追加する前に、次の観点で必要性を評価する。
 
 | 観点 | 説明 |
-|------|------|
+| --- | --- |
 | **テスト価値** | バグ発見・回帰防止にどれだけ貢献するか |
 | **実装コスト** | テスト作成にかかる工数・複雑さ |
 | **メンテナンスコスト** | コード変更時にテストも変更が必要になる頻度 |
@@ -76,24 +78,27 @@ tests/
 ### 優先度ガイドライン
 
 | 優先度 | 条件 |
-|--------|------|
+| --- | --- |
 | **高** | テスト価値が高く、実装コストが低い(純粋関数、ユーティリティ) |
 | **中** | テスト価値は高いが、DOMモック等の追加設定が必要 |
 | **低** | 外部ライブラリのラッパーや、単純な表示コンポーネント |
 
 ## テスト種別
 
-### Unit Tests
+### Unitテスト
+
 - 純粋関数、ユーティリティ関数
 - テスト環境: `jsdom`(現行設定)
 - 依存関係: なし
 
-### Component Tests
+### Componentテスト
+
 - Reactコンポーネントのロジック
 - テスト環境: `jsdom`
 - 依存関係: `@testing-library/react`
 
-### E2E Tests
+### E2Eテスト
+
 - Playwrightを使用
 - 配置: `tests/e2e/**/*.spec.ts`
 - `pnpm test:e2e`で実行
@@ -106,7 +111,7 @@ tests/
 
 ## Visual Regression Tests
 
-VRTはBrowser E2Eのうち、スクリーンショットで意図しないレイアウトやスタイルの変更を
+VRTはブラウザE2Eのうち、スクリーンショットで意図しないレイアウトやスタイルの変更を
 検出するテストである。記事や外部サービスの更新を検出するテストにはしない。
 
 ### VRT対象
@@ -116,9 +121,11 @@ VRTはBrowser E2Eのうち、スクリーンショットで意図しないレイ
 - Desktop / Mobile、Light / Darkなど、仕様として維持する表示条件を網羅する
 - ページ全体を確認する場合も、実記事ではなく固定fixtureでページを構成する
 
-fixtureページは開発サーバーと`TEST_FIXTURES=true`のテストビルドで`/__test/*`に公開し、
-通常の本番ビルドには含めない。`pnpm build`の後処理で、通常のビルドに`__test`のページがないことを検査する。テストビルド(`pnpm build:test`)だけが、fixtureページを許可する検査を実行する。検査の設定は`package.json`の`build:test`で定義する。本番ページとfixtureページは`src/components/pages/`の
-ページコンポーネントを共有し、前者には実データ、後者には`src/test-fixtures/fixtures.ts`の固定データを渡す。
+開発サーバーと`TEST_FIXTURES=true`のテストビルドでは、fixtureページを`/__test/*`に公開する。通常の本番ビルドには含めない。
+
+`pnpm build`の後処理は、通常のビルドに`__test`のページがないことを検査する。テストビルド(`pnpm build:test`)だけが、fixtureページを許可する検査を実行する。検査の設定は`package.json`の`build:test`で定義する。
+
+本番ページとfixtureページは、`src/components/pages/`のページコンポーネントを共有する。本番ページには実データを渡す。fixtureページには`src/test-fixtures/fixtures.ts`の固定データを渡す。
 機能検証と`tests/e2e/snapshot.spec.ts`の画像比較は同じfixtureページを使う。
 
 ### fixtureの要件
@@ -127,11 +134,11 @@ fixtureページは開発サーバーと`TEST_FIXTURES=true`のテストビル�
 - 長いタイトル、複数行、空状態など、守りたいレイアウト条件を明示して含める
 - リンクカードは外部URLから取得せず、解決済みのカードデータを渡す
 - 現在時刻、乱数、ネットワーク、実コンテンツの追加・編集へ依存させない
-- fixtureはテスト対象の近くに置き、用途が分かる名前を付ける
+- fixtureは用途が分かる名前を付ける。テスト専用のデータは`tests/`へ、公開するfixtureページとそのデータは`src/test-fixtures/`へ置く
 
 ### 外部依存とビルド時処理の境界
 
-Playwrightの通信モックが介入できるのは、ページを開いた後にブラウザが行う通信だけである。
+Playwrightの通信モックは、ページを開いた後にブラウザが送る通信だけを固定できる。
 Astroのビルド時に`getCollection()`で読み込む記事や、Markdown変換中に生成する
 リンクカードは、完成済みHTMLとしてブラウザへ渡されるため、通信モックでは固定できない。
 
@@ -174,7 +181,7 @@ Playwright用のCompose構成はE2EとVRTの再現性を担保するために使
 - [snapshot.spec.ts](../../tests/e2e/snapshot.spec.ts) - 固定fixtureページのVRT
 - [snapshot.ts](../../tests/e2e/helpers/snapshot.ts) - 撮影前の安定化と画像比較
 - [snapshot.css](../../tests/e2e/snapshot.css) - 撮影時のアニメーションと開発UIの制御
-- [fixtures.ts](../../src/test-fixtures/fixtures.ts) - Browser E2Eへ渡す固定データ
+- [fixtures.ts](../../src/test-fixtures/fixtures.ts) - ブラウザE2Eへ渡す固定データ
 - [fixture pages](../../src/test-fixtures/pages/) - 開発サーバーとテストビルドだけで公開するテスト対象ページ
 - [fixture article](../../content/posts/__test/article.md) - テストビルドだけで公開する固定Markdown記事
 - [verify-public-build.ts](../../scripts/verify-public-build.ts) - ビルド後に公開成果物を検査するスクリプト
