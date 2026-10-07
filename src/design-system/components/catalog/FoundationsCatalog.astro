@@ -496,6 +496,16 @@ const shows = (section: FoundationSection) => sections.includes(section);
         <strong>判定</strong>
         <ul>
           <li>viewport全体の幅で判定する</li>
+          <li>上限は<code>47.999rem</code>と<code>63.999rem</code>で書く</li>
+        </ul>
+      </li>
+      <li>
+        <strong>部品内部</strong>
+        <ul>
+          <li>3段階はページの主要領域の構成だけに使う</li>
+          <li>切り替えなしに収まる配置を優先する</li>
+          <li>切り替える場合は、内容が収まらなくなる幅を境目にし、その理由をCSSのコメントに書く</li>
+          <li>置き場所で幅が変わる部品は、コンテナクエリで部品の幅を判定する</li>
         </ul>
       </li>
     </ul>
@@ -517,7 +527,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>最大幅</strong>
         <ul>
-          <li>全ページで同じシェルを使う。最大幅は左右の内側余白を含めて1280pxとする</li>
+          <li>確認用カタログを除く全ページで同じシェルを使う。最大幅は左右の内側余白を含めて1280pxとする</li>
         </ul>
       </li>
       <li>
@@ -535,6 +545,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
           <tr><td>全ページ</td><td>左右の内側余白。画面幅に合わせて16〜40pxに補間する</td><td><code>--shell-pad</code></td></tr>
           <tr><td>Privacy Policy</td><td>シェル幅を保ち、本文の行長を抑える</td><td>主領域の列数とmax-inline-size</td></tr>
           <tr><td>検索</td><td>シェルとは独立した重なり領域</td><td>Command Paletteの実装</td></tr>
+          <tr><td>確認用カタログ</td><td>独自のシェルにSidebarと本文を並べる。56rem未満ではSidebarを本文の上に折りたたむ</td><td><code>.book-shell</code></td></tr>
         </tbody>
       </table>
     </div>
