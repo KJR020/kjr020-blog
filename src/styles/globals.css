@@ -94,6 +94,18 @@
   --font-size-caption: 0.786rem; /* 1/√φ */
 
   /*
+   * Font weights: 見出しはh4からh1まで、1段上がるごとに100ずつ太くする。
+   * 上位の見出しが下位のラベルと同じ太さだと、サイズが大きくても細く見えるため
+   */
+  --font-weight-page-title: 900; /* h1: ページ・記事のタイトル */
+  --font-weight-section: 800; /* h2: セクション見出し */
+  --font-weight-subsection: 700; /* h3: 小見出し */
+  --font-weight-label: 600; /* h4・ルール見出し・項目名 */
+  --font-weight-body: 400;
+  /* 欧文・数字の大見出し。見出しの階層とは別に、字間を詰めた面として見せる */
+  --font-weight-display: 800;
+
+  /*
    * Fluid scale: φの段の間を画面幅で補間する。
    * 下限と上限はどちらもφスケール上の値とし、中間だけを連続させる。
    */
@@ -313,7 +325,7 @@
 /* 欧文・数字の大見出し。字間を詰め、太いウェイトで面として見せる */
 .type-display {
   font-family: var(--font-heading);
-  font-weight: 800;
+  font-weight: var(--font-weight-display);
   letter-spacing: -0.035em;
   line-height: 1;
 }
@@ -334,7 +346,7 @@
 
 .section-heading__title {
   font-size: var(--font-size-title1);
-  font-weight: 800;
+  font-weight: var(--font-weight-section);
   letter-spacing: -0.03em;
   line-height: 1.1;
 }

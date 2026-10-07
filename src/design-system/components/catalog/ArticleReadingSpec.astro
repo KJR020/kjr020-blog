@@ -1,5 +1,6 @@
 ---
 import ImageLightbox from "@/components/article/ImageLightbox.astro";
+import SourceRow from "../SourceRow.astro";
 import "../../article-reading.css";
 import "@/styles/article-code.css";
 import "@/styles/article-content.css";
@@ -212,10 +213,17 @@ const codeSample = `export function getReadingWidth(viewport: number) {
     <p class="src">図と文章の左端をそろえて、読書の流れを保ちます。本文幅より小さい画像は引き伸ばさず、枠を画像の幅に合わせます。</p>
     <ul class="src rule-list">
       <li>
+        <strong>配置</strong>
+        <ul>
+          <li>Reading lane(8 / 9)の左端へ揃え、枠は画像より広げない</li>
+        </ul>
+      </li>
+      <li>
         <strong>画像リンク</strong>
         <ul>
           <li>JavaScriptを利用できない場合は、原寸画像へ移動する</li>
-          <li>JavaScript利用時はDialogで拡大する</li>
+          <li>JavaScript利用時はDialogで拡大し、小さな文字や細部を確認できるようにする</li>
+          <li>拡大を閉じた後は、元の画像リンクへフォーカスを戻す</li>
         </ul>
       </li>
       <li>
@@ -247,17 +255,17 @@ const codeSample = `export function getReadingWidth(viewport: number) {
         </p>
       </figcaption>
     </figure>
-
-    <div class="pattern-rules">
-      <div><strong>Alignment</strong><span>Reading lane(8 / 9)の左端へ揃え、枠は画像より広げない</span></div>
-      <div><strong>Detail</strong><span>小さな文字や細部は原寸画像で確認できる</span></div>
-      <div><strong>Zoom</strong><span>JavaScript利用時はDialogで拡大する。閉じた後は元の画像リンクへフォーカスを戻す</span></div>
-    </div>
   </section>
 
   <section class="spec article-reading-section" id="code-pattern">
     <h4>Code example</h4>
     <ul class="src rule-list">
+      <li>
+        <strong>文字サイズと行高</strong>
+        <ul>
+          <li>14px・行高1.5とし、等幅フォントの語形を識別できる密度にする</li>
+        </ul>
+      </li>
       <li>
         <strong>言語</strong>
         <ul>
@@ -267,13 +275,14 @@ const codeSample = `export function getReadingWidth(viewport: number) {
       <li>
         <strong>Copy操作</strong>
         <ul>
-          <li>コード領域の右上へ置く</li>
+          <li>コード領域の右上へ置き、TouchとKeyboardでも見つけられるようにする</li>
           <li>コピー結果は表示とAccessible name、aria-live="polite"で伝える</li>
         </ul>
       </li>
       <li>
         <strong>長い行</strong>
         <ul>
+          <li>コードとコマンドは原則として折り返さない</li>
           <li>コード領域の中だけで横スクロールさせる</li>
         </ul>
       </li>
@@ -282,17 +291,9 @@ const codeSample = `export function getReadingWidth(viewport: number) {
     <div class="demo">
       <pre class="astro-code article-code" data-language="typescript" tabindex="0"><code>{codeSample}</code></pre>
     </div>
-
-    <div class="pattern-rules code-rules">
-      <div><strong>14px / 1.5</strong><span>等幅フォントの語形を識別できる密度</span></div>
-      <div><strong>Horizontal scroll</strong><span>コードとコマンドは原則として折り返さない</span></div>
-      <div><strong>Visible action</strong><span>TouchとKeyboardでもCopyを見つけられる</span></div>
-    </div>
   </section>
 
-  <p class="source-row">
-    <strong>Source</strong><code>src/pages/posts/[...slug].astro</code><code>src/integrations/rehypeArticleFigures.ts</code><code>src/components/article/ImageLightbox.astro</code><code>src/lib/articleCode.ts</code><code>src/styles/article-content.css</code>
-  </p>
+  <SourceRow files={["src/pages/posts/[...slug].astro", "src/integrations/rehypeArticleFigures.ts", "src/components/article/ImageLightbox.astro", "src/lib/articleCode.ts", "src/styles/article-content.css"]} />
 
   <ImageLightbox />
 </div>

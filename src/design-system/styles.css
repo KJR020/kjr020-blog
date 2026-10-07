@@ -281,7 +281,7 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
   max-inline-size: 44rem;
   margin: 0;
   font-size: clamp(2rem, 1.5rem + 2vw, var(--font-size-display));
-  font-weight: 900;
+  font-weight: var(--font-weight-page-title);
   letter-spacing: -0.025em;
   line-height: var(--lh-tight);
 }
@@ -318,6 +318,7 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
   padding-block-end: var(--phi-neg1);
   border-block-end: 1px solid var(--border);
   font-size: var(--font-size-title2);
+  font-weight: var(--font-weight-section);
   line-height: var(--lh-tight);
 }
 
@@ -329,6 +330,7 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
 .spec-item > h3 {
   margin: 0 0 var(--phi-neg3);
   font-size: var(--font-size-title3);
+  font-weight: var(--font-weight-subsection);
   line-height: var(--lh-tight);
 }
 
@@ -378,6 +380,36 @@ pre {
   border-radius: calc(var(--radius) - 0.25rem);
   background: var(--muted);
   overflow-wrap: anywhere;
+}
+
+/* mainブランチの最新ファイルへのリンク。チップの見た目は保ち、Hoverでリンク色にする */
+.source-row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  max-inline-size: 100%;
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.source-row a:hover {
+  color: var(--link);
+}
+
+.source-row a:hover code {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.source-row a:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: calc(var(--radius) - 0.25rem);
+}
+
+.source-row a svg {
+  flex: none;
 }
 
 .design-system-directory {
@@ -592,6 +624,7 @@ pre {
 
 .tag-interaction h4 {
   font-size: var(--font-size-body);
+  font-weight: var(--font-weight-label);
 }
 
 .tag-interaction p {
@@ -699,6 +732,10 @@ table.map th {
   list-style: disc;
 }
 
+ol.rule-list {
+  list-style: decimal;
+}
+
 .rule-list li + li {
   margin-block-start: var(--phi-neg2);
 }
@@ -706,7 +743,7 @@ table.map th {
 /* ルールの見出しを親に、説明を子に置く */
 .rule-list > li > strong {
   color: var(--foreground);
-  font-weight: 600;
+  font-weight: var(--font-weight-label);
 }
 
 .rule-list ul {
@@ -1144,6 +1181,7 @@ table.map th {
   padding-block-end: var(--phi-neg1);
   border-block-end: 1px solid var(--border);
   font-size: var(--font-size-title2);
+  font-weight: var(--font-weight-section);
   line-height: var(--lh-tight);
 }
 
@@ -1152,7 +1190,7 @@ table.map th {
 .article-prose h3 {
   margin: var(--phi-1) 0 var(--phi-neg1);
   font-size: var(--font-size-title3);
-  font-weight: 500;
+  font-weight: var(--font-weight-subsection);
   line-height: var(--lh-tight);
 }
 
@@ -1294,36 +1332,6 @@ table.map th {
   gap: var(--phi-neg1);
 }
 
-.principle-list,
-.conformance-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--phi-0);
-  padding-inline-start: calc(var(--phi-1) + var(--phi-0));
-}
-
-.principle-list li,
-.conformance-list li {
-  padding-inline-start: var(--phi-neg2);
-}
-
-.principle-list li + li,
-.conformance-list li + li {
-  margin-block-start: 0;
-}
-
-.principle-list span,
-.conformance-list span {
-  display: block;
-  margin-block-start: var(--phi-neg3);
-  color: var(--muted-foreground);
-  font-size: var(--font-size-small);
-}
-
-.conformance-list strong {
-  color: var(--destructive);
-}
-
 .responsive-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1339,6 +1347,12 @@ table.map th {
 }
 
 .responsive-summary > div:last-child { border-inline-end: 0; }
+
+/* ラベルと説明は、ルール一覧の見出しと説明と同じ大きさ・太さにそろえる */
+.responsive-summary strong {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-label);
+}
 
 .responsive-summary span {
   color: var(--muted-foreground);
@@ -1393,11 +1407,6 @@ table.map th {
 @keyframes specimen-opacity {
   0%, 30% { opacity: 0.25; }
   60%, 100% { opacity: 1; }
-}
-
-.motion-rules,
-.governance-principles {
-  margin-block-start: var(--phi-neg1);
 }
 
 .book-footer {
@@ -1526,9 +1535,7 @@ table.map th {
   .emphasis-demo,
   .callout-grid,
   .navigation-actions-demo,
-  .code-image-grid,
-  .principle-list,
-  .conformance-list {
+  .code-image-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1764,12 +1771,13 @@ table.map th {
   padding-block-start: var(--phi-0);
   border-block-start: 1px solid var(--border);
   font-size: var(--font-size-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-label);
 }
 
 .motion-heading {
   margin: var(--phi-1) 0 var(--phi-neg1);
   font-size: var(--font-size-small);
+  font-weight: var(--font-weight-label);
 }
 
 .curve-grid {

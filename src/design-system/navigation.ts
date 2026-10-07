@@ -52,7 +52,8 @@ export const designSystemPages = [
     id: "governance",
     label: "ガバナンス",
     href: "/design-system/governance",
-    description: "仕様書、実装、確認用カタログを同じ仕様へ揃える管理・更新ルール",
+    description:
+      "AIエージェントを含む実装者とプロダクトオーナーの役割と、仕様・実装・確認用カタログを揃える更新ルール",
   },
 ] as const satisfies readonly (DesignSystemNavigationLink & {
   id: DesignSystemPageId;
@@ -183,6 +184,7 @@ export const designSystemPageGroups: Record<
       label: "11. ガバナンス",
       href: "/design-system/governance#governance",
       links: [
+        { label: "役割と承認", href: "/design-system/governance#roles" },
         { label: "Source of Truth", href: "/design-system/governance#source-of-truth" },
         { label: "適合ルール", href: "/design-system/governance#conformance-rules" },
         { label: "更新方法", href: "/design-system/governance#update-method" },
@@ -254,6 +256,7 @@ const legacySectionGroups = {
   ],
   "/design-system/governance": [
     "governance",
+    "roles",
     "source-of-truth",
     "conformance-rules",
     "update-method",
