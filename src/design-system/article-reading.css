@@ -23,6 +23,7 @@
 .article-reading-section > h4 {
   margin: 0 0 var(--phi-neg3);
   font-size: var(--font-size-title3);
+  font-weight: var(--font-weight-label);
   line-height: var(--lh-tight);
 }
 

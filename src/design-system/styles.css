@@ -281,7 +281,7 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
   max-inline-size: 44rem;
   margin: 0;
   font-size: clamp(2rem, 1.5rem + 2vw, var(--font-size-display));
-  font-weight: 900;
+  font-weight: var(--font-weight-page-title);
   letter-spacing: -0.025em;
   line-height: var(--lh-tight);
 }
@@ -318,6 +318,7 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
   padding-block-end: var(--phi-neg1);
   border-block-end: 1px solid var(--border);
   font-size: var(--font-size-title2);
+  font-weight: var(--font-weight-section);
   line-height: var(--lh-tight);
 }
 
@@ -329,6 +330,7 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
 .spec-item > h3 {
   margin: 0 0 var(--phi-neg3);
   font-size: var(--font-size-title3);
+  font-weight: var(--font-weight-subsection);
   line-height: var(--lh-tight);
 }
 
@@ -592,6 +594,7 @@ pre {
 
 .tag-interaction h4 {
   font-size: var(--font-size-body);
+  font-weight: var(--font-weight-label);
 }
 
 .tag-interaction p {
@@ -706,7 +709,7 @@ table.map th {
 /* ルールの見出しを親に、説明を子に置く */
 .rule-list > li > strong {
   color: var(--foreground);
-  font-weight: 600;
+  font-weight: var(--font-weight-label);
 }
 
 .rule-list ul {
@@ -1144,6 +1147,7 @@ table.map th {
   padding-block-end: var(--phi-neg1);
   border-block-end: 1px solid var(--border);
   font-size: var(--font-size-title2);
+  font-weight: var(--font-weight-section);
   line-height: var(--lh-tight);
 }
 
@@ -1152,7 +1156,7 @@ table.map th {
 .article-prose h3 {
   margin: var(--phi-1) 0 var(--phi-neg1);
   font-size: var(--font-size-title3);
-  font-weight: 500;
+  font-weight: var(--font-weight-subsection);
   line-height: var(--lh-tight);
 }
 
@@ -1764,12 +1768,13 @@ table.map th {
   padding-block-start: var(--phi-0);
   border-block-start: 1px solid var(--border);
   font-size: var(--font-size-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-label);
 }
 
 .motion-heading {
   margin: var(--phi-1) 0 var(--phi-neg1);
   font-size: var(--font-size-small);
+  font-weight: var(--font-weight-label);
 }
 
 .curve-grid {

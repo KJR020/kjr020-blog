@@ -20,18 +20,18 @@ const calloutTokens = [
 ] as const;
 
 const typeScale = [
-  ["Display", "--font-size-display", "700", "404など単一状態の強調"],
+  ["Display", "--font-size-display", "--font-weight-display", "404など単一状態の強調"],
   [
     "Title 1",
     "--font-size-title1",
-    "700",
+    "--font-weight-section",
     "固定サイズの見出し。ページタイトルは--text-page-title、記事タイトルは--text-article-titleを使う",
   ],
-  ["Title 2", "--font-size-title2", "700", "セクション見出し"],
-  ["Title 3", "--font-size-title3", "500", "小見出し"],
-  ["Body", "--font-size-body", "400", "本文"],
-  ["Small", "--font-size-small", "400", "補助テキスト・メタ情報"],
-  ["Caption", "--font-size-caption", "400", "短い補足"],
+  ["Title 2", "--font-size-title2", "--font-weight-section", "セクション見出し"],
+  ["Title 3", "--font-size-title3", "--font-weight-subsection", "小見出し"],
+  ["Body", "--font-size-body", "--font-weight-body", "本文"],
+  ["Small", "--font-size-small", "--font-weight-body", "補助テキスト・メタ情報"],
+  ["Caption", "--font-size-caption", "--font-weight-body", "短い補足"],
 ] as const;
 
 const spacingTokens = [
@@ -216,13 +216,22 @@ const shows = (section: FoundationSection) => sections.includes(section);
           <li>役割ごとに黄金比φを基準に定義する</li>
         </ul>
       </li>
+      <li>
+        <strong>太さ</strong>
+        <ul>
+          <li>見出しはh4からh1まで、1段上がるごとに100ずつ太くする。h1は900、h2は800、h3は700、h4とルール見出しは600とし、本文は400とする</li>
+          <li>上位の見出しを、下位の見出しやラベルと同じ太さにしない</li>
+          <li>欧文・数字の大見出し(<code>.type-display</code>)は、見出しの階層とは別に800とする</li>
+        </ul>
+      </li>
     </ul>
     <div class="demo type-list">
       {typeScale.map(([label, token, weight, usage]) => (
         <div class="type-row">
-          <div style={`font-size: var(${token}); font-weight: ${weight}`}>あいうえお Aa 012</div>
+          <div style={`font-size: var(${token}); font-weight: var(${weight})`}>あいうえお Aa 012</div>
           <dl>
             <div><dt>{label}</dt><dd><code>{token}</code></dd></div>
+            <div><dt>太さ</dt><dd><code>{weight}</code></dd></div>
             <div><dt>用途</dt><dd>{usage}</dd></div>
           </dl>
         </div>
