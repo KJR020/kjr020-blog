@@ -382,6 +382,36 @@ pre {
   overflow-wrap: anywhere;
 }
 
+/* mainブランチの最新ファイルへのリンク。チップの見た目は保ち、Hoverでリンク色にする */
+.source-row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  max-inline-size: 100%;
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.source-row a:hover {
+  color: var(--link);
+}
+
+.source-row a:hover code {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.source-row a:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: calc(var(--radius) - 0.25rem);
+}
+
+.source-row a svg {
+  flex: none;
+}
+
 .design-system-directory {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

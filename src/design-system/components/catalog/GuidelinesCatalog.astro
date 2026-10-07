@@ -1,4 +1,6 @@
 ---
+import SourceRow from "../SourceRow.astro";
+
 type GuidelineSection = "writing" | "responsive" | "governance";
 
 interface Props {
@@ -122,7 +124,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
         </tbody>
       </table>
     </div>
-    <p class="source-row"><strong>Specification</strong><code>docs/design/ui-writing-guidelines.md</code></p>
+    <SourceRow label="Specification" files={["docs/design/ui-writing-guidelines.md"]} />
   </div>
 </section>
 )}

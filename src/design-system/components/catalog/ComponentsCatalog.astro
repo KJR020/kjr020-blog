@@ -20,6 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import SourceRow from "../SourceRow.astro";
 
 const posts = await getCollection("posts", ({ data }) => !data.draft);
 const specimenPost = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0] ?? {
@@ -96,7 +97,7 @@ const scrapboxPages = [
         <Button disabled>読み込み中…</Button>
       </div>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/ui/button.tsx</code></p>
+    <SourceRow files={["src/components/ui/button.tsx"]} />
   </div>
 
   <div class="spec-item" id="badge">
@@ -149,7 +150,7 @@ const scrapboxPages = [
         </div>
       </section>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/ui/badge.tsx</code><code>src/components/TagList.astro</code></p>
+    <SourceRow files={["src/components/ui/badge.tsx", "src/components/TagList.astro"]} />
   </div>
 
   <div class="spec-item" id="card">
@@ -166,7 +167,7 @@ const scrapboxPages = [
         <CardFooter className="border-t"><Button variant="outline" size="sm">詳細を見る</Button></CardFooter>
       </Card>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/ui/card.tsx</code></p>
+    <SourceRow files={["src/components/ui/card.tsx"]} />
   </div>
 
   <div class="spec-item" id="input">
@@ -200,7 +201,7 @@ const scrapboxPages = [
         <kbd>⌘K</kbd>
       </div>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/ui/input.tsx</code><code>src/components/Header.astro</code></p>
+    <SourceRow files={["src/components/ui/input.tsx", "src/components/Header.astro"]} />
   </div>
 </section>
 
@@ -250,7 +251,7 @@ const scrapboxPages = [
         <a href="#global-navigation">Cosense</a>
       </nav>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/Header.astro</code></p>
+    <SourceRow files={["src/components/Header.astro"]} />
   </div>
 
   <div class="spec-item" id="command-palette">
@@ -280,7 +281,7 @@ const scrapboxPages = [
       <p class="demo-instruction">このページでも<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>でCommand Paletteを開けます。</p>
       <CommandPalette client:load />
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/search/CommandPalette.tsx</code></p>
+    <SourceRow files={["src/components/search/CommandPalette.tsx"]} />
   </div>
 
   <div class="spec-item" id="theme-mobile">
@@ -308,7 +309,7 @@ const scrapboxPages = [
         <div><dt>Menu dismissal</dt><dd>Escape / 外側クリック / リンク選択</dd></div>
       </dl>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/theme/ThemeToggleAnimated.tsx</code><code>src/components/MobileMenu.tsx</code></p>
+    <SourceRow files={["src/components/theme/ThemeToggleAnimated.tsx", "src/components/MobileMenu.tsx"]} />
   </div>
 </section>
 
@@ -320,7 +321,7 @@ const scrapboxPages = [
     <h3>6-1. PageHero</h3>
     <p class="src">欧文の大見出しと日本語の説明で、ページの目的を一覧本文より先に伝えます。mascotを指定した場合は、下端の罫線上にくりを立たせます。</p>
     <div class="demo page-demo"><PageHero title="Posts" description="ブログ記事一覧です。" mascot /></div>
-    <p class="source-row"><strong>Source</strong><code>src/components/PageHero.astro</code></p>
+    <SourceRow files={["src/components/PageHero.astro"]} />
   </div>
 
   <div class="spec-item" id="post-card">
@@ -343,7 +344,7 @@ const scrapboxPages = [
       </li>
     </ul>
     <div class="demo post-card-wrap"><PostListItem post={specimenPost} /></div>
-    <p class="source-row"><strong>Source</strong><code>src/components/PostListItem.astro</code><code>src/components/TagList.astro</code></p>
+    <SourceRow files={["src/components/PostListItem.astro", "src/components/TagList.astro"]} />
   </div>
 
   <div class="spec-item" id="kuri">
@@ -377,7 +378,7 @@ const scrapboxPages = [
       <figure><Kuri size="6rem" /><figcaption>sleepy</figcaption></figure>
       <figure><Kuri size="6rem" mood="asleep" /><figcaption>asleep</figcaption></figure>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/Kuri.astro</code></p>
+    <SourceRow files={["src/components/Kuri.astro"]} />
   </div>
 
   <div class="spec-item" id="table-of-contents">
@@ -402,7 +403,7 @@ const scrapboxPages = [
       <TableOfContents headings={tocHeadings} variant="responsive" client:load />
       <div class="toc-specimen-summary"><strong>Wide</strong><span>画面内に追従・内部スクロール・常時表示</span><strong>CompactとMedium</strong><span>記事ヘッダー直後・折りたたみ・aria-expanded</span></div>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/toc/TableOfContents.tsx</code><code>src/components/toc/MobileTOC.tsx</code></p>
+    <SourceRow files={["src/components/toc/TableOfContents.tsx", "src/components/toc/MobileTOC.tsx"]} />
   </div>
 
   <div class="spec-item" id="scrapbox-card-list">
@@ -425,7 +426,7 @@ const scrapboxPages = [
     <div class="demo scrapbox-specimen">
       <ScrapboxCardList project="specimen" pages={scrapboxPages} client:visible />
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/components/scrapbox/ScrapboxCardList.tsx</code></p>
+    <SourceRow files={["src/components/scrapbox/ScrapboxCardList.tsx"]} />
   </div>
 
 </section>

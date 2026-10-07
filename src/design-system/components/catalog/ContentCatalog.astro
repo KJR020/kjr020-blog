@@ -1,4 +1,5 @@
 ---
+import SourceRow from "../SourceRow.astro";
 import ArticleReadingSpec from "./ArticleReadingSpec.astro";
 
 const codeExample = `const phi = 1.618;
@@ -36,7 +37,7 @@ const spacing = phi ** 2;`;
         <table><thead><tr><th>要素</th><th>表現</th></tr></thead><tbody><tr><td>見出し</td><td>下境界＋余白</td></tr><tr><td>コード</td><td>Mono＋テーマ背景</td></tr></tbody></table>
       </div>
     </article>
-    <p class="source-row"><strong>Source</strong><code>src/pages/posts/[...slug].astro</code><code>src/styles/globals.css</code></p>
+    <SourceRow files={["src/pages/posts/[...slug].astro", "src/styles/globals.css"]} />
   </div>
 
   <div class="spec-item" id="callout">
@@ -62,7 +63,7 @@ const spacing = phi ** 2;`;
       <aside data-callout data-callout-type="warning"><div data-callout-title>Warning</div><div data-callout-body>注意が必要な条件。</div></aside>
       <aside data-callout data-callout-type="danger"><div data-callout-title>Danger</div><div data-callout-body>破壊的・危険な操作。</div></aside>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code><code>@r4ai/remark-callout</code></p>
+    <SourceRow files={["src/styles/globals.css"]} packages={["@r4ai/remark-callout"]} />
   </div>
 
   <div class="spec-item" id="link-card">
@@ -105,7 +106,7 @@ const spacing = phi ** 2;`;
         </span>
       </a>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code><code>remark-link-card</code></p>
+    <SourceRow files={["src/styles/globals.css"]} packages={["remark-link-card"]} />
   </div>
 
   <div class="spec-item" id="code-image">
@@ -136,7 +137,7 @@ const spacing = phi ** 2;`;
         <figcaption><p>Captionは画像の内容を繰り返さず、読者が確認すべき点を示す。</p></figcaption>
       </figure>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/lib/articleCode.ts</code><code>src/integrations/rehypeArticleFigures.ts</code><code>src/components/article/ImageLightbox.astro</code><code>src/styles/article-content.css</code></p>
+    <SourceRow files={["src/lib/articleCode.ts", "src/integrations/rehypeArticleFigures.ts", "src/components/article/ImageLightbox.astro", "src/styles/article-content.css"]} />
   </div>
 </section>
 

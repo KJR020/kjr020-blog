@@ -1,5 +1,6 @@
 ---
 import Kuri from "@/components/Kuri.astro";
+import SourceRow from "../SourceRow.astro";
 
 const colorTokens = [
   { name: "--background", label: "Background / Card", role: "ページと面" },
@@ -164,7 +165,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
         </div>
       ))}
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code></p>
+    <SourceRow files={["src/styles/globals.css"]} />
   </div>
 
   <div class="spec-item" id="callout-colors">
@@ -195,7 +196,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
         </div>
       ))}
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code></p>
+    <SourceRow files={["src/styles/globals.css"]} />
   </div>
 
   <div class="spec-item" id="typography">
@@ -237,7 +238,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
         </div>
       ))}
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code><code>src/layouts/BaseHead.astro</code></p>
+    <SourceRow files={["src/styles/globals.css", "src/layouts/BaseHead.astro"]} />
   </div>
 
   <div class="spec-item" id="spacing">
@@ -268,7 +269,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
         </div>
       ))}
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code></p>
+    <SourceRow files={["src/styles/globals.css"]} />
   </div>
 
   <div class="spec-item" id="radius">
@@ -302,7 +303,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
         <div><strong>Overlay shadow</strong><code>--shadow-overlay</code><small>Dialog・Popover・Menuなど、本文の前面に浮く面</small></div>
       </div>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code><code>src/design-system/styles.css</code></p>
+    <SourceRow files={["src/styles/globals.css", "src/design-system/styles.css"]} />
   </div>
 
   <div class="spec-item" id="motion">
@@ -412,7 +413,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
         <button type="button" data-kuri-event="kuri:wake">起きる</button>
       </div>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/styles/globals.css</code><code>src/components/Kuri.astro</code></p>
+    <SourceRow files={["src/styles/globals.css", "src/components/Kuri.astro"]} />
   </div>
 </section>
 )}
@@ -445,7 +446,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <div class="layout-bar layout-main"><strong>Main</strong><span>ページの主な内容を置く</span></div>
       <div class="layout-bar"><strong>Footer</strong><span>border-top · privacy / social links</span></div>
     </div>
-    <p class="source-row"><strong>Source</strong><code>src/layouts/BaseLayout.astro</code></p>
+    <SourceRow files={["src/layouts/BaseLayout.astro"]} />
   </div>
 
   <div class="spec-item" id="grid">
@@ -479,7 +480,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
         <span class="shell-margin">16〜40px</span>
       </div>
     </div>
-    <p class="source-row"><strong>Specification</strong><code>docs/design/grid-system.md</code></p>
+    <SourceRow label="Specification" files={["docs/design/grid-system.md"]} />
   </div>
 
   <div class="spec-item" id="grid-breakpoints">

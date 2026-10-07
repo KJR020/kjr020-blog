@@ -1,5 +1,6 @@
 ---
 import ImageLightbox from "@/components/article/ImageLightbox.astro";
+import SourceRow from "../SourceRow.astro";
 import "../../article-reading.css";
 import "@/styles/article-code.css";
 import "@/styles/article-content.css";
@@ -290,9 +291,7 @@ const codeSample = `export function getReadingWidth(viewport: number) {
     </div>
   </section>
 
-  <p class="source-row">
-    <strong>Source</strong><code>src/pages/posts/[...slug].astro</code><code>src/integrations/rehypeArticleFigures.ts</code><code>src/components/article/ImageLightbox.astro</code><code>src/lib/articleCode.ts</code><code>src/styles/article-content.css</code>
-  </p>
+  <SourceRow files={["src/pages/posts/[...slug].astro", "src/integrations/rehypeArticleFigures.ts", "src/components/article/ImageLightbox.astro", "src/lib/articleCode.ts", "src/styles/article-content.css"]} />
 
   <ImageLightbox />
 </div>
