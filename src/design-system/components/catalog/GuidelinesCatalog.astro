@@ -48,13 +48,43 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 
   <div class="spec-item" id="writing-principles">
     <h3>9-2. 文言設計の6原則</h3>
-    <ol class="demo rule-list principle-list">
-      <li><strong>文脈から書き始める</strong><span>周囲から明らかな情報は繰り返さない</span></li>
-      <li><strong>1つの文言に1つの役割を持たせる</strong><span>見出し、説明、操作、状態、補助を分ける</span></li>
-      <li><strong>操作後を予測できるラベルにする</strong><span>文法を機械的に揃えず、自然な言葉を選ぶ</span></li>
-      <li><strong>読者が知っている言葉を使う</strong><span>内部実装語ではなく画面上の対象を示す</span></li>
-      <li><strong>状態は事実を先に伝える</strong><span>役に立つ場合だけ次の手段を続ける</span></li>
-      <li><strong>Visible textとAccessible nameを一緒に決める</strong><span>表示ラベルがある場合は、その文言をAccessible nameに含める</span></li>
+    <ol class="src rule-list">
+      <li>
+        <strong>文脈から書き始める</strong>
+        <ul>
+          <li>周囲から明らかな情報は繰り返さない</li>
+        </ul>
+      </li>
+      <li>
+        <strong>1つの文言に1つの役割を持たせる</strong>
+        <ul>
+          <li>見出し、説明、操作、状態、補助を分ける</li>
+        </ul>
+      </li>
+      <li>
+        <strong>操作後を予測できるラベルにする</strong>
+        <ul>
+          <li>文法を機械的に揃えず、自然な言葉を選ぶ</li>
+        </ul>
+      </li>
+      <li>
+        <strong>読者が知っている言葉を使う</strong>
+        <ul>
+          <li>内部実装語ではなく画面上の対象を示す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>状態は事実を先に伝える</strong>
+        <ul>
+          <li>役に立つ場合だけ次の手段を続ける</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Visible textとAccessible nameを一緒に決める</strong>
+        <ul>
+          <li>表示ラベルがある場合は、その文言をAccessible nameに含める</li>
+        </ul>
+      </li>
     </ol>
   </div>
 
@@ -80,17 +110,46 @@ const shows = (section: GuidelineSection) => sections.includes(section);
   <div class="spec-item" id="notation">
     <h3>9-4. 表記</h3>
     <p class="src">読者が操作対象、条件、結果を判断できるように書きます。短くするときも、判断に必要な情報を残します。</p>
-    <ul class="demo rule-list">
-      <li>同じ対象と操作には同じ言葉を使う</li>
-      <li>一文では1つの内容を伝え、状態と次の操作は文を分ける</li>
-      <li>操作に条件がある場合は、操作より先に条件を書く</li>
-      <li>「適切に」だけで済ませず、判断できる条件や結果を示す</li>
-      <li>Navigationのカテゴリ名とサービス固有名は英語を使用でき、説明・操作・状態は日本語を基本とする</li>
-      <li>ボタンやリンクは短く、説明文と状態メッセージは「です・ます」で書く</li>
-      <li>ボタン、見出し、タグに句点を付けず、完全文には「。」を付ける</li>
-      <li>進行中は全角の「…」を1つ使う</li>
-      <li>数字は算用数字、記事日付は「2026年3月21日」、件数は対象と隣接させる</li>
-      <li>Pagefind、API、proxyなどの実装語は記事本文や開発者向けログで使う。読者向けの状態文には出さない</li>
+    <ul class="src rule-list">
+      <li>
+        <strong>用語と文の構造</strong>
+        <ul>
+          <li>同じ対象と操作には同じ言葉を使う</li>
+          <li>一文では1つの内容を伝え、状態と次の操作は文を分ける</li>
+          <li>操作に条件がある場合は、操作より先に条件を書く</li>
+          <li>「適切に」だけで済ませず、判断できる条件や結果を示す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>文体</strong>
+        <ul>
+          <li>ボタンやリンクは短く書く</li>
+          <li>説明文と状態メッセージは「です・ます」で書く</li>
+        </ul>
+      </li>
+      <li>
+        <strong>日本語と英語</strong>
+        <ul>
+          <li>Navigationのカテゴリ名とサービス固有名は英語を使用できる</li>
+          <li>説明・操作・状態は日本語を基本とする</li>
+          <li>Pagefind、API、proxyなどの実装語は記事本文や開発者向けログで使い、読者向けの状態文には出さない</li>
+        </ul>
+      </li>
+      <li>
+        <strong>句読点</strong>
+        <ul>
+          <li>ボタン、見出し、タグに句点を付けず、完全文には「。」を付ける</li>
+          <li>進行中は全角の「…」を1つ使う</li>
+        </ul>
+      </li>
+      <li>
+        <strong>数字・日付・件数</strong>
+        <ul>
+          <li>数字は算用数字を使う</li>
+          <li>記事日付は「2026年3月21日」と書く</li>
+          <li>件数は対象と隣接させる</li>
+        </ul>
+      </li>
     </ul>
     <p class="src">「検索条件の変更を行ってください」は「キーワードを変えて検索してください」と書きます。短くしても、操作対象や条件は残します。</p>
   </div>
@@ -136,11 +195,32 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 
   <div class="spec-item" id="responsive-rules">
     <h3>10-1. レスポンシブ規則</h3>
-    <ul class="demo rule-list">
-      <li>48rem未満では、水平ナビゲーションをMobileMenuへ切り替える</li>
-      <li>64rem未満では、記事目次を記事ヘッダー直後の折りたたみ領域へ置く</li>
-      <li>画像は親の領域幅に収める。コードと表が親幅を超える場合は、その領域内で横スクロールできるようにする</li>
-      <li>リンクカードは、置き場所の幅28.5remを境にOG画像の幅とaspect-ratioを切り替える</li>
+    <ul class="src rule-list">
+      <li>
+        <strong>ナビゲーション</strong>
+        <ul>
+          <li>48rem未満では、水平ナビゲーションをMobileMenuへ切り替える</li>
+        </ul>
+      </li>
+      <li>
+        <strong>記事目次</strong>
+        <ul>
+          <li>64rem未満では、記事ヘッダー直後の折りたたみ領域へ置く</li>
+        </ul>
+      </li>
+      <li>
+        <strong>画像・コード・表</strong>
+        <ul>
+          <li>画像は親の領域幅に収める</li>
+          <li>コードと表が親幅を超える場合は、その領域内で横スクロールできるようにする</li>
+        </ul>
+      </li>
+      <li>
+        <strong>リンクカード</strong>
+        <ul>
+          <li>置き場所の幅28.5remを境に、OG画像の幅とaspect-ratioを切り替える</li>
+        </ul>
+      </li>
     </ul>
     <div class="responsive-summary" aria-label="レスポンシブレイアウトの要約">
       <div><strong>Compact</strong><span>縦積み · Mobile controls</span></div>
@@ -151,11 +231,34 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 
   <div class="spec-item" id="keyboard-aria">
     <h3>10-2. キーボード・ARIA</h3>
-    <ul class="demo rule-list">
-      <li>Button / Input / Navigationは視認可能なfocus ringを表示する</li>
-      <li>Command PaletteはHTMLの<code>dialog</code>要素を使う。入力はcombobox、結果一覧はlistbox、各結果はoptionで表す</li>
-      <li>Mobile MenuとTOCは <code>aria-expanded</code>、目次現在地は <code>aria-current="location"</code> を使用する</li>
-      <li>icon-only buttonはaria-label、装飾iconはaria-hiddenを付ける</li>
+    <ul class="src rule-list">
+      <li>
+        <strong>フォーカス</strong>
+        <ul>
+          <li>Button / Input / Navigationは視認可能なfocus ringを表示する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Command Palette</strong>
+        <ul>
+          <li>HTMLの<code>dialog</code>要素を使う</li>
+          <li>入力はcombobox、結果一覧はlistbox、各結果はoptionで表す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>開閉と現在地</strong>
+        <ul>
+          <li>Mobile MenuとTOCの開閉状態は<code>aria-expanded</code>で示す</li>
+          <li>目次の現在地は<code>aria-current="location"</code>で示す</li>
+        </ul>
+      </li>
+      <li>
+        <strong>アイコン</strong>
+        <ul>
+          <li>icon-only buttonにはaria-labelを付ける</li>
+          <li>装飾iconにはaria-hiddenを付ける</li>
+        </ul>
+      </li>
     </ul>
   </div>
 
@@ -174,16 +277,24 @@ const shows = (section: GuidelineSection) => sections.includes(section);
           <li>情報の理解や操作の成立を、animationへ依存させない</li>
         </ul>
       </li>
+      <li>
+        <strong>Reduced motion</strong>
+        <ul>
+          <li><code>prefers-reduced-motion: reduce</code>では不要なanimationを停止する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>画像の読み込み</strong>
+        <ul>
+          <li>Cosense画像は表示領域へ近づいてから読み込み、opacity transitionで表示する</li>
+        </ul>
+      </li>
     </ul>
     <div class="demo motion-grid">
       <div><span class="motion-sample motion-page" aria-hidden="true"></span><strong>Page load</strong><small>400ms fade-in-up</small></div>
       <div><span class="motion-sample motion-tag" aria-hidden="true">Tag</span><strong>Tag float</strong><small>4秒周期</small></div>
       <div><span class="motion-sample motion-image" aria-hidden="true"></span><strong>Lazy image</strong><small>Intersection Observer + opacity</small></div>
     </div>
-    <ul class="rule-list motion-rules">
-      <li><code>prefers-reduced-motion: reduce</code>では不要なanimationを停止する</li>
-      <li>Cosense画像は表示領域へ近づいてから読み込み、opacity transitionで表示する</li>
-    </ul>
   </div>
 </section>
 )}
@@ -196,6 +307,26 @@ const shows = (section: GuidelineSection) => sections.includes(section);
   <div class="spec-item" id="source-of-truth">
     <h3>11-1. Source of Truth</h3>
     <p class="src">要件と判断基準はデザイン仕様書で確認します。確認用カタログは、トークンと実コンポーネントから標本を描画します。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>記載する内容</strong>
+        <ul>
+          <li>採用済みのトークン、部品、パターン、ライティングだけを記載する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Issueで管理する内容</strong>
+        <ul>
+          <li>改善候補、優先度、移行状況、実装との差分</li>
+        </ul>
+      </li>
+      <li>
+        <strong>適合の基準</strong>
+        <ul>
+          <li>実装とテストは、デザイン仕様書に記載した要件へ適合させる</li>
+        </ul>
+      </li>
+    </ul>
     <div class="demo table-scroll">
       <table class="map">
         <thead><tr><th>対象</th><th>正本</th><th>更新時の確認</th></tr></thead>
@@ -208,30 +339,61 @@ const shows = (section: GuidelineSection) => sections.includes(section);
         </tbody>
       </table>
     </div>
-    <ul class="rule-list governance-principles">
-      <li>採用済みのトークン、部品、パターン、ライティングだけを記載する</li>
-      <li>改善候補、優先度、移行状況、実装との差分はIssueで管理する</li>
-      <li>実装とテストは、デザイン仕様書に記載した要件へ適合させる</li>
-    </ul>
   </div>
 
   <div class="spec-item" id="conformance-rules">
     <h3>11-2. 適合ルール</h3>
-    <ul class="demo rule-list conformance-list">
-      <li><strong>未定義の視覚表現を先に実装しない</strong><span>新しい視覚表現はオーナーと合意する。デザイン仕様書で定義してから使用する</span></li>
-      <li><strong>新しい色を直接追加しない</strong><span>まずsemantic tokenで表せるか確認する</span></li>
-      <li><strong>記事本文に独自フォントを持ち込まない</strong><span>見出しはNoto Sans JP、コードはJetBrains Monoを使う</span></li>
-      <li><strong>同じ役割のカードを別の見た目で増やさない</strong><span>Card primitiveかPost / Scrapbox patternを使う</span></li>
-      <li><strong>ダークテーマを後付けにしない</strong><span>新しいsurface / text / stateはライトとダークを同時に定義する</span></li>
-      <li><strong>色だけで操作状態を示さない</strong><span>背景、太さ、境界、文言、aria stateを併用する</span></li>
-      <li><strong>動きを必須情報にしない</strong><span>reduced motionでも内容と操作が成立すること</span></li>
+    <ul class="src rule-list">
+      <li>
+        <strong>未定義の視覚表現を先に実装しない</strong>
+        <ul>
+          <li>新しい視覚表現はオーナーと合意する</li>
+          <li>デザイン仕様書で定義してから使用する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>新しい色を直接追加しない</strong>
+        <ul>
+          <li>まずsemantic tokenで表せるか確認する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>記事本文に独自フォントを持ち込まない</strong>
+        <ul>
+          <li>見出しはNoto Sans JP、コードはJetBrains Monoを使う</li>
+        </ul>
+      </li>
+      <li>
+        <strong>同じ役割のカードを別の見た目で増やさない</strong>
+        <ul>
+          <li>Card primitiveかPost / Scrapbox patternを使う</li>
+        </ul>
+      </li>
+      <li>
+        <strong>ダークテーマを後付けにしない</strong>
+        <ul>
+          <li>新しいsurface / text / stateはライトとダークを同時に定義する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>色だけで操作状態を示さない</strong>
+        <ul>
+          <li>背景、太さ、境界、文言、aria stateを併用する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>動きを必須情報にしない</strong>
+        <ul>
+          <li>reduced motionでも内容と操作が成立するようにする</li>
+        </ul>
+      </li>
     </ul>
   </div>
 
   <div class="spec-item" id="update-method">
     <h3>11-3. 更新方法</h3>
     <p class="src">仕様を変更するときは、次の順序で更新します。</p>
-    <ol class="rule-list">
+    <ol class="src rule-list">
       <li>変更理由と適用範囲を決める。原則、共通トークン、新しい視覚表現を変更する場合は、オーナーと合意する</li>
       <li>デザイン仕様書に、変更後の要件と標準仕様を書く</li>
       <li>正本、関連ガイド、実装、確認用カタログを同じ仕様へ揃える</li>

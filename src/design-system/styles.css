@@ -732,6 +732,10 @@ table.map th {
   list-style: disc;
 }
 
+ol.rule-list {
+  list-style: decimal;
+}
+
 .rule-list li + li {
   margin-block-start: var(--phi-neg2);
 }
@@ -1328,36 +1332,6 @@ table.map th {
   gap: var(--phi-neg1);
 }
 
-.principle-list,
-.conformance-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--phi-0);
-  padding-inline-start: calc(var(--phi-1) + var(--phi-0));
-}
-
-.principle-list li,
-.conformance-list li {
-  padding-inline-start: var(--phi-neg2);
-}
-
-.principle-list li + li,
-.conformance-list li + li {
-  margin-block-start: 0;
-}
-
-.principle-list span,
-.conformance-list span {
-  display: block;
-  margin-block-start: var(--phi-neg3);
-  color: var(--muted-foreground);
-  font-size: var(--font-size-small);
-}
-
-.conformance-list strong {
-  color: var(--destructive);
-}
-
 .responsive-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1373,6 +1347,12 @@ table.map th {
 }
 
 .responsive-summary > div:last-child { border-inline-end: 0; }
+
+/* ラベルと説明は、ルール一覧の見出しと説明と同じ大きさ・太さにそろえる */
+.responsive-summary strong {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-label);
+}
 
 .responsive-summary span {
   color: var(--muted-foreground);
@@ -1427,11 +1407,6 @@ table.map th {
 @keyframes specimen-opacity {
   0%, 30% { opacity: 0.25; }
   60%, 100% { opacity: 1; }
-}
-
-.motion-rules,
-.governance-principles {
-  margin-block-start: var(--phi-neg1);
 }
 
 .book-footer {
@@ -1560,9 +1535,7 @@ table.map th {
   .emphasis-demo,
   .callout-grid,
   .navigation-actions-demo,
-  .code-image-grid,
-  .principle-list,
-  .conformance-list {
+  .code-image-grid {
     grid-template-columns: 1fr;
   }
 

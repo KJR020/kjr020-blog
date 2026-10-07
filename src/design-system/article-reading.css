@@ -189,31 +189,37 @@
   background: var(--secondary);
 }
 
-.responsive-rule,
-.pattern-rules {
+.responsive-rule {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-block-start: var(--phi-0);
   border-block: 1px solid var(--border);
 }
 
-.responsive-rule > div,
-.pattern-rules > div {
+.responsive-rule > div {
   display: grid;
   gap: var(--phi-neg3);
   padding: var(--phi-0);
   border-inline-end: 1px solid var(--border);
 }
 
-.responsive-rule > div:last-child,
-.pattern-rules > div:last-child {
+.responsive-rule > div:last-child {
   border-inline-end: 0;
 }
 
-.responsive-rule span,
-.pattern-rules span {
+.responsive-rule span {
   color: var(--muted-foreground);
+}
+
+/* ラベルと説明は、ルール一覧の見出しと説明と同じ大きさ・太さにそろえる */
+.task-strip,
+.responsive-rule {
   font-size: var(--font-size-small);
+}
+
+.task-strip strong,
+.responsive-rule strong {
+  font-weight: var(--font-weight-label);
 }
 
 .type-specimen {
@@ -298,21 +304,18 @@
   }
 }
 
-/* 31rem未満では、3列にした規則の見出し(Horizontal scroll)が1行に収まらない。 */
-@container book (width < 31rem) {
-  .responsive-rule,
-  .pattern-rules {
+/* 38rem未満では、3列にした要約の説明(目次は記事ヘッダー直後の折りたたみ領域)が2行に収まらない。 */
+@container book (width < 38rem) {
+  .responsive-rule {
     grid-template-columns: 1fr;
   }
 
-  .responsive-rule > div,
-  .pattern-rules > div {
+  .responsive-rule > div {
     border-inline-end: 0;
     border-block-end: 1px solid var(--border);
   }
 
-  .responsive-rule > div:last-child,
-  .pattern-rules > div:last-child {
+  .responsive-rule > div:last-child {
     border-block-end: 0;
   }
 }
