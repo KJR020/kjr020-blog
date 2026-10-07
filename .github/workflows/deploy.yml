@@ -13,8 +13,11 @@ env:
   npm_config_registry: https://npm.flatt.tech
 
 jobs:
+  # ubuntu-latestはGitHubの都合で新しいOSへ切り替わるため、OSを固定して上げる時期をPRで決める。
+  # 26.04へ上げる前に、Playwrightを26.04対応版（1.61以上）へ更新し、
+  # 26.04でChromiumの導入、Mermaidを含むビルド、テスト、E2Eが通ることを確かめる。
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
