@@ -1201,7 +1201,9 @@ table.map th {
   margin: 0;
 }
 
+/* 見本の内側余白の分だけ本文領域より狭いため、記事本文と同じくカードを置く領域の幅で判定させる。 */
 .link-card-specimens {
+  container-type: inline-size;
   display: grid;
   gap: var(--phi-0);
 }
