@@ -13,8 +13,11 @@ env:
   npm_config_registry: https://npm.flatt.tech
 
 jobs:
+  # ubuntu-latestの26.04移行を避け、Playwright 1.57.0が対応する24.04を維持する。
+  # Playwright更新後、26.04でChromium・CI・deployビルドを検証して固定を解除する。
+  # https://github.com/actions/runner-images/issues/14748
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
