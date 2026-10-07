@@ -424,7 +424,12 @@
     background-color var(--duration-fast) var(--ease-out);
 }
 
-@media (min-width: 60ch) {
+/*
+ * 記事本文と確認用カタログの本文領域では、使える幅が置き場所で変わる。
+ * そのため画像の大きさは、最も近いコンテナの幅で切り替える。
+ * 28.5rem未満で幅220pxの画像を並べると、本文の列が画像の列より狭くなる。
+ */
+@container (width >= 28.5rem) {
   .rlc-container {
     grid-template-columns: 1fr 220px;
   }
@@ -500,7 +505,7 @@
   aspect-ratio: 1 / 1;
 }
 
-@media (min-width: 60ch) {
+@container (width >= 28.5rem) {
   .rlc-image-container {
     aspect-ratio: 1.91 / 1;
   }
