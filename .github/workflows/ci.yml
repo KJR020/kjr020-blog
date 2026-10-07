@@ -29,9 +29,9 @@ env:
   npm_config_registry: https://npm.flatt.tech
 
 jobs:
-  # ubuntu-latestの26.04移行を避け、Playwright 1.57.0が対応する24.04を維持する。
-  # Playwright更新後、26.04でChromium・CI・deployビルドを検証して固定を解除する。
-  # https://github.com/actions/runner-images/issues/14748
+  # ubuntu-latestはGitHubの都合で新しいOSへ切り替わるため、OSを固定して上げる時期をPRで決める。
+  # 26.04へ上げる前に、Playwrightを26.04対応版（1.61以上）へ更新し、
+  # 26.04でChromiumの導入、Mermaidを含むビルド、テスト、E2Eが通ることを確かめる。
   # Lintチェック
   lint:
     if: ${{ github.event_name != 'workflow_dispatch' || !inputs.update_snapshots }}
