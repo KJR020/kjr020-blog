@@ -2,6 +2,7 @@
 
 // `pnpm build` の後処理。公開すべきページだけが成果物に入っているかを検査する。
 // テストビルドでは`--allow-test-fixtures`を付け、テスト用fixtureの出力を許可する。
+// `REQUIRE_COMMENTS=true`のときは、コメント欄にGiscusの設定が埋め込まれていることも検査する。
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
@@ -25,6 +26,7 @@ const problems = findPublicBuildOutputProblems({
   files,
   readFile: (file) => readFileSync(path.join(outputDir, file), "utf8"),
   allowsTestFixtures: process.argv.includes("--allow-test-fixtures"),
+  requiresComments: process.env.REQUIRE_COMMENTS === "true",
 });
 
 if (problems.length > 0) {

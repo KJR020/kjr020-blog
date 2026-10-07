@@ -48,9 +48,30 @@ function buildOutput(overrides: Record<string, string | undefined> = {}) {
 
 function problemsOf(
   overrides: Record<string, string | undefined> = {},
-  { allowsTestFixtures = false } = {},
+  { allowsTestFixtures = false, requiresComments = false } = {},
 ) {
-  return findPublicBuildOutputProblems({ ...buildOutput(overrides), allowsTestFixtures });
+  return findPublicBuildOutputProblems({
+    ...buildOutput(overrides),
+    allowsTestFixtures,
+    requiresComments,
+  });
+}
+
+/** Astroが`client:only`のCommentsを出力するときの`<astro-island>`を模す。 */
+function commentsIsland(props: Record<string, unknown>) {
+  const serialized = JSON.stringify(props).replaceAll('"', "&quot;");
+  return `<astro-island uid="a1" component-url="/_astro/Comments.abc.js" component-export="Comments" props="${serialized}" ssr client="only"></astro-island>`;
+}
+
+const giscusProps = {
+  repo: [0, "KJR020/kjr020-blog"],
+  repoId: [0, "R_kgDOMtTHnQ"],
+  category: [0, "Comments"],
+  categoryId: [0, "DIC_kwDOMtTHnc4C1EHQ"],
+};
+
+function articleWithComments(props: Record<string, unknown> = giscusProps) {
+  return articleHtml.replace("</body>", `${commentsIsland(props)}</body>`);
 }
 
 describe("findPublicBuildOutputProblems", () => {
@@ -148,6 +169,56 @@ describe("findPublicBuildOutputProblems", () => {
 
     it("名前に__testを含むだけのページは報告しない", () => {
       expect(problemsOf({ "posts/about__test/index.html": "<html></html>" })).toEqual([]);
+    });
+  });
+
+  describe("コメント欄", () => {
+    it("Giscusの設定が埋め込まれていれば報告しない", () => {
+      expect(
+        problemsOf({ "posts/hello/index.html": articleWithComments() }, { requiresComments: true }),
+      ).toEqual([]);
+    });
+
+    it.each([
+      ["undefined", [0]],
+      ["空文字", [0, ""]],
+    ])("設定が %s のページを、空の項目とともに報告する", (_, empty) => {
+      const html = articleWithComments({ ...giscusProps, repoId: empty, categoryId: empty });
+
+      expect(problemsOf({ "posts/hello/index.html": html }, { requiresComments: true })).toEqual([
+        "posts/hello/index.html: Giscusの設定が空です(repoId, categoryId)",
+      ]);
+    });
+
+    it("コメント欄を持つページがなければ報告する", () => {
+      expect(problemsOf({}, { requiresComments: true })).toEqual([
+        "コメント欄を持つページがありません",
+      ]);
+    });
+
+    it("HTMLコメントの中にだけコメント欄があれば、ないものとして報告する", () => {
+      const html = articleHtml.replace("</body>", `<!-- ${commentsIsland(giscusProps)} --></body>`);
+
+      expect(problemsOf({ "posts/hello/index.html": html }, { requiresComments: true })).toEqual([
+        "コメント欄を持つページがありません",
+      ]);
+    });
+
+    it("ほかのislandのpropsは検査しない", () => {
+      const otherIsland =
+        '<astro-island component-export="MobileMenu" props="{}" client="only"></astro-island>';
+      const html = articleWithComments().replace("</body>", `${otherIsland}</body>`);
+
+      expect(problemsOf({ "posts/hello/index.html": html }, { requiresComments: true })).toEqual(
+        [],
+      );
+    });
+
+    it("設定を必須にしないビルドでは報告しない", () => {
+      // Giscusの設定を持たないローカルビルドやE2Eのビルド
+      const html = articleWithComments({ ...giscusProps, repo: [0] });
+
+      expect(problemsOf({ "posts/hello/index.html": html })).toEqual([]);
     });
   });
 

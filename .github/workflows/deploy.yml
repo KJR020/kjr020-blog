@@ -42,6 +42,17 @@ jobs:
         # Mermaid図をビルド時にChromiumで描画する（@beoe/rehype-mermaid）。
         run: pnpm exec playwright install --with-deps chromium
 
+      - name: Sync Astro types
+        run: pnpm astro sync
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test:run
+
+      # 配信する dist/ は、デプロイ直前のこのビルドだけで作る。
+      # 後続のステップで dist/ を書き換えると、その内容がそのまま配信される。
       - name: Build
         run: pnpm build
         env:
@@ -49,12 +60,7 @@ jobs:
           PUBLIC_GISCUS_REPO_ID: ${{ vars.PUBLIC_GISCUS_REPO_ID }}
           PUBLIC_GISCUS_CATEGORY: ${{ vars.PUBLIC_GISCUS_CATEGORY }}
           PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.PUBLIC_GISCUS_CATEGORY_ID }}
-
-      - name: Type check
-        run: pnpm typecheck
-
-      - name: Test
-        run: pnpm test:run
+          REQUIRE_COMMENTS: "true"
 
       - name: Deploy to Cloudflare Workers
         id: deploy
