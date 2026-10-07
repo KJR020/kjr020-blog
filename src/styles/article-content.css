@@ -29,6 +29,8 @@
 }
 
 .article-figure {
+  /* 本文幅より小さい画像は引き伸ばさず、枠とキャプションを画像の幅へ縮める。 */
+  inline-size: fit-content;
   margin-block: var(--phi-1);
 }
 
@@ -74,7 +76,7 @@
 
 .article-image-trigger img {
   display: block;
-  inline-size: 100%;
+  max-inline-size: 100%;
   block-size: auto;
   margin: 0;
   transition: opacity 180ms ease;
@@ -85,6 +87,8 @@
 }
 
 .article-figure figcaption {
+  /* キャプションの文字数でfigureが画像より広がらないよう、幅の計算から外す。 */
+  contain: inline-size;
   padding-block: var(--phi-neg1);
   border-block-end: 1px solid var(--border);
   color: var(--muted-foreground);

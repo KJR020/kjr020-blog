@@ -698,7 +698,7 @@ test("記事ページの読書設計をパターンの共通レイアウト内�
   await expect(page.locator("#figure-pattern figcaption")).toBeVisible();
   await expect(page.locator("#figure-pattern figcaption")).not.toContainText(/FIGURE \d+/);
   await expect(page.locator("#figure-pattern")).toContainText(
-    "本文と同じReading lane(8 / 9)へ揃える",
+    "Reading lane(8 / 9)の左端へ揃え、枠は画像より広げない",
   );
   const imageTrigger = page.locator("#figure-pattern").getByRole("link", { name: /画像を拡大/ });
   await imageTrigger.click();
