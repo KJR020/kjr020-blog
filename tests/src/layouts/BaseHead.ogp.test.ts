@@ -1,16 +1,19 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import sharp from "sharp";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-const distDir = join(process.cwd(), "dist");
+// 本番の成果物`dist/`へ書き込まない。デプロイでは`pnpm build`の後にテストを実行していたため、
+// このビルドがGiscusの設定を持たない成果物で`dist/`を上書きし、そのまま配信されていた。
+const distDir = mkdtempSync(join(tmpdir(), "kjr020-blog-ogp-"));
 const astroBin = join(process.cwd(), "node_modules", ".bin", "astro");
 const baseHeadPath = join(process.cwd(), "src", "layouts", "BaseHead.astro");
 
 function buildSite() {
-  execFileSync(astroBin, ["build"], {
+  execFileSync(astroBin, ["build", "--outDir", distDir], {
     cwd: process.cwd(),
     env: {
       ...process.env,
@@ -51,6 +54,10 @@ describe("BaseHead OGP meta tags", () => {
     const rssPath = join(distDir, "rss.xml");
     rssXml = existsSync(rssPath) ? readFileSync(rssPath, "utf8") : "";
   }, 60_000);
+
+  afterAll(() => {
+    rmSync(distDir, { recursive: true, force: true });
+  });
 
   it("renders article OGP meta tags on post pages", () => {
     const postHtml = readHtmlFiles(join(distDir, "posts")).find(
