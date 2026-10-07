@@ -52,7 +52,12 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
   transform: translateY(0);
 }
 
+/*
+ * Sidebarの有無で、viewportの幅と本文領域の幅は比例しない。
+ * 見本は本文領域の全幅に置くため、見本の配置は本文領域の幅で切り替える。
+ */
 .book {
+  container: book / inline-size;
   inline-size: min(100%, var(--book-width));
   margin-inline: auto;
   padding-inline: var(--book-gutter);
@@ -1552,15 +1557,66 @@ table.map th {
   .book {
     padding-block-start: var(--phi-1);
   }
+}
 
-  .radius-grid,
-  .input-grid {
-    grid-template-columns: 1fr;
+/* 次のコンテナクエリは、48rem未満の配置を上書きするため、48rem未満のメディアクエリより後に置く。 */
+
+/* 40.5rem未満では、見本のナビゲーション項目が1行に収まらず折り返す。 */
+@container book (width < 40.5rem) {
+  .site-header-demo {
+    align-items: start;
   }
 
-  .selection-demo,
-  .responsive-summary,
+  .nav-demo a:not(.is-active),
+  .nav-demo button {
+    display: none;
+  }
+}
+
+/* 36rem未満では、幅を66.7%に縮めたバーの名前(本文の行長)が1行に収まらない。 */
+@container book (width < 36rem) {
+  .width-narrow,
+  .width-overlay {
+    inline-size: 100%;
+  }
+}
+
+/* 29rem未満では、2列にした選択状態の名前(Command Palette selected)が1行に収まらない。 */
+@container book (width < 29rem) {
+  .selection-demo {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 27.5rem未満では、2列にしたMotionの説明(Intersection Observer + opacity)が1行に収まらない。 */
+@container book (width < 27.5rem) {
   .motion-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 27.5rem未満では、3列の表で各列に8remを確保できない。列を縮める代わりに表を横スクロールさせる。 */
+@container book (width < 27.5rem) {
+  table.map :where(th, td) {
+    min-inline-size: 8rem;
+  }
+}
+
+/* 25.5rem未満では、バーの名前(Sticky Header)と説明が1行に並ばない。 */
+@container book (width < 25.5rem) {
+  .layout-bar {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .layout-bar span {
+    text-align: start;
+  }
+}
+
+/* 24.5rem未満では、2列にした要約の説明(縦積み · stacked support)が1行に収まらない。 */
+@container book (width < 24.5rem) {
+  .responsive-summary {
     grid-template-columns: 1fr;
   }
 
@@ -1574,28 +1630,19 @@ table.map th {
     border-block-start: 0;
     border-block-end: 0;
   }
+}
 
-  .site-header-demo {
-    align-items: start;
+/* 24rem未満では、2列にした入力欄にplaceholder(キーワードを入力)が収まらない。 */
+@container book (width < 24rem) {
+  .input-grid {
+    grid-template-columns: 1fr;
   }
+}
 
-  .nav-demo a:not(.is-active),
-  .nav-demo button {
-    display: none;
-  }
-
-  .layout-bar {
-    align-items: start;
-    flex-direction: column;
-  }
-
-  .layout-bar span {
-    text-align: start;
-  }
-
-  .width-narrow,
-  .width-overlay {
-    inline-size: 100%;
+/* 16.5rem未満では、2列にした角丸の見本(幅6rem)が列に収まらない。 */
+@container book (width < 16.5rem) {
+  .radius-grid {
+    grid-template-columns: 1fr;
   }
 
   .radius-grid > div {
@@ -1606,10 +1653,6 @@ table.map th {
 
   .radius-grid code {
     grid-column: 2;
-  }
-
-  table.map :where(th, td) {
-    min-inline-size: 8rem;
   }
 }
 

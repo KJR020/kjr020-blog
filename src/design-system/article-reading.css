@@ -252,16 +252,25 @@
   line-height: 1.6;
 }
 
-@media (max-width: 52rem) {
-  .task-strip {
+/*
+ * 図の配置は、確認用カタログの本文領域(.book)の幅で切り替える。
+ * Sidebarの有無で、viewportの幅と本文領域の幅は比例しないため。
+ */
+
+/* 37.5rem未満では、3列にしたカードの名前(Article header、Code example)が1行に収まらない。 */
+@container book (width < 37.5rem) {
+  .object-children {
     grid-template-columns: 1fr;
   }
 
-  .object-children,
-  .type-specimen {
-    grid-template-columns: 1fr;
+  .object-children::before {
+    display: none;
   }
+}
 
+/* 29rem未満では、本文見本の列が見出しの列(12rem)より狭くなる。 */
+@container book (width < 29rem) {
+  .type-specimen,
   .type-candidate {
     grid-template-columns: 1fr;
   }
@@ -269,9 +278,12 @@
   .type-candidate small {
     grid-column: auto;
   }
+}
 
-  .object-children::before {
-    display: none;
+/* 23rem未満では、読書行動の項目(コードを確認・コピーする)が1行に収まらない。 */
+@container book (width < 23rem) {
+  .task-strip {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -285,12 +297,27 @@
   }
 }
 
-@media (max-width: 40rem) {
+/* 31rem未満では、3列にした規則の見出し(Horizontal scroll)が1行に収まらない。 */
+@container book (width < 31rem) {
   .responsive-rule,
   .pattern-rules {
     grid-template-columns: 1fr;
   }
 
+  .responsive-rule > div,
+  .pattern-rules > div {
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--border);
+  }
+
+  .responsive-rule > div:last-child,
+  .pattern-rules > div:last-child {
+    border-block-end: 0;
+  }
+}
+
+/* 29rem未満では、Reading laneの名前(READING LANE · 8 / 9)が1行に収まらない。 */
+@container book (width < 29rem) {
   .lane-map {
     grid-template-columns: 1fr;
   }
@@ -309,16 +336,4 @@
   .lane-header {
     grid-template-columns: 1fr;
   }
-
-  .responsive-rule > div,
-  .pattern-rules > div {
-    border-inline-end: 0;
-    border-block-end: 1px solid var(--border);
-  }
-
-  .responsive-rule > div:last-child,
-  .pattern-rules > div:last-child {
-    border-block-end: 0;
-  }
-
 }
