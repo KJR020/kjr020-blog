@@ -302,10 +302,40 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 {shows("governance") && (
 <section class="spec" id="governance">
   <h2>11. ガバナンス</h2>
-  <p class="src">原則、仕様、トークン、部品ごとに正本を定めます。変更時は、仕様書、実装、確認用カタログを同じ仕様へ揃えます。検討中の案と対応状況はIssueで管理します。</p>
+  <p class="src">デザインシステムは、プロダクトオーナーと、AIエージェントを含む実装者が共同で変更します。役割と承認の範囲を定め、仕様書、実装、確認用カタログを同じ仕様へ揃えます。検討中の案と対応状況はIssueで管理します。</p>
+
+  <div class="spec-item" id="roles">
+    <h3>11-1. 役割と承認</h3>
+    <p class="src">AIエージェントは、既存のコードから規則を推測し、同じ書き方を他の箇所へ広げることがあります。そのため判断の根拠をデザイン仕様書に置き、プロダクトオーナーの承認が必要な変更を明示します。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>プロダクトオーナー</strong>
+        <ul>
+          <li>仕様を変える判断を持ち、原則、共通トークン、新しい視覚表現の追加と変更を承認する</li>
+          <li>Pull Requestをレビューし、マージを判断する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>実装者(人とAIエージェント)</strong>
+        <ul>
+          <li>UIを変更する前に、デザイン仕様書と関連ガイドを読む</li>
+          <li>仕様で判断できない点は、プロダクトオーナーへ確認する</li>
+          <li>自動化していない確認の結果をPull Requestに記録する</li>
+        </ul>
+      </li>
+      <li>
+        <strong>プロダクトオーナーの承認が必要な変更</strong>
+        <ul>
+          <li>原則、共通トークン、新しい視覚表現の追加と変更</li>
+          <li>原則と既存仕様が衝突するときの例外</li>
+          <li>既存仕様の範囲内での適用には、承認を必要としない</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 
   <div class="spec-item" id="source-of-truth">
-    <h3>11-1. Source of Truth</h3>
+    <h3>11-2. Source of Truth</h3>
     <p class="src">要件と判断基準はデザイン仕様書で確認します。確認用カタログは、トークンと実コンポーネントから標本を描画します。</p>
     <ul class="src rule-list">
       <li>
@@ -317,13 +347,22 @@ const shows = (section: GuidelineSection) => sections.includes(section);
       <li>
         <strong>Issueで管理する内容</strong>
         <ul>
-          <li>改善候補、優先度、移行状況、実装との差分</li>
+          <li>改善候補、優先度、移行状況</li>
+          <li>そのPull Requestで直さない、実装との差分</li>
         </ul>
       </li>
       <li>
         <strong>適合の基準</strong>
         <ul>
           <li>実装とテストは、デザイン仕様書に記載した要件へ適合させる</li>
+        </ul>
+      </li>
+      <li>
+        <strong>既存コードの扱い</strong>
+        <ul>
+          <li>実装の現在値を、仕様の根拠にしない</li>
+          <li>仕様と異なる値や表現を見つけたら、同じものを他へ広げない</li>
+          <li>そのPull Requestで直す不一致はPull Requestに、直さない不一致はIssueに記録する</li>
         </ul>
       </li>
     </ul>
@@ -342,12 +381,13 @@ const shows = (section: GuidelineSection) => sections.includes(section);
   </div>
 
   <div class="spec-item" id="conformance-rules">
-    <h3>11-2. 適合ルール</h3>
+    <h3>11-3. 適合ルール</h3>
+    <p class="src">実装者が変更を作るときに守るルールです。</p>
     <ul class="src rule-list">
       <li>
         <strong>未定義の視覚表現を先に実装しない</strong>
         <ul>
-          <li>新しい視覚表現はオーナーと合意する</li>
+          <li>新しい視覚表現はプロダクトオーナーの承認を得る</li>
           <li>デザイン仕様書で定義してから使用する</li>
         </ul>
       </li>
@@ -391,14 +431,19 @@ const shows = (section: GuidelineSection) => sections.includes(section);
   </div>
 
   <div class="spec-item" id="update-method">
-    <h3>11-3. 更新方法</h3>
-    <p class="src">仕様を変更するときは、次の順序で更新します。</p>
+    <h3>11-4. 更新方法</h3>
+    <p class="src">仕様を変更するときは、次の順序で更新します。各手順の主語が、その手順を担う役割です。</p>
     <ol class="src rule-list">
-      <li>変更理由と適用範囲を決める。原則、共通トークン、新しい視覚表現を変更する場合は、オーナーと合意する</li>
-      <li>デザイン仕様書に、変更後の要件と標準仕様を書く</li>
-      <li>正本、関連ガイド、実装、確認用カタログを同じ仕様へ揃える</li>
-      <li>影響する画面幅、テーマ、入力方法、状態で要件を確認する</li>
-      <li>カタログのテストとビルドを実行する。公開成果物の検査が通ることを確認する</li>
+      <li>実装者が変更理由と適用範囲を決める</li>
+      <li>承認が必要な変更の場合は、実装者が実装する前にプロダクトオーナーの承認を得る</li>
+      <li>実装者が、デザイン仕様書に変更後の要件と標準仕様を書く</li>
+      <li>実装者が、対応する実装、関連ガイド、確認用カタログ、検証を、変更の影響範囲に応じて更新する</li>
+      <li>実装者が、影響する画面幅、テーマ、入力方法、状態で要件と期待する結果を確認する</li>
+      <li>自動化していない確認がある場合は、実装者が結果をPull Requestに記録する</li>
+      <li>実装者が<code>pnpm test:design-system</code>を実行し、実コンポーネントとの接続を確認する</li>
+      <li>実装者が<code>pnpm build</code>を実行し、公開成果物の検査が通ることを確認する</li>
+      <li>プロダクトオーナーがPull Requestをレビューする</li>
+      <li>仕様・実装・確認の結果が一致している場合は、プロダクトオーナーがマージする</li>
     </ol>
   </div>
 </section>

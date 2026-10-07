@@ -13,7 +13,8 @@
 <type>/<short-description>
 ```
 
-- `type`には`feat`、`fix`、`docs`、`refactor`、`test`、`chore`のいずれかを使用する
+- `type`には`feat`、`fix`、`docs`、`refactor`、`test`、`chore`、`design`のいずれかを使用する
+  - `design`は、デザイン仕様と見た目の変更を同時に扱う場合に使う
 - `short-description`は変更内容を表す英語のkebab-caseにする
 - `main`へ直接コミットせず、変更内容に対応するブランチからPRを作成する
 
