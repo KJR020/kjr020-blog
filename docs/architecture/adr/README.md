@@ -9,3 +9,4 @@
 - [記事の本文幅と目次表示の簡素化](0003-simplify-article-reading-layout.md) - 本文幅の変更とWideの目次開閉の廃止
 - [確認用カタログの公開](0004-publish-design-system-catalog.md) - 公開の形、検索エンジンと導線、標本データの扱い
 - [解釈の違いを減らす執筆規則の採用](0005-adopt-clear-technical-writing.md) - 日本語へ採用した規則と、ASD-STE100への準拠を求めない理由
+- [PR作成ガイドを原則・標準構成・パターンに分ける](0006-split-pr-guide-into-principles-structure-and-patterns.md) - 3層の役割と、パターンの条件を説明しづらい点で決める理由
