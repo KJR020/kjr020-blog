@@ -1735,6 +1735,28 @@ ol.rule-list {
   font-size: var(--font-size-small);
 }
 
+/*
+ * 狭い画面では余白の注記が横幅を取り、主領域と補助領域の文字がはみ出す。
+ * 注記を縦書きにして細い帯へ収める。縦書きでは論理方向が回るため、左右の罫線はblock方向へ付け直す
+ */
+@media (max-width: 32rem) {
+  .shell-anatomy {
+    padding: var(--phi-0);
+  }
+
+  .shell-margin {
+    padding-block: var(--phi-neg3);
+    padding-inline: 0;
+    border-block: 1px dashed color-mix(in srgb, var(--link) 45%, transparent);
+    border-inline: 0;
+    writing-mode: vertical-rl;
+  }
+
+  .shell-inner {
+    padding-inline: var(--phi-neg1);
+  }
+}
+
 .kuri-specimen {
   display: flex;
   flex-wrap: wrap;

@@ -95,11 +95,23 @@ const isActive = (href: string) => {
     z-index: 50;
     inline-size: 100%;
     border-block-end: 1px solid transparent;
-    background: color-mix(in oklch, var(--background) 82%, transparent);
     font-family: var(--font-ui);
+    view-transition-name: site-header;
+  }
+
+  /*
+   * iOS Safariはステータスバーの裏にもページを描くため、ヘッダーの面を上へはみ出させて覆う。
+   * 下端は透明な境界線の下まで伸ばし、本文がぼかされずに透ける隙間を作らない
+   */
+  .site-header::before {
+    position: absolute;
+    z-index: -1;
+    inset-block: -6rem -1px;
+    inset-inline: 0;
+    background: color-mix(in oklch, var(--background) 82%, transparent);
     backdrop-filter: saturate(1.4) blur(14px);
     -webkit-backdrop-filter: saturate(1.4) blur(14px);
-    view-transition-name: site-header;
+    content: "";
   }
 
   /* スクロールを始めたら境界線を出す。非対応ブラウザでは常に表示する */
