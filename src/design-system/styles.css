@@ -1500,7 +1500,7 @@ ol.rule-list {
   }
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 47.999rem) {
   .scope-note,
   .type-row {
     grid-template-columns: 1fr;
