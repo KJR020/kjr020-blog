@@ -35,5 +35,7 @@ services:
 
 secrets:
   # CIとローカルで使用しているTakumi Guardの認証情報をビルド時だけ渡す。
+  # ファイルではなく環境変数から渡す。Buildx 0.37.2以降のbakeは、作業ディレクトリ外の
+  # secretファイルを読む前にfs.readの許可を求め、Composeからのビルドでは許可を渡せないため。
   npmrc:
-    file: "${HOME}/.npmrc"
+    environment: NPMRC
