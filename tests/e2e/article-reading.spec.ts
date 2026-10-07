@@ -25,23 +25,35 @@ test("画面幅に応じた本文組版を使う", async ({ page }, testInfo) =>
   expect(typography.width).toBeLessThanOrEqual(expectedFontSize * 43 + 1);
 });
 
-test("Figureを本文と同じReading laneへ揃える", async ({ page }, testInfo) => {
+test("Figureを本文の左端へ揃え、枠とキャプションを画像の幅まで縮める", async ({ page }) => {
   await page.goto(articlePath);
 
   const content = page.locator(".article-reading-content");
   const paragraph = content.locator(":scope > p").first();
   const figure = content.locator("figure.article-figure").last();
+  const image = figure.locator("img");
+  const caption = figure.locator("figcaption");
 
-  await expect(figure.locator("figcaption")).toContainText("画像を拡大表示できる");
-  await expect(figure.locator("figcaption")).not.toContainText(/FIGURE \d+/);
+  await expect(caption).toContainText("画像を拡大表示できる");
+  await expect(caption).not.toContainText(/FIGURE \d+/);
 
-  if (testInfo.project.name === "chromium") {
-    const [paragraphBox, figureBox] = await Promise.all([
-      paragraph.boundingBox(),
-      figure.boundingBox(),
-    ]);
-    expect(figureBox?.width).toBeCloseTo(paragraphBox?.width ?? 0, 0);
-  }
+  // fixtureの画像は幅500px。Desktopでは本文幅より小さく、Mobileでは本文幅より大きい。
+  await figure.scrollIntoViewIfNeeded();
+  await expect(image).toHaveJSProperty("naturalWidth", 500);
+
+  const [paragraphBox, figureBox, imageBox, captionBox] = await Promise.all([
+    paragraph.boundingBox(),
+    figure.boundingBox(),
+    image.boundingBox(),
+    caption.boundingBox(),
+  ]);
+  const frameBorderWidth = 2;
+  const expectedImageWidth = Math.min(500, (paragraphBox?.width ?? 0) - frameBorderWidth);
+
+  expect(figureBox?.x).toBeCloseTo(paragraphBox?.x ?? 0, 0);
+  expect(imageBox?.width).toBeCloseTo(expectedImageWidth, 0);
+  expect(figureBox?.width).toBeCloseTo(expectedImageWidth + frameBorderWidth, 0);
+  expect(captionBox?.width).toBeCloseTo(figureBox?.width ?? 0, 0);
 });
 
 test("日本時間0時に公開した記事を当日の日付で表示する", async ({ page }) => {

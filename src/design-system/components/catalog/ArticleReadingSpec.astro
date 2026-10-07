@@ -209,7 +209,7 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
   <section class="spec article-reading-section" id="figure-pattern">
     <h4>Figure</h4>
-    <p class="src">図と文章の左右端をそろえて、読書の流れを保ちます。</p>
+    <p class="src">図と文章の左端をそろえて、読書の流れを保ちます。本文幅より小さい画像は引き伸ばさず、枠を画像の幅に合わせます。</p>
     <ul class="src rule-list">
       <li>
         <strong>画像リンク</strong>
@@ -249,7 +249,7 @@ const codeSample = `export function getReadingWidth(viewport: number) {
     </figure>
 
     <div class="pattern-rules">
-      <div><strong>Alignment</strong><span>本文と同じReading lane(8 / 9)へ揃える</span></div>
+      <div><strong>Alignment</strong><span>Reading lane(8 / 9)の左端へ揃え、枠は画像より広げない</span></div>
       <div><strong>Detail</strong><span>小さな文字や細部は原寸画像で確認できる</span></div>
       <div><strong>Zoom</strong><span>JavaScript利用時はDialogで拡大する。閉じた後は元の画像リンクへフォーカスを戻す</span></div>
     </div>
