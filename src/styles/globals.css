@@ -506,7 +506,9 @@
   }
 }
 
-.rlc-image {
+/* .prose img の width / height: auto との競合を避ける */
+.rlc-image,
+.prose .rlc-image {
   width: 100%;
   height: 100%;
   margin: 0;
