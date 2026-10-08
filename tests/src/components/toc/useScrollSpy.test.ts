@@ -162,6 +162,18 @@ describe("useScrollSpy", () => {
     expect(result.current.activeId).toBe("heading-1");
   });
 
+  it("effectをやり直すときは、古いObserverを止めてから新しいObserverで監視する", () => {
+    const headingIds = ["heading-1", "heading-2"];
+
+    // tests/setup.tsのStrict Modeにより、effectが開始・停止・開始と走る
+    renderHook(() => useScrollSpy(headingIds));
+
+    const [firstObserver, secondObserver] = MockIntersectionObserver.instances;
+    expect(MockIntersectionObserver.instances).toHaveLength(2);
+    expect(firstObserver.isDisconnected).toBe(true);
+    expect(secondObserver).toBe(getActiveObserver());
+  });
+
   it("アンマウント時にObserverがクリーンアップされる", () => {
     const headingIds = ["heading-1", "heading-2"];
 

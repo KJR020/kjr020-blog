@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { withStrictMode } from "@/components/withStrictMode";
 import { cn } from "@/lib/utils";
 
 interface LinkNavItem {
@@ -31,7 +32,7 @@ function isCurrent(href: string, currentPath?: string) {
 const itemClassName =
   "group flex w-full items-baseline gap-4 border-b border-border py-4 text-left text-foreground transition-colors hover:text-link focus-visible:text-link";
 
-export function MobileMenu({ navItems, currentPath }: MobileMenuProps) {
+function MobileMenuInner({ navItems, currentPath }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -169,3 +170,5 @@ export function MobileMenu({ navItems, currentPath }: MobileMenuProps) {
     </div>
   );
 }
+
+export const MobileMenu = withStrictMode(MobileMenuInner);

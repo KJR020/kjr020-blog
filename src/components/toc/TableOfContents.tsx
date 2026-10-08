@@ -1,3 +1,4 @@
+import { withStrictMode } from "@/components/withStrictMode";
 import { cn } from "@/lib/utils";
 import { MobileTOC } from "./MobileTOC";
 import { TOCList } from "./TOCList";
@@ -9,7 +10,7 @@ import { useScrollSpy } from "./useScrollSpy";
  * デスクトップ: 右側スティッキー表示
  * モバイル: 折りたたみアコーディオン表示
  */
-export function TableOfContents({
+function TableOfContentsInner({
   headings,
   variant = "responsive",
   className,
@@ -54,3 +55,5 @@ export function TableOfContents({
     </>
   );
 }
+
+export const TableOfContents = withStrictMode(TableOfContentsInner);

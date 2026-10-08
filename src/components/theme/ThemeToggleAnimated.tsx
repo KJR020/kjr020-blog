@@ -1,6 +1,7 @@
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { withStrictMode } from "@/components/withStrictMode";
 import { MoonIcon } from "./MoonIcon";
 import { SunIcon } from "./SunIcon";
 
@@ -12,7 +13,7 @@ function getInitialTheme(): boolean {
   return false;
 }
 
-export function ThemeToggleAnimated() {
+function ThemeToggleAnimatedInner() {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -205,3 +206,5 @@ export function ThemeToggleAnimated() {
     </>
   );
 }
+
+export const ThemeToggleAnimated = withStrictMode(ThemeToggleAnimatedInner);
