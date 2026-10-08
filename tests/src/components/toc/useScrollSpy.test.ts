@@ -5,11 +5,14 @@ import { useScrollSpy } from "@/components/toc/useScrollSpy";
 // IntersectionObserverのモック
 class MockIntersectionObserver {
   private callback: IntersectionObserverCallback;
-  private elements: Set<Element> = new Set();
+  readonly options?: IntersectionObserverInit;
+  readonly elements: Set<Element> = new Set();
+  isDisconnected = false;
   static instances: MockIntersectionObserver[] = [];
 
-  constructor(callback: IntersectionObserverCallback) {
+  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     this.callback = callback;
+    this.options = options;
     MockIntersectionObserver.instances.push(this);
   }
 
@@ -23,10 +26,14 @@ class MockIntersectionObserver {
 
   disconnect() {
     this.elements.clear();
+    this.isDisconnected = true;
   }
 
   // テスト用: エントリを発火させる
   triggerEntries(entries: Partial<IntersectionObserverEntry>[]) {
+    if (this.isDisconnected) {
+      throw new Error("停止したObserverには通知が届かない");
+    }
     const fullEntries = entries.map((entry) => ({
       isIntersecting: false,
       intersectionRatio: 0,
@@ -39,6 +46,16 @@ class MockIntersectionObserver {
     })) as IntersectionObserverEntry[];
     this.callback(fullEntries, this as unknown as IntersectionObserver);
   }
+}
+
+// Strict Modeではeffectが開始・停止・開始と走り、停止済みのObserverが残る。
+// 本物のブラウザで通知が届くのは停止していないObserverだけなので、それを取り出して検証する
+function getActiveObserver() {
+  const activeObservers = MockIntersectionObserver.instances.filter(
+    (observer) => !observer.isDisconnected,
+  );
+  expect(activeObservers).toHaveLength(1);
+  return activeObservers[0];
 }
 
 describe("useScrollSpy", () => {
@@ -65,7 +82,8 @@ describe("useScrollSpy", () => {
 
     renderHook(() => useScrollSpy(headingIds));
 
-    expect(MockIntersectionObserver.instances.length).toBe(1);
+    const observedIds = [...getActiveObserver().elements].map((element) => element.id);
+    expect(observedIds).toEqual(headingIds);
   });
 
   it("初期状態では最初の見出しがactiveIdになる", () => {
@@ -81,7 +99,7 @@ describe("useScrollSpy", () => {
 
     const { result } = renderHook(() => useScrollSpy(headingIds));
 
-    const observer = MockIntersectionObserver.instances[0];
+    const observer = getActiveObserver();
     const targetElement = document.getElementById("heading-1");
     if (!targetElement) throw new Error("heading-1 not found");
 
@@ -102,7 +120,7 @@ describe("useScrollSpy", () => {
 
     const { result } = renderHook(() => useScrollSpy(headingIds));
 
-    const observer = MockIntersectionObserver.instances[0];
+    const observer = getActiveObserver();
     const heading1 = document.getElementById("heading-1");
     const heading2 = document.getElementById("heading-2");
     if (!heading1 || !heading2) throw new Error("headings not found");
@@ -148,13 +166,11 @@ describe("useScrollSpy", () => {
     const headingIds = ["heading-1", "heading-2"];
 
     const { unmount } = renderHook(() => useScrollSpy(headingIds));
-
-    const observer = MockIntersectionObserver.instances[0];
-    const disconnectSpy = vi.spyOn(observer, "disconnect");
+    const observer = getActiveObserver();
 
     unmount();
 
-    expect(disconnectSpy).toHaveBeenCalled();
+    expect(observer.isDisconnected).toBe(true);
   });
 
   it("headingIdsが空の場合、Observerは作成されない", () => {
@@ -170,8 +186,7 @@ describe("useScrollSpy", () => {
 
     renderHook(() => useScrollSpy(headingIds, options));
 
-    // オプションが渡されることを確認（実装で検証）
-    expect(MockIntersectionObserver.instances.length).toBe(1);
+    expect(getActiveObserver().options?.rootMargin).toBe(options.rootMargin);
   });
 
   describe("ページ末尾付近でスクロールしたとき", () => {
