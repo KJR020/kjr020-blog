@@ -143,6 +143,8 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Test
         run: pnpm test:run --passWithNoTests
+      - name: Verify Cosense cache lifetime
+        run: pnpm test:cache
 
   # カバレッジ測定（閾値はvitest.config.tsで定義し、下回るとジョブが失敗する）
   coverage:
