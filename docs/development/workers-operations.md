@@ -79,6 +79,8 @@ CIの疎通確認はSecretに依存しない項目だけを検査する。Cosens
 
 `CF-Cache-Status`だけではCosense API Proxy内の`caches.default.match`のHIT/MISSを断定しない。実装は診断用ヘッダーを公開していない。応答時間だけでもHIT/MISSを判定できない。
 
+期限切れと再取得を確認するときは、[Cosenseキャッシュの検証](cosense-cache-verification.md)に従う。ローカルの実行環境とCloudflare上の観測結果は分けて記録する。
+
 ## 関連ファイル
 
 - [Wrangler設定](../../wrangler.toml) - デプロイ先とStatic Assetsの配信設定
