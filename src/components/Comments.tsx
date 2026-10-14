@@ -1,5 +1,6 @@
 import Giscus from "@giscus/react";
 import { useEffect, useState } from "react";
+import { withStrictMode } from "@/components/withStrictMode";
 
 interface CommentsProps {
   repo: `${string}/${string}`;
@@ -8,7 +9,7 @@ interface CommentsProps {
   categoryId: string;
 }
 
-export function Comments({ repo, repoId, category, categoryId }: CommentsProps) {
+function CommentsInner({ repo, repoId, category, categoryId }: CommentsProps) {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
@@ -62,3 +63,5 @@ export function Comments({ repo, repoId, category, categoryId }: CommentsProps) 
     </section>
   );
 }
+
+export const Comments = withStrictMode(CommentsInner);

@@ -2,6 +2,7 @@
 
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { withStrictMode } from "@/components/withStrictMode";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "./QueryProvider";
 import type { ScrapboxPageData } from "./types";
@@ -115,10 +116,12 @@ function ScrapboxCardListInner({ project, limit, className, pages }: ScrapboxCar
   );
 }
 
-export function ScrapboxCardList(props: ScrapboxCardListProps) {
+function ScrapboxCardListWithQuery(props: ScrapboxCardListProps) {
   return (
     <QueryProvider>
       <ScrapboxCardListInner {...props} />
     </QueryProvider>
   );
 }
+
+export const ScrapboxCardList = withStrictMode(ScrapboxCardListWithQuery);
