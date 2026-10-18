@@ -42,7 +42,7 @@ test("カテゴリカードはカード全体をリンクにして補助ラベ�
 
 test("公開ページは仕様の目的と使い方を説明する", async ({ page }) => {
   const pageDescriptions = [
-    { path: "/design-system", description: "要件と判断基準は、デザイン仕様書で定めます" },
+    { path: "/design-system", description: "デザイン仕様書で定めた" },
     { path: "/design-system/foundations", description: "同じ見た目が同じ意味を表す" },
     { path: "/design-system/components", description: "どのページでも同じ部品で実装する" },
     {
