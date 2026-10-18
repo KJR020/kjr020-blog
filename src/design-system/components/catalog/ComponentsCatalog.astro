@@ -10,15 +10,7 @@ import { ThemeToggleAnimated } from "@/components/theme/ThemeToggleAnimated";
 import { TableOfContents } from "@/components/toc";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import SourceRow from "../SourceRow.astro";
 
@@ -155,7 +147,7 @@ const scrapboxPages = [
 
   <div class="spec-item" id="card">
     <h3>4-3. Card</h3>
-    <p class="src">Cardは、関連する情報と操作を1つの単位にまとめる部品です。</p>
+    <p class="src">Cardは、独立した移動先を、関連する情報とまとめて1つの単位で示す部品です。</p>
     <ul class="src rule-list">
       <li>
         <strong>構成</strong>
@@ -175,15 +167,14 @@ const scrapboxPages = [
       </li>
     </ul>
     <div class="demo card-demo">
-      <Card className="specimen-card">
-        <CardHeader>
-          <CardTitle>デザインシステム</CardTitle>
-          <CardDescription>ブログと同じ部品の表示と操作を確認できます。</CardDescription>
-          <CardAction><Badge variant="outline">Connected</Badge></CardAction>
-        </CardHeader>
-        <CardContent><p>カード内の余白は、情報どうしの関係に合わせて選びます。</p></CardContent>
-        <CardFooter className="border-t"><Button variant="outline" size="sm">詳細を見る</Button></CardFooter>
-      </Card>
+      <a class="specimen-card-link" href="/posts">
+        <Card className="specimen-card">
+          <CardHeader>
+            <CardTitle>記事一覧</CardTitle>
+            <CardDescription>公開した記事を、年とタグから探せます。</CardDescription>
+          </CardHeader>
+        </Card>
+      </a>
     </div>
     <SourceRow files={["src/components/ui/card.tsx"]} />
   </div>
