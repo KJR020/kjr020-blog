@@ -292,6 +292,24 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
   color: var(--muted-foreground);
 }
 
+/* リード文に続く並列項目。リード文と同じ強さで読ませ、項目名だけを本文色にする */
+.book-lead-list {
+  max-inline-size: 50rem;
+  margin: var(--phi-neg2) 0 0;
+  padding-inline-start: var(--phi-1);
+  color: var(--muted-foreground);
+  list-style: disc;
+}
+
+.book-lead-list li + li {
+  margin-block-start: var(--phi-neg3);
+}
+
+.book-lead-list strong {
+  color: var(--foreground);
+  font-weight: var(--font-weight-label);
+}
+
 .scope-note {
   display: grid;
   grid-template-columns: auto 1fr;

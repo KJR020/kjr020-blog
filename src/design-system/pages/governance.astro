@@ -10,7 +10,14 @@ import DesignSystemLayout from "../components/DesignSystemLayout.astro";
 >
   <header class="book-intro" id="overview">
     <h1 class="book-title">ガバナンス</h1>
-    <p class="book-lead">AIエージェントを含む実装者とプロダクトオーナーが、同じ仕様を基準にデザインを変更するためのルールを示します。要件はデザイン仕様書で確認します。プロダクトオーナーの承認が必要な変更を明示します。</p>
+    <p class="book-lead">ガバナンスは、AIエージェントを含む実装者とプロダクトオーナーが、同じ仕様を基準にデザインを変更するためのルールである。デザイン仕様書、実装、確認用カタログを同じ仕様にそろえるために定める。</p>
+    <p class="book-lead">ガバナンスは、次の4つで構成する。</p>
+    <ul class="book-lead-list">
+      <li><strong>役割と承認</strong>: 誰が何を決め、どの変更に承認が必要か</li>
+      <li><strong>Source of Truth</strong>: 管理対象ごとの正本</li>
+      <li><strong>適合ルール</strong>: 変更を作るときに守るルール</li>
+      <li><strong>更新方法</strong>: 仕様を変更するときの手順</li>
+    </ul>
   </header>
 
   <GuidelinesCatalog sections={["governance"]} />

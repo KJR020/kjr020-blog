@@ -11,7 +11,13 @@ import DesignSystemLayout from "../components/DesignSystemLayout.astro";
 >
   <header class="book-intro" id="overview">
     <h1 class="book-title">パターン</h1>
-    <p class="book-lead">状態メッセージ、記事の表示、ページ内の情報順序を確認できます。読者の目的に合わせて部品を組み合わせます。画面幅を変えて、記事を探す、読む、移動する操作ができることを確認します。</p>
+    <p class="book-lead">パターンは、ページや画面幅が変わっても、読者が記事を探し、読み、別のページへ移動できるようにするための部品の組み合わせ方である。</p>
+    <p class="book-lead">パターンは、次の3つで構成する。</p>
+    <ul class="book-lead-list">
+      <li><strong>状態の体系</strong>: 操作中、取得中、現在地、選択の伝え方</li>
+      <li><strong>記事コンテンツ</strong>: Markdownで書いた本文と補足の表示</li>
+      <li><strong>ページの型</strong>: ページの種類ごとの情報の順序と主要な操作</li>
+    </ul>
   </header>
 
   <FoundationsCatalog sections={["states"]} />

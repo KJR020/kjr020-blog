@@ -10,7 +10,13 @@ import DesignSystemLayout from "../components/DesignSystemLayout.astro";
 >
   <header class="book-intro" id="overview">
     <h1 class="book-title">コンポーネント</h1>
-    <p class="book-lead">ボタン、カード、入力欄、ナビゲーションの用途と使い分けを確認できます。標本では、表示と操作を確認します。各部品の状態、アクセシビリティ、実装元も示します。</p>
+    <p class="book-lead">コンポーネントは、同じ用途の情報表示と操作を、どのページでも同じ部品で実装するために共有する。</p>
+    <p class="book-lead">コンポーネントは、次の3つで構成する。</p>
+    <ul class="book-lead-list">
+      <li><strong>基本部品</strong>: ボタン、バッジ、カード、入力など、複数の場所で使う最小単位のUI</li>
+      <li><strong>ナビゲーション・検索部品</strong>: 現在地、移動先、検索手段を伝える部品</li>
+      <li><strong>ブログ固有部品</strong>: 記事を探し、読み、関連情報へ移動するための部品</li>
+    </ul>
   </header>
 
   <ComponentsCatalog />

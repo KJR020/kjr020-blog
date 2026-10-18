@@ -18,7 +18,7 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
 <div class="spec-item article-reading-spec" id="article-reading">
   <h3>8-3. 記事ページ</h3>
-  <p class="src">記事の本文、画像、コード、目次の配置と操作を確認できます。</p>
+  <p class="src">記事ページは、本文を続けて読む場面と、コード・表・図の詳細を確認する場面の両方を成立させるために、幅と表示手段を使い分ける。</p>
   <ul class="src rule-list">
     <li>
       <strong>情報構造</strong>
@@ -35,7 +35,7 @@ const codeSample = `export function getReadingWidth(viewport: number) {
   </ul>
   <div class="scope-note article-reading-scope">
     <strong>適用範囲</strong>
-    <span>記事ページのArticle header、本文、目次、画像、コード、参照情報に適用します。</span>
+    <span>記事ページのArticle header、本文、目次、画像、コード、参照情報に適用する。</span>
   </div>
 
   <section class="spec article-reading-section" id="reading-model">
@@ -104,7 +104,12 @@ const codeSample = `export function getReadingWidth(viewport: number) {
         <strong>記事ヘッダー</strong>
         <ul>
           <li>本文と目次より上に置く</li>
-          <li>Wideではタイトルとメタ情報をシェルの1〜12列へ置く。マスコットは置かない</li>
+          <li>Wideでは、タイトルとメタ情報をシェルの1〜12列へ置く</li>
+          <li>マスコットは置かない
+            <ul>
+              <li>本文と注意を奪い合わないようにするため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
@@ -116,13 +121,18 @@ const codeSample = `export function getReadingWidth(viewport: number) {
       <li>
         <strong>コード・表</strong>
         <ul>
-          <li>Wide lane(記事内部の9 / 9)へ置く</li>
+          <li>Wide lane(記事内部の9 / 9)へ置く
+            <ul>
+              <li>横方向の情報量が意味を持つため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
         <strong>目次</strong>
         <ul>
-          <li>Wideでは13〜16列へ置き、現在位置を示す。CompactとMediumでは記事ヘッダー直後の折りたたみ領域へ置く</li>
+          <li>Wideでは、13〜16列へ置き、現在位置を示す</li>
+          <li>CompactとMediumでは、記事ヘッダー直後の折りたたみ領域へ置く</li>
         </ul>
       </li>
     </ul>
@@ -176,23 +186,23 @@ const codeSample = `export function getReadingWidth(viewport: number) {
     <h4>Typography</h4>
     <ul class="src rule-list">
       <li>
+        <strong>目的</strong>
+        <ul>
+          <li>長文を続けて読める行間を保つ</li>
+          <li>コードや図と行き来しても、本文の位置を見失いにくい行長に制限する</li>
+        </ul>
+      </li>
+      <li>
         <strong>文字サイズと行高</strong>
         <ul>
-          <li>Compactは16px・行高1.90</li>
-          <li>Medium以上は17px・行高2.00</li>
+          <li>Compactは16px・行高1.90とする</li>
+          <li>Medium以上は17px・行高2.00とする</li>
         </ul>
       </li>
       <li>
         <strong>行長</strong>
         <ul>
-          <li>本文幅の上限は43ic</li>
-        </ul>
-      </li>
-      <li>
-        <strong>目的</strong>
-        <ul>
-          <li>長文を続けて読める行間を保つ</li>
-          <li>コードや図と行き来しても、本文の位置を見失いにくい行長に制限する</li>
+          <li>本文幅の上限は43icとする</li>
         </ul>
       </li>
     </ul>
@@ -210,19 +220,29 @@ const codeSample = `export function getReadingWidth(viewport: number) {
 
   <section class="spec article-reading-section" id="figure-pattern">
     <h4>Figure</h4>
-    <p class="src">図と文章の左端をそろえて、読書の流れを保ちます。本文幅より小さい画像は引き伸ばさず、枠を画像の幅に合わせます。</p>
+    <p class="src">図は、文章と左端をそろえて、読書の流れを保つ。</p>
     <ul class="src rule-list">
       <li>
         <strong>配置</strong>
         <ul>
-          <li>Reading lane(8 / 9)の左端へ揃え、枠は画像より広げない</li>
+          <li>Reading lane(8 / 9)の左端へそろえる</li>
+          <li>本文幅より小さい画像は引き伸ばさず、原寸で表示する
+            <ul>
+              <li>引き伸ばすと、GIFやスクリーンショットがぼやけるため</li>
+            </ul>
+          </li>
+          <li>枠は画像の幅に合わせ、画像より広げない
+            <ul>
+              <li>枠だけを本文幅に残すと、画像の右側に何もない領域ができるため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
         <strong>画像リンク</strong>
         <ul>
-          <li>JavaScriptを利用できない場合は、原寸画像へ移動する</li>
-          <li>JavaScript利用時はDialogで拡大し、小さな文字や細部を確認できるようにする</li>
+          <li>画像は、原寸画像へのリンクにする</li>
+          <li>JavaScript利用時は、Dialogで拡大し、小さな文字や細部を確認できるようにする</li>
           <li>拡大を閉じた後は、元の画像リンクへフォーカスを戻す</li>
         </ul>
       </li>

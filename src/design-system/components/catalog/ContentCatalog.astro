@@ -8,7 +8,7 @@ const spacing = phi ** 2;`;
 
 <section class="spec" id="article">
   <h2>7. 記事コンテンツ</h2>
-  <p class="src">記事本文は、見出し、文章、コード、画像、補足、外部参照で構成します。要素の役割に合わせてHTML構造を選びます。読み順と情報の意味を保ちます。</p>
+  <p class="src">記事コンテンツは、Markdownで書いた要素を、役割に合ったHTML構造と共通のスタイルで表示する。読み順と情報の意味を保つ。</p>
 
   <div class="spec-item" id="markdown-content">
     <h3>7-1. Markdown本文</h3>
@@ -16,7 +16,13 @@ const spacing = phi ** 2;`;
       <li>
         <strong>幅</strong>
         <ul>
-          <li>本文はReading lane、コードと表はWide laneへ配置する。親の領域幅を超えない</li>
+          <li>本文はReading laneへ配置する</li>
+          <li>コードと表はWide laneへ配置する
+            <ul>
+              <li>横方向の情報量が意味を持つため</li>
+            </ul>
+          </li>
+          <li>どちらも、親の領域幅を超えない</li>
         </ul>
       </li>
       <li>
@@ -42,7 +48,7 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="callout">
     <h3>7-2. Callout</h3>
-    <p class="src">remark-calloutで変換します。</p>
+    <p class="src">Calloutは、本文の流れを止めずに補足を示すために使う。remark-calloutで変換する。</p>
     <ul class="src rule-list">
       <li>
         <strong>強さ</strong>
@@ -68,7 +74,7 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="link-card">
     <h3>7-3. Link Card</h3>
-    <p class="src">remark-link-cardで変換します。</p>
+    <p class="src">Link Cardは、外部参照の移動先を本文中で示すために使う。remark-link-cardで変換する。</p>
     <ul class="src rule-list">
       <li>
         <strong>置き場所の幅が28.5rem未満</strong>
@@ -144,12 +150,12 @@ const spacing = phi ** 2;`;
 <section class="spec" id="pages">
   <h2>8. ページの型</h2>
   <p class="src">
-    ページは、読者の目的、主な構造、固有の部品で分類します。同じ種類のページでは、情報の順序と主要な操作を揃えます。
+    ページの型は、同じ種類のページで情報の順序と主要な操作をそろえるために定める。ページは、読者の目的、主な構造、固有の部品で分類する。
   </p>
 
   <div class="spec-item" id="home-page">
     <h3>8-1. ホーム</h3>
-    <p class="src">ブログを紹介し、最新の記事とCosenseのメモへ案内します。</p>
+    <p class="src">ホームは、ブログを紹介し、最新の記事とCosenseのメモへ案内する。</p>
     <ul class="src rule-list">
       <li>
         <strong>配置</strong>
@@ -171,7 +177,16 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="post-archive-page">
     <h3>8-2. 記事一覧</h3>
-    <p class="src">記事を時系列またはタグで探せるようにします。PageHero、タグ一覧、年の見出しとPostListItemの順に配置します。Wideでは、年の見出しを画面内に追従させます。</p>
+    <p class="src">記事一覧は、記事を時系列またはタグで探せるようにする。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>配置</strong>
+        <ul>
+          <li>PageHero、タグ一覧、年の見出しとPostListItemの順に置く</li>
+          <li>Wideでは、年の見出しを画面内に追従させる</li>
+        </ul>
+      </li>
+    </ul>
     <article class="demo page-card" aria-label="記事一覧のページ構造">
       <div class="wire"><div class="wire-title wire-short"></div><div class="wire-two-col"><div><div class="wire-card"></div><div class="wire-card"></div></div><div class="wire-line"></div></div></div>
     </article>
@@ -181,7 +196,7 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="search-page">
     <h3>8-4. 検索ユーティリティ</h3>
-    <p class="src">検索はCommand Paletteで提供します。読者がHeaderのSearchを押したときに開きます。</p>
+    <p class="src">検索はCommand Paletteで提供する。HeaderのSearchを押すか、<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>を押したときに開く。</p>
     <ul class="src rule-list">
       <li>
         <strong>置かない場所</strong>
@@ -192,7 +207,7 @@ const spacing = phi ** 2;`;
       <li>
         <strong>旧URL</strong>
         <ul>
-          <li>旧URLの/searchは/?search=openへ転送し、同じCommand Paletteを開く</li>
+          <li>旧URLの<code>/search</code>は<code>/?search=open</code>へ転送し、同じCommand Paletteを開く</li>
         </ul>
       </li>
     </ul>
@@ -203,7 +218,20 @@ const spacing = phi ** 2;`;
 
   <div class="spec-item" id="policy-state-page">
     <h3>8-5. ポリシー・状態</h3>
-    <p class="src">Privacy Policyでは、本文の行長を抑えます。404ページでは、表示できない状態とトップへの移動手段を伝えます。</p>
+    <ul class="src rule-list">
+      <li>
+        <strong>Privacy Policy</strong>
+        <ul>
+          <li>シェルの幅を保ったまま、本文の行長を抑える</li>
+        </ul>
+      </li>
+      <li>
+        <strong>404</strong>
+        <ul>
+          <li>表示できない状態と、トップへの移動手段を伝える</li>
+        </ul>
+      </li>
+    </ul>
     <article class="demo page-card" aria-label="ポリシー・状態のページ構造">
       <div class="wire"><div class="wire-title wire-short"></div><div class="wire-card"></div><div class="wire-line wire-medium"></div></div>
     </article>

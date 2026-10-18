@@ -8,17 +8,16 @@ const categoryPages = designSystemPages.filter((page) => page.id !== "overview")
 <DesignSystemLayout
   activePage="overview"
   title="KJR020's Blog デザインシステム"
-  description="KJR020's Blogの色、文字、部品、配置、UI文言を確認するカタログ"
+  description="KJR020's Blogの色、文字、部品、配置、UI文言を、実際の表示と操作で確認するためのカタログ"
 >
   <header class="book-intro" id="overview">
     <h1 class="book-title">KJR020's Blog<br />デザインシステム</h1>
-    <p class="book-lead">KJR020's Blogの色、文字、部品、配置、UI文言を確認するカタログです。各説明は、部品の用途と使い分けを示します。標本は、ブログと同じトークンとコンポーネントから描画します。要件と判断基準はデザイン仕様書で定めます。</p>
-    <div class="scope-note">
-      <strong>適用範囲</strong>
-      <span>
-        記事、一覧、検索、ナビゲーション、状態表示を含む、ブログのすべての公開ページとUI部品に適用します。
-      </span>
-    </div>
+    <p class="book-lead">KJR020's Blogの色、文字、部品、配置、UI文言を、実際の表示と操作で確認するためのカタログである。要件と判断基準は、デザイン仕様書で定める。</p>
+    <p class="book-lead">各項目は、説明と標本で構成する。</p>
+    <ul class="book-lead-list">
+      <li><strong>説明</strong>: 用途、使い分け、その理由を示す</li>
+      <li><strong>標本</strong>: ブログと同じトークンとコンポーネントから描画する</li>
+    </ul>
   </header>
 
   <section class="spec" id="categories">

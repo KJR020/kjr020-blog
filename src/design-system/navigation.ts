@@ -22,7 +22,7 @@ export const designSystemPages = [
     id: "overview",
     label: "概要",
     href: "/design-system",
-    description: "このデザインシステムの目的、適用範囲、5つのカテゴリ",
+    description: "このカタログの位置付けと5つのカテゴリ",
   },
   {
     id: "foundations",
@@ -71,7 +71,7 @@ export const designSystemPageGroups: Record<
       href: "/design-system/foundations#tokens",
       links: [
         { label: "カラー", href: "/design-system/foundations#color" },
-        { label: "記事コールアウト色", href: "/design-system/foundations#callout-colors" },
+        { label: "記事のCallout色", href: "/design-system/foundations#callout-colors" },
         { label: "タイポグラフィ", href: "/design-system/foundations#typography" },
         { label: "スペーシング", href: "/design-system/foundations#spacing" },
         { label: "角丸・影", href: "/design-system/foundations#radius" },
