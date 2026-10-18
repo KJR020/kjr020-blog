@@ -127,11 +127,12 @@ const shows = (section: FoundationSection) => sections.includes(section);
 {shows("tokens") && (
 <section class="spec" id="tokens">
   <h2>1. トークン</h2>
-  <p class="src">トークンは、ブログ全体の見た目と意味を1か所の変更で更新できるようにするために置く。値には数値ではなく用途を表す名前を付け、ページと部品はその名前で値を参照する。</p>
+  <p class="src">トークンは、ブログ全体の見た目と意味を1か所の変更で更新できるようにするために置きます。</p>
+  <p class="src">値には数値ではなく用途を表す名前を付け、ページと部品はその名前で値を参照します。</p>
 
   <div class="spec-item" id="color">
     <h3>1-1. 色の役割</h3>
-    <p class="src">色は、情報の役割、操作できるかどうか、状態を伝えるために使う。</p>
+    <p class="src">色は、情報の役割、操作できるかどうか、状態を伝えるために使います。</p>
     <ul class="src rule-list">
       <li>
         <strong>Token</strong>
@@ -182,7 +183,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="callout-colors">
     <h3>1-2. 記事のCallout色</h3>
-    <p class="src">Callout色は、本文から補足の種類を識別するためだけに使う。</p>
+    <p class="src">Callout色は、本文から補足の種類を識別するためだけに使います。</p>
     <ul class="src rule-list">
       <li>
         <strong>適用する場所</strong>
@@ -217,7 +218,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="typography">
     <h3>1-3. 文字階層</h3>
-    <p class="src">文字は、書体、サイズ、太さ、行高の組み合わせで情報の階層を伝える。</p>
+    <p class="src">文字は、書体、サイズ、太さ、行高の組み合わせで情報の階層を伝えます。</p>
     <ul class="src rule-list">
       <li>
         <strong>書体</strong>
@@ -275,7 +276,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="spacing">
     <h3>1-4. 黄金比スペーシング</h3>
-    <p class="src">余白は、要素どうしの関係と情報の区切りを伝えるために使う。</p>
+    <p class="src">余白は、要素どうしの関係と情報の区切りを伝えるために使います。</p>
     <ul class="src rule-list">
       <li>
         <strong>値の選び方</strong>
@@ -315,7 +316,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="radius">
     <h3>1-5. 角丸・影</h3>
-    <p class="src">角丸と影は、面のまとまりと重なりを示すためだけに使う。</p>
+    <p class="src">角丸と影は、面のまとまりと重なりを示すためだけに使います。</p>
     <ul class="src rule-list">
       <li>
         <strong>角丸</strong>
@@ -361,7 +362,8 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="motion">
     <h3>1-6. モーション</h3>
-    <p class="src">動きは、状態の変化を伝えるためと、くりの人格を表すために使う。UIの動きは短く規則的にし、表現的な動きはヒーローとくりに限る。読書を邪魔しないためである。</p>
+    <p class="src">動きは、状態の変化を伝えるためと、くりの人格を表すために使います。</p>
+    <p class="src">UIの動きは短く規則的にし、表現的な動きはヒーローとくりに限ります。読書を邪魔しないためです。</p>
     <ul class="src rule-list">
       <li>
         <strong>トークン</strong>
@@ -385,7 +387,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
     </ul>
 
     <h4 class="motion-group-heading">UIのモーション</h4>
-    <p class="src">状態・階層・遷移を短く規則的に伝え、操作には即応する。</p>
+    <p class="src">状態・階層・遷移を短く規則的に伝え、操作には即応します。</p>
 
     <h5 class="motion-heading">イージング</h5>
     <div class="demo curve-grid">
@@ -423,7 +425,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
     </div>
 
     <h4 class="motion-group-heading">キャラクターのモーション</h4>
-    <p class="src">くりの人格を、ポーズ、重心、間で表す。体は重く動かず、目だけが素早く動く。</p>
+    <p class="src">くりの人格を、ポーズ、重心、間で表します。体は重く動かず、目だけが素早く動きます。</p>
 
     <h5 class="motion-heading">イージング</h5>
     <div class="demo curve-grid">
@@ -480,7 +482,10 @@ const shows = (section: FoundationSection) => sections.includes(section);
 <section class="spec" id="layout">
   <h2>2. レイアウト原則</h2>
   <p class="src">
-    レイアウトは、読者が主要な情報を見つけ、読み進められるように、ページの骨格をそろえるために定める。ページの幅、列、余白、読み順を決め、画面幅が変わっても情報の優先順位とDOM順を保つ。
+    レイアウトは、読者が主要な情報を見つけ、読み進められるように、ページの骨格をそろえるために定めます。
+  </p>
+  <p class="src">
+    ページの幅、列、余白、読み順を決め、画面幅が変わっても情報の優先順位とDOM順を保ちます。
   </p>
 
   <div class="spec-item" id="page-shell">
@@ -707,7 +712,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="spacing-hierarchy">
     <h3>2-7. 余白の階層</h3>
-    <p class="src">情報の関係が強いほど狭く、セクションやページの境界ほど広い余白を使う。</p>
+    <p class="src">情報の関係が強いほど狭く、セクションやページの境界ほど広い余白を使います。</p>
     <div class="demo table-scroll">
       <table class="map">
         <thead><tr><th>関係</th><th>主な値</th><th>実装例</th></tr></thead>
@@ -723,7 +728,7 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="emphasis-hierarchy">
     <h3>2-8. 見出しと強調の階層</h3>
-    <p class="src">ページタイトル → セクション見出し → カードタイトル → メタ情報の順に、サイズ・太さ・色を弱める。</p>
+    <p class="src">ページタイトル → セクション見出し → カードタイトル → メタ情報の順に、サイズ・太さ・色を弱めます。</p>
     <div class="demo emphasis-demo">
       <div class="emphasis-level emphasis-page"><strong>Page title</strong><span>ページタイトルは--text-page-title、記事タイトルは--text-article-title</span></div>
       <div class="emphasis-level emphasis-section"><strong>Section heading</strong><span>罫線と余白で節の区切りを示す</span></div>
@@ -737,11 +742,12 @@ const shows = (section: FoundationSection) => sections.includes(section);
 {shows("states") && (
 <section class="spec" id="states">
   <h2>3. 状態の体系</h2>
-    <p class="src">状態は、読者がいま何が起きていて、何を操作できるかを判断できるようにするために区別する。操作中、取得中、現在地、選択を区別し、同じ状態には部品が変わっても同じ表現を使い、表示、文言、ARIAで伝える。</p>
+    <p class="src">状態は、読者がいま何が起きていて、何を操作できるかを判断できるようにするために区別します。</p>
+    <p class="src">操作中、取得中、現在地、選択を区別し、同じ状態には部品が変わっても同じ表現を使い、表示、文言、ARIAで伝えます。</p>
 
   <div class="spec-item" id="interaction-states">
     <h3>3-1. 操作状態</h3>
-    <p class="src">操作状態は、色の反転だけに頼らず、背景・文字色・ring・opacityの組み合わせで表す。</p>
+    <p class="src">操作状態は、色の反転だけに頼らず、背景・文字色・ring・opacityの組み合わせで表します。</p>
     <div class="demo state-grid">
       <div class="interactive-state">Default<span>surface + border</span></div>
       <div class="interactive-state state-hover">Hover<span>accent background</span></div>

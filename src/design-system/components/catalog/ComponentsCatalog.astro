@@ -62,11 +62,11 @@ const scrapboxPages = [
 
 <section class="spec" id="primitives">
   <h2>4. 基本部品</h2>
-  <p class="src">基本部品は、ページ間で見た目と操作をそろえるために、複数の場所で使う最小単位のUIである。同じ用途では、同じ部品を使う。</p>
+  <p class="src">基本部品は、ページ間で見た目と操作をそろえるために、複数の場所で使う最小単位のUIです。同じ用途では、同じ部品を使います。</p>
 
   <div class="spec-item" id="button">
     <h3>4-1. Button</h3>
-    <p class="src">Buttonは、操作を開始する部品である。</p>
+    <p class="src">Buttonは、操作を開始する部品です。</p>
     <ul class="src rule-list">
       <li>
         <strong>ラベル</strong>
@@ -155,7 +155,7 @@ const scrapboxPages = [
 
   <div class="spec-item" id="card">
     <h3>4-3. Card</h3>
-    <p class="src">Cardは、関連する情報と操作を1つの単位にまとめる部品である。</p>
+    <p class="src">Cardは、関連する情報と操作を1つの単位にまとめる部品です。</p>
     <ul class="src rule-list">
       <li>
         <strong>構成</strong>
@@ -225,7 +225,8 @@ const scrapboxPages = [
 
 <section class="spec" id="navigation">
   <h2>5. ナビゲーション・検索部品</h2>
-  <p class="src">ナビゲーション・検索部品は、読者がサイト内の現在地、移動先、検索手段を把握できるようにするための部品である。ポインター、タッチ、キーボードのどれでも、同じ移動先と操作へ到達できるようにする。</p>
+  <p class="src">ナビゲーション・検索部品は、読者がサイト内の現在地、移動先、検索手段を把握できるようにするための部品です。</p>
+  <p class="src">ポインター、タッチ、キーボードのどれでも、同じ移動先と操作へ到達できるようにします。</p>
 
   <div class="spec-item" id="global-navigation">
     <h3>5-1. Header / Global Navigation</h3>
@@ -302,7 +303,7 @@ const scrapboxPages = [
         <div class="command-option is-selected" role="option" aria-selected="true">Astroブログに全文検索を導入した<small>Pagefindを使った検索UIの実装</small></div>
         <div class="command-option" role="option" aria-selected="false">Astroブログにコールアウト機能を追加した<small>記事表現を拡張する</small></div>
       </div>
-      <p class="demo-instruction">このページでも、<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>でCommand Paletteを開ける。</p>
+      <p class="demo-instruction">このページでも、<kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>でCommand Paletteを開けます。</p>
       <CommandPalette client:load />
     </div>
     <SourceRow files={["src/components/search/CommandPalette.tsx"]} />
@@ -339,18 +340,20 @@ const scrapboxPages = [
 
 <section class="spec" id="blog-components">
   <h2>6. ブログ固有部品</h2>
-  <p class="src">ブログ固有部品は、記事を探し、読み、関連情報へ移動するための部品であり、KJR020's Blog固有の情報構造を持つ。実データと状態を含めて再利用し、ページごとに別の見た目や挙動を作らない。</p>
+  <p class="src">ブログ固有部品は、記事を探し、読み、関連情報へ移動するための部品であり、KJR020's Blog固有の情報構造を持ちます。</p>
+  <p class="src">実データと状態を含めて再利用し、ページごとに別の見た目や挙動を作りません。</p>
 
   <div class="spec-item" id="page-hero">
     <h3>6-1. PageHero</h3>
-    <p class="src">PageHeroは、欧文の大見出しと日本語の説明で、ページの目的を一覧本文より先に伝える。mascotを指定した場合は、下端の罫線上にくりを立たせる。</p>
+    <p class="src">PageHeroは、欧文の大見出しと日本語の説明で、ページの目的を一覧本文より先に伝えます。</p>
+    <p class="src">mascotを指定した場合は、下端の罫線上にくりを立たせます。</p>
     <div class="demo page-demo"><PageHero title="Posts" description="ブログ記事一覧です。" mascot /></div>
     <SourceRow files={["src/components/PageHero.astro"]} />
   </div>
 
   <div class="spec-item" id="post-card">
     <h3>6-2. PostListItem</h3>
-    <p class="src">PostListItemは、罫線で区切った索引の1行である。</p>
+    <p class="src">PostListItemは、罫線で区切った索引の1行です。</p>
     <ul class="src rule-list">
       <li>
         <strong>リンク</strong>
@@ -377,7 +380,7 @@ const scrapboxPages = [
 
   <div class="spec-item" id="kuri">
     <h3>6-5. Kuri</h3>
-    <p class="src">Kuriは栗のマスコットであり、ページの主役にせず、罫線の端に立たせる。</p>
+    <p class="src">Kuriは栗のマスコットであり、ページの主役にせず、罫線の端に立たせます。</p>
     <ul class="src rule-list">
       <li>
         <strong>配置</strong>
@@ -448,7 +451,7 @@ const scrapboxPages = [
 
   <div class="spec-item" id="scrapbox-card-list">
     <h3>6-4. Scrapbox Card List</h3>
-    <p class="src">Scrapbox Card Listは、Cosenseのメモを、タイトル・説明・更新日の一覧として縦に並べる。</p>
+    <p class="src">Scrapbox Card Listは、Cosenseのメモを、タイトル・説明・更新日の一覧として縦に並べます。</p>
     <ul class="src rule-list">
       <li>
         <strong>リンク</strong>
