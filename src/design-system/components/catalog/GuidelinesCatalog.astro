@@ -14,7 +14,8 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 {shows("writing") && (
 <section class="spec" id="writing">
   <h2>9. UIライティング</h2>
-  <p class="src">UI文言の役割、表記、状態メッセージの書き方を示します。表示する文言とAccessible nameを一緒に決めます。読者が次の操作を判断できることを確認します。</p>
+  <p class="src">UI文言は、読者が現在地、起きたこと、次の操作を判断できるようにするために書きます。</p>
+  <p class="src">ここでは、文言の役割、表記、状態メッセージの書き方を定めます。</p>
 
   <div class="spec-item" id="voice">
     <h3>9-1. 声の性格</h3>
@@ -23,7 +24,11 @@ const shows = (section: GuidelineSection) => sections.includes(section);
       <li>
         <strong>記事本文との関係</strong>
         <ul>
-          <li>記事本文の個性とは分ける</li>
+          <li>記事本文の個性とは分ける
+            <ul>
+              <li>記事では書き手の個性を表現し、UIでは操作や状態の理解を優先するため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
@@ -109,7 +114,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 
   <div class="spec-item" id="notation">
     <h3>9-4. 表記</h3>
-    <p class="src">読者が操作対象、条件、結果を判断できるように書きます。短くするときも、判断に必要な情報を残します。</p>
+    <p class="src">表記は、読者が操作対象、条件、結果を判断できるように書きます。短くするときも、判断に必要な情報を残します。</p>
     <ul class="src rule-list">
       <li>
         <strong>用語と文の構造</strong>
@@ -124,21 +129,30 @@ const shows = (section: GuidelineSection) => sections.includes(section);
         <strong>文体</strong>
         <ul>
           <li>ボタンやリンクは短く書く</li>
-          <li>説明文と状態メッセージは「です・ます」で書く</li>
+          <li>UIの説明文と状態メッセージは、「です・ます」で書く</li>
         </ul>
       </li>
       <li>
         <strong>日本語と英語</strong>
         <ul>
-          <li>Navigationのカテゴリ名とサービス固有名は英語を使用できる</li>
-          <li>説明・操作・状態は日本語を基本とする</li>
-          <li>Pagefind、API、proxyなどの実装語は記事本文や開発者向けログで使い、読者向けの状態文には出さない</li>
+          <li>説明・操作・状態は、日本語を基本とする</li>
+          <li>Navigationのカテゴリ名とサービス固有名は、英語を使用できる</li>
+          <li>Pagefind、API、proxyなどの実装語は、読者向けの状態文に出さない
+            <ul>
+              <li>実装語は、記事本文や開発者向けログで使う</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
         <strong>句読点</strong>
         <ul>
-          <li>ボタン、見出し、タグに句点を付けず、完全文には「。」を付ける</li>
+          <li>本文の完全文には「。」を付ける</li>
+          <li>ボタン、見出し、タグ、通知には句点を付けない
+            <ul>
+              <li>例: 「コードをコピーしました」</li>
+            </ul>
+          </li>
           <li>進行中は全角の「…」を1つ使う</li>
         </ul>
       </li>
@@ -151,7 +165,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
         </ul>
       </li>
     </ul>
-    <p class="src">「検索条件の変更を行ってください」は「キーワードを変えて検索してください」と書きます。短くしても、操作対象や条件は残します。</p>
+    <p class="src">例: 「検索条件の変更を行ってください」ではなく、「キーワードを変えて検索してください」と書きます。</p>
   </div>
 
   <div class="spec-item" id="state-messages">
@@ -166,7 +180,12 @@ const shows = (section: GuidelineSection) => sections.includes(section);
       <li>
         <strong>一貫性</strong>
         <ul>
-          <li>同じ対象と状態には同じ文言を使う。検索結果0件とCosenseの取得結果0件は区別する</li>
+          <li>同じ対象と状態には、同じ文言を使う</li>
+          <li>対象が異なる0件は、文言を区別する
+            <ul>
+              <li>例: 検索結果の0件と、Cosenseの取得結果の0件</li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
@@ -191,7 +210,8 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 {shows("responsive") && (
 <section class="spec" id="responsive">
   <h2>10. レスポンシブ・アクセシビリティ</h2>
-  <p class="src">画面幅、入力方法、動きの設定が変わっても、同じ情報と操作へ到達できるようにします。配置、キーボード操作、ARIA、Motionの最低条件を定義します。</p>
+  <p class="src">画面幅、入力方法、動きの設定が変わっても、同じ情報と操作へ到達できるようにするための最低条件を定めます。</p>
+  <p class="src">対象は、配置、キーボード操作、ARIA、Motionです。</p>
 
   <div class="spec-item" id="responsive-rules">
     <h3>10-1. レスポンシブ規則</h3>
@@ -302,11 +322,12 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 {shows("governance") && (
 <section class="spec" id="governance">
   <h2>11. ガバナンス</h2>
-  <p class="src">デザインシステムは、プロダクトオーナーと、AIエージェントを含む実装者が共同で変更します。役割と承認の範囲を定め、仕様書、実装、確認用カタログを同じ仕様へ揃えます。検討中の案と対応状況はIssueで管理します。</p>
+  <p class="src">ガバナンスは、デザイン仕様書、実装、確認用カタログを同じ仕様にそろえるためのルールです。</p>
+  <p class="src">デザインシステムは、プロダクトオーナーと、AIエージェントを含む実装者が共同で変更します。</p>
 
   <div class="spec-item" id="roles">
     <h3>11-1. 役割と承認</h3>
-    <p class="src">AIエージェントは、既存のコードから規則を推測し、同じ書き方を他の箇所へ広げることがあります。そのため判断の根拠をデザイン仕様書に置き、プロダクトオーナーの承認が必要な変更を明示します。</p>
+    <p class="src">AIエージェントは、既存のコードから規則を推測し、同じ書き方を他の箇所へ広げることがあります。そのため、判断の根拠をデザイン仕様書に置き、プロダクトオーナーの承認が必要な変更を明示します。</p>
     <ul class="src rule-list">
       <li>
         <strong>プロダクトオーナー</strong>
@@ -336,7 +357,8 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 
   <div class="spec-item" id="source-of-truth">
     <h3>11-2. Source of Truth</h3>
-    <p class="src">要件と判断基準はデザイン仕様書で確認します。確認用カタログは、トークンと実コンポーネントから標本を描画します。</p>
+    <p class="src">Source of Truthは、管理対象ごとの正本を決め、仕様と実装が食い違ったときにどちらを直すかを判断できるようにするために定めます。</p>
+    <p class="src">要件と判断基準はデザイン仕様書で確認し、確認用カタログはトークンと実コンポーネントから標本を描画します。</p>
     <ul class="src rule-list">
       <li>
         <strong>記載する内容</strong>
@@ -382,7 +404,7 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 
   <div class="spec-item" id="conformance-rules">
     <h3>11-3. 適合ルール</h3>
-    <p class="src">実装者が変更を作るときに守るルールです。</p>
+    <p class="src">適合ルールは、実装者が変更を作るときに守るルールです。</p>
     <ul class="src rule-list">
       <li>
         <strong>未定義の視覚表現を先に実装しない</strong>
@@ -432,7 +454,8 @@ const shows = (section: GuidelineSection) => sections.includes(section);
 
   <div class="spec-item" id="update-method">
     <h3>11-4. 更新方法</h3>
-    <p class="src">仕様を変更するときは、次の順序で更新します。各手順の主語が、その手順を担う役割です。</p>
+    <p class="src">仕様を変更するときは、次の順序で更新します。</p>
+    <p class="src">各手順の主語が、その手順を担う役割です。</p>
     <ol class="src rule-list">
       <li>実装者が変更理由と適用範囲を決める</li>
       <li>承認が必要な変更の場合は、実装者が実装する前にプロダクトオーナーの承認を得る</li>

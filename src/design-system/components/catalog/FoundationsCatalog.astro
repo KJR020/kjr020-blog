@@ -127,31 +127,44 @@ const shows = (section: FoundationSection) => sections.includes(section);
 {shows("tokens") && (
 <section class="spec" id="tokens">
   <h2>1. トークン</h2>
-  <p class="src">色、文字、余白、角丸、影などの値に用途を表す名前を付け、ページと部品で共有します。値の直接指定を減らし、変更時にブログ全体の意味と見た目を同じ基準で更新できるようにします。</p>
+  <p class="src">トークンは、ブログ全体の見た目と意味を1か所の変更で更新できるようにするために置きます。</p>
+  <p class="src">値には数値ではなく用途を表す名前を付け、ページと部品はその名前で値を参照します。</p>
 
   <div class="spec-item" id="color">
     <h3>1-1. 色の役割</h3>
-    <p class="src">色は情報の役割、操作可能性、状態を伝えるために使います。</p>
+    <p class="src">色は、情報の役割、操作できるかどうか、状態を伝えるために使います。</p>
     <ul class="src rule-list">
       <li>
         <strong>Token</strong>
         <ul>
-          <li>Light / Darkで同じ意味を保つsemantic tokenを選ぶ</li>
+          <li>Light / Darkで同じ意味を保つsemantic tokenを選ぶ
+            <ul>
+              <li>テーマを切り替えても、同じ色が同じ意味を表すようにするため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
         <strong>用途</strong>
         <ul>
-          <li>ニュートラルは面と文字</li>
-          <li>青は遷移</li>
-          <li>赤は破壊的状態</li>
-          <li>4色は記事内Callout</li>
+          <li>面と文字には、ニュートラルを使う</li>
+          <li>アクセントは青の1色に限り、リンク、現在地、強調の印に使う
+            <ul>
+              <li>青がリンクの印として読めるようにするため</li>
+            </ul>
+          </li>
+          <li>赤は、破壊的な操作とエラーに使う</li>
+          <li>Calloutの4色は、記事内のCalloutだけに使う</li>
         </ul>
       </li>
       <li>
         <strong>色以外の手がかり</strong>
         <ul>
-          <li>色だけを唯一の手がかりにしない</li>
+          <li>色だけを唯一の手がかりにしない
+            <ul>
+              <li>色を区別しにくい環境でも、意味を判断できるようにするため</li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
@@ -169,14 +182,18 @@ const shows = (section: FoundationSection) => sections.includes(section);
   </div>
 
   <div class="spec-item" id="callout-colors">
-    <h3>1-2. 記事コールアウト色</h3>
+    <h3>1-2. 記事のCallout色</h3>
     <p class="src">Callout色は、本文から補足の種類を識別するためだけに使います。</p>
     <ul class="src rule-list">
       <li>
         <strong>適用する場所</strong>
         <ul>
-          <li>面全体を塗らない</li>
-          <li>左2pxの境界とタイトル文字へ適用する</li>
+          <li>左2pxの境界とタイトル文字だけに適用する</li>
+          <li>面全体は塗らない
+            <ul>
+              <li>補足が本文より目立たないようにするため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
@@ -201,27 +218,43 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="typography">
     <h3>1-3. 文字階層</h3>
-    <p class="src">書体、サイズ、太さ、行高で、情報の階層を伝えます。下の標本は固定段のトークンです。ページタイトルと記事タイトルには、それぞれ専用の可変サイズを使います。</p>
+    <p class="src">文字は、書体、サイズ、太さ、行高の組み合わせで情報の階層を伝えます。</p>
     <ul class="src rule-list">
       <li>
         <strong>書体</strong>
         <ul>
-          <li>Headerはsystem sans</li>
-          <li>本文と見出しはNoto Sans JP</li>
-          <li>コードとトークン名はJetBrains Mono</li>
+          <li>本文と見出しには、Noto Sans JPを使う</li>
+          <li>Headerのナビゲーションには、system sansを使う</li>
+          <li>コードとトークン名には、JetBrains Monoを使う</li>
         </ul>
       </li>
       <li>
         <strong>サイズと行高</strong>
         <ul>
-          <li>役割ごとに黄金比φを基準に定義する</li>
+          <li>役割ごとに、黄金比φを基準に定義する</li>
+          <li>下の標本は、固定段のトークンを示す</li>
+          <li>ページタイトルと記事タイトルには、それぞれ専用の可変サイズを使う
+            <ul>
+              <li>ページタイトル: <code>--text-page-title</code></li>
+              <li>記事タイトル: <code>--text-article-title</code></li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
         <strong>太さ</strong>
         <ul>
-          <li>見出しはh4からh1まで、1段上がるごとに100ずつ太くする。h1は900、h2は800、h3は700、h4とルール見出しは600とし、本文は400とする</li>
-          <li>上位の見出しを、下位の見出しやラベルと同じ太さにしない</li>
+          <li>見出しはh4からh1まで、1段上がるごとに100ずつ太くする
+            <ul>
+              <li>h1は900、h2は800、h3は700とする</li>
+              <li>h4とルール見出しは600、本文は400とする</li>
+            </ul>
+          </li>
+          <li>上位の見出しを、下位の見出しやラベルと同じ太さにしない
+            <ul>
+              <li>同じ太さだと、サイズが大きくても細く見え、階層が読み取れないため</li>
+            </ul>
+          </li>
           <li>欧文・数字の大見出し(<code>.type-display</code>)は、見出しの階層とは別に800とする</li>
         </ul>
       </li>
@@ -250,12 +283,21 @@ const shows = (section: FoundationSection) => sections.includes(section);
         <ul>
           <li>黄金比φのscaleから選ぶ</li>
           <li>局所的な数値を追加する前に、既存tokenで関係を表せるか確認する</li>
+          <li>φが読みやすさや操作性を損なう場合は、理由と適用範囲を明示して調整する
+            <ul>
+              <li>φは標準値を選ぶ基準であり、比率の厳守を理由に読みにくさを残さないため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
         <strong>広げる順序</strong>
         <ul>
-          <li>同一要素内、部品間、セクション間、ページ外周の順に広げる</li>
+          <li>同一要素内、部品間、セクション間、ページ外周の順に広げる
+            <ul>
+              <li>余白の広さから、情報の関係の強さを読み取れるようにするため</li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
@@ -274,20 +316,32 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="radius">
     <h3>1-5. 角丸・影</h3>
+    <p class="src">角丸と影は、面のまとまりと重なりを示すためだけに使います。</p>
     <ul class="src rule-list">
       <li>
         <strong>角丸</strong>
         <ul>
-          <li>同じ面に属する情報のまとまりを伝える</li>
-          <li>基準は0.618rem</li>
+          <li>同じ面に属する情報のまとまりを伝えるために使う
+            <ul>
+              <li>基準値は0.618remとする</li>
+            </ul>
+          </li>
           <li>装飾だけを目的に丸めない</li>
         </ul>
       </li>
       <li>
         <strong>影</strong>
         <ul>
-          <li>面の区切りには使わず、罫線と余白で示す</li>
-          <li>Dialog・Popover・Menuなど、本文の前面に重なる面にだけ使う</li>
+          <li>Dialog・Popover・Menuなど、本文の前面に重なる面にだけ使う
+            <ul>
+              <li>罫線だけでは、本文との重なりを示せないため</li>
+            </ul>
+          </li>
+          <li>面の区切りには使わず、罫線と余白で示す
+            <ul>
+              <li>枠や影を重ねず、記事の文字を主役にするため</li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
@@ -308,13 +362,19 @@ const shows = (section: FoundationSection) => sections.includes(section);
 
   <div class="spec-item" id="motion">
     <h3>1-6. モーション</h3>
-    <p class="src">UIの動きは短く規則的にし、表現的な動きはヒーローとくりに限ります。</p>
+    <p class="src">動きは、状態の変化を伝えるためと、くりの人格を表すために使います。</p>
+    <p class="src">UIの動きは短く規則的にし、表現的な動きはヒーローとくりに限ります。読書を邪魔しないためです。</p>
     <ul class="src rule-list">
       <li>
         <strong>トークン</strong>
         <ul>
-          <li>UIのカーブとdurationは<code>globals.css</code>、くりの値は<code>Kuri.astro</code>のトークンを正本とする</li>
-          <li>くりの動きには、UIのトークンを流用しない</li>
+          <li>UIのカーブとdurationは、<code>globals.css</code>のトークンを正本とする</li>
+          <li>くりの値は、<code>Kuri.astro</code>のトークンを正本とする</li>
+          <li>くりの動きには、UIのトークンを流用しない
+            <ul>
+              <li>UIの値を調整したときに、くりのアクションが意図せず変わらないようにするため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
@@ -422,7 +482,10 @@ const shows = (section: FoundationSection) => sections.includes(section);
 <section class="spec" id="layout">
   <h2>2. レイアウト原則</h2>
   <p class="src">
-    ページの幅、列、余白、読み順を示します。画面幅に合わせて配置を変えます。情報の優先順位とDOM順は保ちます。
+    レイアウトは、読者が主要な情報を見つけ、読み進められるように、ページの骨格をそろえるために定めます。
+  </p>
+  <p class="src">
+    ページの幅、列、余白、読み順を決め、画面幅が変わっても情報の優先順位とDOM順を保ちます。
   </p>
 
   <div class="spec-item" id="page-shell">
@@ -437,7 +500,12 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>くりの配置</strong>
         <ul>
-          <li>ホームと記事一覧では、見出し下の罫線上へ置く。記事詳細には置かない</li>
+          <li>ホームと記事一覧では、見出し下の罫線上へ置く</li>
+          <li>記事詳細には置かない
+            <ul>
+              <li>本文と注意を奪い合わないようにするため</li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
@@ -455,9 +523,21 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>列</strong>
         <ul>
-          <li>Wideでは、シェルの内容幅を16列と列間の余白へ分割する。列間の余白は<code>--grid-gutter</code>で16〜24pxに補間する</li>
-          <li>主要領域の幅と位置を列で決める</li>
-          <li>列は配置をそろえる座標系で、CSS Gridの使用は要件にしない</li>
+          <li>Wideでは、シェルの内容幅を16列と列間の余白へ分割する
+            <ul>
+              <li>列間の余白は、<code>--grid-gutter</code>で16〜24pxに補間する</li>
+            </ul>
+          </li>
+          <li>主要領域の幅と位置を列で決める
+            <ul>
+              <li>ページ間で配置の基準線をそろえるため</li>
+            </ul>
+          </li>
+          <li>列は配置をそろえる座標系であり、CSS Gridの使用は要件にしない
+            <ul>
+              <li>CSS Gridは、複数の領域が同じ行で異なる列を占めるときに使う</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
@@ -489,23 +569,39 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>段階</strong>
         <ul>
-          <li>Tailwindのmdとlgに合わせた3段階</li>
+          <li>ページの主要領域の構成は、Tailwindのmdとlgに合わせた3段階で切り替える</li>
         </ul>
       </li>
       <li>
         <strong>判定</strong>
         <ul>
           <li>viewport全体の幅で判定する</li>
-          <li>上限は<code>47.999rem</code>と<code>63.999rem</code>で書く</li>
+          <li>上限は<code>47.999rem</code>と<code>63.999rem</code>で書く
+            <ul>
+              <li><code>48rem</code>と書くと、768pxちょうどでCompactとMediumの指定が両方効くため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
         <strong>部品内部</strong>
         <ul>
-          <li>3段階はページの主要領域の構成だけに使う</li>
-          <li>切り替えなしに収まる配置を優先する</li>
-          <li>切り替える場合は、内容が収まらなくなる幅を境目にし、その理由をCSSのコメントに書く</li>
-          <li>置き場所で幅が変わる部品は、コンテナクエリで部品の幅を判定する</li>
+          <li>切り替えなしに収まる配置を優先する
+            <ul>
+              <li>例: <code>flex-wrap</code>や<code>repeat(auto-fit, minmax())</code>で、使える幅に応じて折り返す</li>
+            </ul>
+          </li>
+          <li>切り替える場合は、内容が収まらなくなる幅を境目にする</li>
+          <li>3段階以外の境目には、何が収まらなくなるかをCSSのコメントに書く
+            <ul>
+              <li>値の根拠が分からないと、境目を変えてよいかを判断できないため</li>
+            </ul>
+          </li>
+          <li>置き場所で幅が変わる部品は、コンテナクエリで部品の幅を判定する
+            <ul>
+              <li>Sidebarの有無などで、viewportの幅と部品の幅が比例しないため</li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
@@ -527,13 +623,19 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>最大幅</strong>
         <ul>
-          <li>確認用カタログを除く全ページで同じシェルを使う。最大幅は左右の内側余白を含めて1280pxとする</li>
+          <li>全ページで同じシェルを使う
+            <ul>
+              <li>ページ間を移動しても、Headerと本文の左端がそろい、視線の基準線が動かないようにするため</li>
+            </ul>
+          </li>
+          <li>最大幅は、左右の内側余白を含めて1280pxとする</li>
+          <li>確認用カタログだけは、独自のシェルを使う</li>
         </ul>
       </li>
       <li>
         <strong>列の分割</strong>
         <ul>
-          <li>16列へ分割するのはシェルの内容幅</li>
+          <li>16列へ分割するのは、シェルの内容幅とする</li>
         </ul>
       </li>
     </ul>
@@ -557,8 +659,12 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>Wide</strong>
         <ul>
-          <li>記事詳細の本文は1〜12列、ホームの記事一覧は1〜11列へ置く</li>
-          <li>補助領域は13〜16列</li>
+          <li>主領域は1〜12列、補助領域は13〜16列へ置く</li>
+          <li>ホームの記事一覧だけは、1〜11列へ置く
+            <ul>
+              <li>列間の余白だけでは、記事一覧とメモが近づきすぎるため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
@@ -582,7 +688,12 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>指定方法</strong>
         <ul>
-          <li>ページシェルは共通のCSS変数で指定する。重なり領域の幅は対応する部品で指定する</li>
+          <li>ページシェルの幅は、共通のCSS変数で指定する</li>
+          <li>重なり領域の幅は、対応する部品で指定する
+            <ul>
+              <li>Dialogなどの重なり領域は、Gridの外に浮くため</li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
@@ -631,11 +742,12 @@ const shows = (section: FoundationSection) => sections.includes(section);
 {shows("states") && (
 <section class="spec" id="states">
   <h2>3. 状態の体系</h2>
-    <p class="src">操作中、取得中、現在地、選択を区別します。同じ状態には、部品が変わっても一貫した表現を使います。表示、文言、ARIAで状態を伝えます。</p>
+    <p class="src">状態は、読者がいま何が起きていて、何を操作できるかを判断できるようにするために区別します。</p>
+    <p class="src">操作中、取得中、現在地、選択を区別し、同じ状態には部品が変わっても同じ表現を使い、表示、文言、ARIAで伝えます。</p>
 
   <div class="spec-item" id="interaction-states">
     <h3>3-1. 操作状態</h3>
-    <p class="src">色の反転だけに頼らず、背景・文字色・ring・opacityの組み合わせで表します。</p>
+    <p class="src">操作状態は、色の反転だけに頼らず、背景・文字色・ring・opacityの組み合わせで表します。</p>
     <div class="demo state-grid">
       <div class="interactive-state">Default<span>surface + border</span></div>
       <div class="interactive-state state-hover">Hover<span>accent background</span></div>
@@ -675,20 +787,21 @@ const shows = (section: FoundationSection) => sections.includes(section);
       <li>
         <strong>現在のページ</strong>
         <ul>
-          <li>Headerでは文字の下の青い点で示す。カタログのサイドバーではlink色とsemiboldで示す</li>
+          <li>link色とsemiboldで示す</li>
+          <li>Headerでは、さらに文字の下に青い点を付ける</li>
           <li>見出しのアクセントラインは、現在地の表示へ転用しない</li>
         </ul>
       </li>
       <li>
         <strong>目次</strong>
         <ul>
-          <li>現在の見出しはforeground＋medium</li>
+          <li>現在の見出しは、foreground色とmediumの太さで示す</li>
         </ul>
       </li>
       <li>
         <strong>Command Palette</strong>
         <ul>
-          <li>選択行はaccent面で示す</li>
+          <li>選択行は、accent面で示す</li>
         </ul>
       </li>
     </ul>

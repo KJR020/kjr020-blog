@@ -292,6 +292,24 @@ body[data-layout="specimen-book"] :where(a, button, input, summary):focus-visibl
   color: var(--muted-foreground);
 }
 
+/* リード文に続く並列項目。リード文と同じ強さで読ませ、項目名だけを本文色にする */
+.book-lead-list {
+  max-inline-size: 50rem;
+  margin: var(--phi-neg2) 0 0;
+  padding-inline-start: var(--phi-1);
+  color: var(--muted-foreground);
+  list-style: disc;
+}
+
+.book-lead-list li + li {
+  margin-block-start: var(--phi-neg3);
+}
+
+.book-lead-list strong {
+  color: var(--foreground);
+  font-weight: var(--font-weight-label);
+}
+
 .scope-note {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -677,14 +695,21 @@ pre {
   background: var(--secondary);
 }
 
-.specimen-card {
+/* Cardは独立した移動先にだけ使うため、標本もカード全体をリンクにする */
+.specimen-card-link {
+  display: block;
   inline-size: min(100%, 34rem);
+  border-radius: var(--radius);
+  color: inherit;
+  text-decoration: none;
 }
 
-.specimen-card p {
-  margin: 0;
-  color: var(--muted-foreground);
-  font-size: var(--font-size-small);
+.specimen-card-link [data-slot="card"] {
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.specimen-card-link:hover [data-slot="card"] {
+  border-color: var(--link);
 }
 
 .page-demo {
