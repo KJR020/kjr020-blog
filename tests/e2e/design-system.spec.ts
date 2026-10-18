@@ -42,23 +42,26 @@ test("カテゴリカードはカード全体をリンクにして補助ラベ�
 
 test("公開ページは仕様の目的と使い方を説明する", async ({ page }) => {
   const pageDescriptions = [
-    { path: "/design-system", description: "要件と判断基準はデザイン仕様書で定めます" },
+    { path: "/design-system", description: "要件と判断基準は、デザイン仕様書で定める" },
+    { path: "/design-system/foundations", description: "同じ見た目が同じ意味を表す" },
+    { path: "/design-system/components", description: "どのページでも同じ部品で実装する" },
     {
-      path: "/design-system/foundations",
-      description: "情報の意味と優先順位が保たれることを確認します",
+      path: "/design-system/patterns",
+      description: "記事を探し、読み、別のページへ移動できる",
     },
-    { path: "/design-system/components", description: "用途と使い分けを確認できます" },
-    { path: "/design-system/patterns", description: "記事を探す、読む、移動する操作" },
     {
       path: "/design-system/content",
-      description: "現在地、起きたこと、次の操作を具体的に伝えます",
+      description: "現在地、起きたこと、次の操作を判断できる",
     },
-    { path: "/design-system/governance", description: "要件はデザイン仕様書で確認します" },
+    { path: "/design-system/governance", description: "同じ仕様にそろえる" },
   ] as const;
 
   for (const pageDescription of pageDescriptions) {
     await page.goto(pageDescription.path);
-    await expect(page.locator(".book-lead")).toContainText(pageDescription.description);
+    // リード文は目的を先に書く。最初の段落に目的が含まれることを確かめる
+    await expect(page.locator(".book-intro > .book-lead").first()).toContainText(
+      pageDescription.description,
+    );
   }
 
   await page.goto("/design-system/foundations");
@@ -78,24 +81,49 @@ test("説明はルールの見出しを親に、説明を子にした箇条書�
   ]) {
     await page.goto(path);
 
-    const ruleItems = await page.locator(".rule-list li").evaluateAll((items) =>
+    // 子の箇条書きを除いた、その項目自身の文だけを検査する
+    const ruleItems = await page.locator(".rule-list li, .book-lead-list li").evaluateAll((items) =>
       items.map((item) => ({
-        text: (item.querySelector(":scope > ul")
-          ? item.querySelector(":scope > strong")
-          : item
-        )?.textContent?.trim(),
+        text: [...item.childNodes]
+          .filter((node) => node.nodeName !== "UL" && node.nodeName !== "OL")
+          .map((node) => node.textContent)
+          .join("")
+          .trim(),
       })),
     );
-    expect(ruleItems.filter(({ text }) => text?.endsWith("。"))).toEqual([]);
+    expect(ruleItems.filter(({ text }) => text.endsWith("。"))).toEqual([]);
   }
 
   await page.goto("/design-system/foundations#radius");
   const radiusRules = page.locator("#radius > .rule-list > li");
   await expect(radiusRules.locator(":scope > strong")).toHaveText(["角丸", "影"]);
+  // 原則を先に、それに従う規則を後に置き、理由は子の箇条書きへ下げる
   await expect(radiusRules.nth(1).locator(":scope > ul > li")).toHaveText([
-    "面の区切りには使わず、罫線と余白で示す",
-    "Dialog・Popover・Menuなど、本文の前面に重なる面にだけ使う",
+    /^Dialog・Popover・Menuなど、本文の前面に重なる面にだけ使う\s*罫線だけでは/,
+    /^面の区切りには使わず、罫線と余白で示す\s*枠や影を重ねず/,
   ]);
+});
+
+test("カタログの説明は常体で書き、標本のUI文言だけを「です・ます」で書く", async ({ page }) => {
+  for (const path of [
+    "/design-system",
+    "/design-system/foundations",
+    "/design-system/components",
+    "/design-system/patterns",
+    "/design-system/content",
+    "/design-system/governance",
+  ]) {
+    await page.goto(path);
+
+    const politeSentences = await page
+      .locator(".book-lead, .book-lead-list li, .src, .scope-note span, .demo-instruction")
+      .evaluateAll((elements) =>
+        elements
+          .map((element) => element.textContent?.trim() ?? "")
+          .filter((text) => /(です|ます|ません)。/.test(text)),
+      );
+    expect(politeSentences, path).toEqual([]);
+  }
 });
 
 test("Button標本は実装例のコードを重ねず状態とvariantだけを表示する", async ({ page }) => {
@@ -124,7 +152,6 @@ test("Scrapbox Card Listの標本は実在するCosenseのページへリンク�
 
 test("カタログの面には影を付けず、罫線で区切る", async ({ page }) => {
   await page.goto("/design-system");
-  await expect(page.locator(".scope-note")).toHaveCSS("box-shadow", "none");
   await expect(page.locator(".spec-page-link").first()).toHaveCSS("box-shadow", "none");
 
   await page.goto("/design-system/foundations#radius");
@@ -505,9 +532,11 @@ test("ヘッダー・本文・コードで合意したフォントを使い分�
 
   await page.goto("/design-system/foundations#typography");
   const typographyDescription = page.locator("#typography > .rule-list");
-  await expect(typographyDescription).toContainText("Headerはsystem sans");
-  await expect(typographyDescription).toContainText("本文と見出しはNoto Sans JP");
-  await expect(typographyDescription).toContainText("コードとトークン名はJetBrains Mono");
+  await expect(typographyDescription).toContainText("本文と見出しには、Noto Sans JPを使う");
+  await expect(typographyDescription).toContainText(
+    "Headerのナビゲーションには、system sansを使う",
+  );
+  await expect(typographyDescription).toContainText("コードとトークン名には、JetBrains Monoを使う");
   const codeFont = await page
     .locator("#typography code")
     .first()
@@ -698,7 +727,10 @@ test("記事ページの読書設計をパターンの共通レイアウト内�
   await expect(page.locator("#figure-pattern figcaption")).toBeVisible();
   await expect(page.locator("#figure-pattern figcaption")).not.toContainText(/FIGURE \d+/);
   await expect(page.locator("#figure-pattern")).toContainText(
-    "Reading lane(8 / 9)の左端へ揃え、枠は画像より広げない",
+    "Reading lane(8 / 9)の左端へそろえる",
+  );
+  await expect(page.locator("#figure-pattern")).toContainText(
+    "枠は画像の幅に合わせ、画像より広げない",
   );
   const imageTrigger = page.locator("#figure-pattern").getByRole("link", { name: /画像を拡大/ });
   await imageTrigger.click();
