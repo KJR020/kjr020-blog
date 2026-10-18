@@ -96,6 +96,9 @@ tests/
 - Reactコンポーネントのロジック
 - テスト環境: `jsdom`
 - 依存関係: `@testing-library/react`
+- Strict Modeで描画する（`tests/setup.ts`）
+  - 描画とeffectを追加で実行し、副作用の漏れを表に出すため
+  - ブラウザのアイランドでは検査されない、初回マウントのeffectもここで検査する
 
 ### E2Eテスト
 

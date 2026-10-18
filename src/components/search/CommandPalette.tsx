@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { withStrictMode } from "@/components/withStrictMode";
 import { cn } from "@/lib/utils";
 
 interface PagefindResultData {
@@ -28,7 +29,7 @@ interface SearchResultItem {
 
 const PAGEFIND_PATH = "/pagefind/pagefind.js";
 
-export function CommandPalette() {
+function CommandPaletteInner() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const pagefindRef = useRef<Pagefind | null>(null);
@@ -288,3 +289,5 @@ export function CommandPalette() {
     </dialog>
   );
 }
+
+export const CommandPalette = withStrictMode(CommandPaletteInner);

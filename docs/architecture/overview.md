@@ -113,6 +113,10 @@ Cosense API Proxyはレスポンスを表示に必要な項目だけへ変換す
 
 ページ全体をSPAにせず、検索、コメント、目次、テーマ切替などに`client:load`または`client:only`を指定する。記事本文と主要なナビゲーションはJavaScriptが実行される前から利用できる。
 
+### React IslandsをStrict Modeで描画する
+
+開発時に、純粋でない描画と、effectの停止の書き漏れを表に出す。Astroに設定がないため、アイランドとして読み込む部品は`withStrictMode`で包んだものをexportする。検査されない範囲と判断の詳細は[ADR 0007](adr/0007-render-react-islands-in-strict-mode.md)に記録する。
+
 ### 秘密情報をCosense API Proxyへ隔離する
 
 Cosenseのセッション情報は公開バンドルへ含めない。Proxyは外部APIレスポンスをそのまま中継せず、フロントエンド向けの型へ変換する。
