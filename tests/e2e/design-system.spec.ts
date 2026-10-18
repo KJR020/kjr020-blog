@@ -42,7 +42,7 @@ test("カテゴリカードはカード全体をリンクにして補助ラベ�
 
 test("公開ページは仕様の目的と使い方を説明する", async ({ page }) => {
   const pageDescriptions = [
-    { path: "/design-system", description: "要件と判断基準は、デザイン仕様書で定める" },
+    { path: "/design-system", description: "要件と判断基準は、デザイン仕様書で定めます" },
     { path: "/design-system/foundations", description: "同じ見た目が同じ意味を表す" },
     { path: "/design-system/components", description: "どのページでも同じ部品で実装する" },
     {
@@ -65,8 +65,11 @@ test("公開ページは仕様の目的と使い方を説明する", async ({ pa
   }
 
   await page.goto("/design-system/foundations");
-  await expect(page.locator("#tokens > .src")).toContainText("用途を表す名前");
-  await expect(page.locator("#layout > .src")).toContainText("読み順");
+  // 節のリード文も、目的の段落を先に、扱う範囲の段落を後に置く
+  await expect(page.locator("#tokens > p.src").first()).toContainText("1か所の変更で更新できる");
+  await expect(page.locator("#tokens > p.src").nth(1)).toContainText("用途を表す名前");
+  await expect(page.locator("#layout > p.src").first()).toContainText("ページの骨格をそろえる");
+  await expect(page.locator("#layout > p.src").nth(1)).toContainText("読み順");
 });
 
 test("説明はルールの見出しを親に、説明を子にした箇条書きで書き、項目末尾に句点を付けない", async ({
@@ -104,7 +107,7 @@ test("説明はルールの見出しを親に、説明を子にした箇条書�
   ]);
 });
 
-test("カタログの説明は常体で書き、標本のUI文言だけを「です・ます」で書く", async ({ page }) => {
+test("カタログの段落は「です・ます」で書き、箇条書きは常体で書く", async ({ page }) => {
   for (const path of [
     "/design-system",
     "/design-system/foundations",
@@ -115,14 +118,31 @@ test("カタログの説明は常体で書き、標本のUI文言だけを「で
   ]) {
     await page.goto(path);
 
-    const politeSentences = await page
-      .locator(".book-lead, .book-lead-list li, .src, .scope-note span, .demo-instruction")
+    const plainSentences = await page
+      .locator("p.book-lead, p.src, .scope-note span, .demo-instruction")
       .evaluateAll((elements) =>
         elements
-          .map((element) => element.textContent?.trim() ?? "")
-          .filter((text) => /(です|ます|ません)。/.test(text)),
+          .flatMap((element) => (element.textContent ?? "").split("。"))
+          .map((sentence) => sentence.trim())
+          .filter((sentence) => sentence !== "" && !/(です|ます|ません)$/.test(sentence)),
       );
-    expect(politeSentences, path).toEqual([]);
+    expect(plainSentences, path).toEqual([]);
+
+    // 子の箇条書きを除いた、その項目自身の文だけを検査する
+    const politeItems = await page
+      .locator(".rule-list li, .book-lead-list li")
+      .evaluateAll((items) =>
+        items
+          .map((item) =>
+            [...item.childNodes]
+              .filter((node) => node.nodeName !== "UL" && node.nodeName !== "OL")
+              .map((node) => node.textContent)
+              .join("")
+              .trim(),
+          )
+          .filter((text) => /(です|ます|ません)$/.test(text)),
+      );
+    expect(politeItems, path).toEqual([]);
   }
 });
 
